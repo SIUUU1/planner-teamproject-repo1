@@ -1,0 +1,12 @@
+.footer {
+	background-color: #f7f8fa;
+	color: gray;
+	padding: 25px 70px;
+	text-align: left;
+	font-size: 16px;
+	line-height: 180%;
+	margin-top: 80px;
+}
+.footerContent1 span {
+  cursor: pointer;
+}

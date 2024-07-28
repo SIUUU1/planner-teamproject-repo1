@@ -1,0 +1,22 @@
+.studyGroupList {
+  margin: 0 auto;
+  width: 70%;
+}
+.studyGroupList h3 {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 30px;
+}
+.studyGroupList .addBdiv {
+  text-align: right;
+}
+.studyGroupList table {
+  width: 100%;
+  text-align: center;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.studyGroupList tr, .studyGroupMain td {
+  border: 1px solid black;
+  padding: 10px;
+}

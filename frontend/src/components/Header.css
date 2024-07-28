@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
+
+.header {
+  margin: 0 auto;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+  border-bottom: 1px solid rgb(224, 220, 220);
+}
+.headerTitle {
+  font-size: 40px;
+  color:#000000;
+  font-weight: 700;
+  text-align: center;
+  font-family: "Major Mono Display", monospace;
+}
+.headerBottom{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rightHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+.leftHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.leftMiddleHeader {
+  margin-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

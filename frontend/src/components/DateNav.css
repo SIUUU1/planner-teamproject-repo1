@@ -1,0 +1,13 @@
+.dateNav {
+  margin: 0 auto;
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+}
+.dateNavFirstChild {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
