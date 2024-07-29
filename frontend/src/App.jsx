@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import Header from './components/Header';
+import BackGround from './components/BackGround';
 import NotFound from './pages/NotFound';
 import StudyGroupMain from './studygroup/StudyGroupMain';
 import StudyGroupEdit from './studygroup/StudyGroupEdit';
@@ -25,6 +26,7 @@ function App() {
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
         </Routes>
       </BrowserRouter>
+      <BackGround></BackGround>
     </>
   )
 }

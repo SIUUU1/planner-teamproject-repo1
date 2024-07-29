@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
 
-.header {
+.header{
+  width: 100%;
+  background-color: white;
+}
+.headerContent {
   margin: 0 auto;
   width: 95%;
   display: flex;

@@ -11,21 +11,24 @@ import Button from "./Button";
 const Header = () => {
 return (
 <header className="header">
-<div className="headerTitle">WePlAN</div>
-<div className="headerBottom">
-      <div className="leftHeader">
-      <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars}/>}/></div>
-      <div className="leftMiddleHeader">
-      <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket}/>}/></div>
-      <div className='headerThirdChild'><Button text={<FontAwesomeIcon icon={faUserGroup}/>}/></div>
-      <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple}/>}/></div>
-      </div>
-      </div>
-      <div className='rightHeader'>
-      <div className='headerFifthChild'><Button text={<FontAwesomeIcon icon={faPaperPlane}/>}/></div>
-      <div className='headerSixthChild'><Button text={<FontAwesomeIcon icon={faBell}/>}/></div>
-      </div>
-</div>      
+      <div className="headerContent">
+            <div className="headerTitle">WePlAN</div>
+                  <div className="headerBottom">
+                        <div className="leftHeader">
+                              <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars}/>}/></div>
+                              <div className="leftMiddleHeader">
+                                    <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket}/>}/></div>
+                                    <div className='headerThirdChild'><Button text={<FontAwesomeIcon icon={faUserGroup}/>}/></div>
+                                    <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple}/>}/>
+                              </div>
+                        </div>
+                  </div>
+                  <div className='rightHeader'>
+                  <div className='headerFifthChild'><Button text={<FontAwesomeIcon icon={faPaperPlane}/>}/></div>
+                  <div className='headerSixthChild'><Button text={<FontAwesomeIcon icon={faBell}/>}/></div>
+                  </div>
+            </div> 
+      </div>     
 </header>
 );
 };
