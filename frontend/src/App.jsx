@@ -10,6 +10,8 @@ import StudyGroupEdit from './studygroup/StudyGroupEdit';
 import StudyGroupNew from './studygroup/StudyGroupNew';
 import StudyGroupSearch from './studygroup/StudyGroupSearch';
 import Home from './pages/Home';
+import AttainmentMain from './attainment/AttainmentMain';
+import AttainmentDetail from './attainment/AttainmentDetail';
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
           <Route path='/groupnew' element={<StudyGroupNew/>}/>
           <Route path='/groupedit' element={<StudyGroupEdit/>}/>
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
+          <Route path='/attainmentMain' element={<AttainmentMain/>}/>
+          <Route path='/attainmentDetail/:type/:id' element={<AttainmentDetail/>}/>
         </Routes>
       </BrowserRouter>
       <BackGround></BackGround>

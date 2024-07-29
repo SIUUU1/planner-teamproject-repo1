@@ -1,0 +1,16 @@
+.attainmentContent {
+  width: 70%;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 10px;
+  margin: 50px auto;
+}
+.todoDate{
+  width: 90%;
+  margin: 0 auto;
+}
+
+.attainmentList{
+  width: 80%;
+  margin: 0 auto;
+  padding: 0; 
+}
