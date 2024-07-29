@@ -57,6 +57,10 @@
   width: 39%;
   border: 1px solid black;
 }
+.progress1, .progress2{
+  height: 50%;
+  width: 100%;
+}
 .board {
   height: 100%;
   width: 60%;

@@ -1,6 +1,6 @@
 import './Home.css';
 import Footer from '../components/Footer';
-
+import Attainment from '../Attainment/Attainment.jsx';
 const Home = ()=>{
 
   return(
@@ -26,7 +26,14 @@ const Home = ()=>{
         </div>
 
         <div className='homeThirdMiddle'>
-          <div className='progress'>진행률</div>
+          <div className='progress'>
+            <div className='progress1'>
+              <Attainment></Attainment>
+            </div>
+            <div className='progress2'>
+              <Attainment></Attainment>
+            </div>
+          </div>
           <div className='board'>게시판</div>
         </div>
         
