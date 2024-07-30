@@ -65,6 +65,11 @@
   border: 1px solid black;
 }
 
+.user .progress1, .user .progress2{
+  height: 50%;
+  width: 100%;
+}
+
 .user .board {
   height: 100%;
   width: 60%;
