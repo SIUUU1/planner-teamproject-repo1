@@ -1,0 +1,146 @@
+.friendsList {
+  display: flex;
+  background-color: #ffe4e1;
+  height: 100vh;
+}
+
+.friendsList .profileSection {
+  width: 250px;
+  padding: 20px;
+  background-color: #ffc0cb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friendsList .avatarWrapper {
+  position: relative;
+}
+
+.friendsList .profilePicture {
+  width: 100px;
+  height: 100px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.friendsList .profilePictureLabel {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.friendsList .profileInfo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.friendsList .friendsHeader {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.friendsLists {    /* 친구목록 */
+  list-style-type: none;
+  padding: 0;
+  width: 80%;
+  color: black;
+ 
+}
+
+.friendsList .friendItem {
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+}
+
+.friendsList .deleteButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.friendsList .deleteButton:hover {
+  background-color: darkred;
+}
+
+.friendsList .searchSection {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friendsList .searchSection h2 .p {
+  margin-bottom: 10px;
+}
+
+.friendsList .searchSection input {
+  padding: 10px;
+  width: 200px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.friendsList .searchSection button {
+  padding: 10px 20px;
+  background-color: #87cefa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.friendsList .searchSection button:hover {
+  background-color: #00bfff;
+}
+
+.friendsList .searchResult {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.friendsList .friendInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.friendsList .friendInfo button {
+  padding: 5px 10px;
+  background-color: #32cd32;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.friendsList .friendInfo button:hover {
+  background-color: #228b22;
+}

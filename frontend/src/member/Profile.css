@@ -1,0 +1,69 @@
+.profile {
+  padding-top: 60px; /* 헤더 높이만큼 패딩 추가 */
+}
+
+.profileContainer {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.profileContainer h1 {
+  text-align: center;
+  color: #ff69b4;
+  margin-bottom: 20px;
+}
+
+.profileContainer .profileNav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #ff69b4;
+}
+
+.profileContainer .profileNav span {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.profileContainer .profileNav .active {
+  font-weight: bold;
+}
+
+.profileContent {
+  text-align: center;
+}
+
+.profileTable {
+  margin: 0 auto;
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.profileTable td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.profileTable input {
+  width: 100%;
+  padding: 5px;
+}
+
+.profileTable button {
+  padding: 5px 10px;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profileTable button:hover {
+  background-color: #ff1493;
+}
+
+.profile .errorMmessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

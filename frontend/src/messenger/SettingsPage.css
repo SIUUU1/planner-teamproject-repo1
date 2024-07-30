@@ -1,0 +1,119 @@
+/* src/pages/SettingsPage.css */
+.settingsPage {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.settingsPage .profileSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.settingsPage .avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.settingsPage .profileInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsPage .profileName {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.settingsPage .profileContact {
+  color: #888;
+}
+
+.settingsPage .editButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.settingsPage .editbButton:hover {
+  background-color: #45a049;
+}
+
+.settingsPage .settingsSection {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.settingsPage .settingsCategory {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.settingsPage .settingsItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.settingsPage .settingstem span {
+  margin-left: 1px;
+}
+
+.settingsPage .switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.settingsPage .switch input {
+  display: none;
+}
+
+.settingsPage .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.settingsPage .slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+.settingsPage input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+.settingsPage input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.settingsPage .version {
+  text-align: right;
+  color: #888;
+  font-size: 12px;
+}

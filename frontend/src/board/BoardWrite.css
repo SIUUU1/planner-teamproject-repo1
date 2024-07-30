@@ -1,0 +1,51 @@
+/* src/pages/BoardWrite.css */
+.boardWrite {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.boardWrite h1 {
+  text-align: center;
+  color: #333;
+}
+
+.boardWrite .formGroup {
+  margin-bottom: 15px;
+}
+
+.boardWrite .formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.boardWrite .formGroup input, .boardWrite .formGroup select, .boardWrite .formGroup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.boardWrite .addCategoryButton, .boardWrite .completeButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.boardWrite .addCategoryButton:hover, .boardWrite .completeButton:hover {
+  background-color: #45a049;
+}
+
+.boardWrite textarea {
+  resize: vertical;
+  height: 150px;
+}

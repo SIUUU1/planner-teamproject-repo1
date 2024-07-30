@@ -1,0 +1,58 @@
+/* src/pages/ThemeChange.css */
+.themeChange {
+  padding: 20px;
+}
+
+.themeChange .displayMessages {
+  padding: 10px;
+  border: px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.themeSection, .colorSection {
+  margin-bottom: 20px;
+}
+
+.themeOptions, .colorOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.themeOption, .colorOption {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  flex: 1;
+}
+
+.themeOption.selected, .colorOption.selected {
+  border-color: #7289da;
+}
+
+.themeChange .colorCircle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.themeChange .colorGradient1 {
+  background: linear-gradient(45deg, violet, orange);
+}
+
+.themeChange .colorGradient2 {
+  background: linear-gradient(90deg, red, yellow);
+}
+
+.themeChange .colorGradient3 {
+  background: linear-gradient(60deg, #ff9a9e, #fad0c4);
+}
+
+.themeChange .colorGradient4 {
+  background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+}
+
+.themeChange .colorGradient5 {
+  background: linear-gradient(180deg, #667eea, #764ba2);
+}
