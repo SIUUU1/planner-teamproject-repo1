@@ -1,0 +1,117 @@
+/* src/pages/QnaCustomerSupport.css */
+.qnaCustomerSupport {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  width: 60%; /* 내용이 중앙에 정렬되도록 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬을 위한 자동 마진 */
+}
+
+.qnaCustomerSupport .mainTitle {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.qnaCustomerSupport .subTitle {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.qnaCustomerSupport .subTitleItem {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.qnaCustomerSupport .contentBox {
+  background-color: #064D48;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.qnaCustomerSupport .faqSection {
+  margin-top: 20px;
+}
+
+.qnaCustomerSupport .faqItem {
+  margin-bottom: 10px;
+}
+
+.qnaCustomerSupport .faqQuestion {
+  font-weight: bold;
+}
+
+.qnaCustomerSupport .faqAnswer {
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.qnaCustomerSupport .supportForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.qnaCustomerSupport .formGroup {
+  margin-bottom: 15px;
+}
+
+.qnaCustomerSupport .title {
+  display: flex;
+  flex-direction: column;
+}
+
+.qnaCustomerSupport .subtitle {
+  color: red;
+  font-size: 12px;
+}
+
+.qnaCustomerSupport .formLabel {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px; /* 상담유형 글씨 크기 조정 */
+}
+
+.qnaCustomerSupport .radioGroup {
+  display: flex;
+  gap: 20px; /* 라디오 버튼 사이의 간격을 조정합니다 */
+  font-size: 14px; /* 상담유형 옵션 글씨 크기 조정 */
+  justify-content: space-around;
+}
+
+.qnaCustomerSupport .radioGroup label {
+  display: flex;
+  flex-direction: column; /* 수직 정렬을 위해 추가 */
+  align-items: center;
+  gap: 5px;
+}
+
+.qnaCustomerSupport .formInput, .qnaCustomerSupport .formTextarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px; /* 입력 필드 글씨 크기 조정 */
+}
+
+.qnaCustomerSupport .formTextarea {
+  height: 100px;
+}
+
+.qnaCustomerSupport .submitButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  align-self: center;
+}
+
+.qnaCustomerSupport .submitButton:hover {
+  background-color: #45a049;
+}

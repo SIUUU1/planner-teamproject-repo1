@@ -1,0 +1,50 @@
+/* src/pages/EditPage.css */
+.boardEdit {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.boardEdit h1 {
+  margin-bottom: 20px;
+}
+
+.boardEdit .formGroup {
+  margin-bottom: 15px;
+}
+
+.boardEdit .formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.boardEdit .formGroup input, .boardEdit .formGroup select, .boardEdit .formGroup textArea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.boardEdit .addCategoryButton, .saveButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.boardEdit .addCategoryButton:hover, .boardEdit .saveButton:hover {
+  background-color: #45a049;
+}
+
+.boardEdit textArea {
+  resize: vertical;
+  height: 150px;
+}
