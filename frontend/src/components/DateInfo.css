@@ -1,0 +1,11 @@
+.dateInfo {
+  margin: 0 auto;
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+}
+.dateInfoTitle{
+  margin-left: 10px;
+}

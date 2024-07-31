@@ -137,7 +137,7 @@ const AttainmentMain=()=>{
   const height2 = data2.length * 70;
   return (
     <div className="attainmentMain">
-      <div className="attainmentContent">
+      <div className="attainmentContent backWhite">
         <div className='todoDate'>
             <DateNav firstChild={<Button text={<FontAwesomeIcon icon={faAnglesLeft}/>}/>} 
             title={'2024-07-22'}
