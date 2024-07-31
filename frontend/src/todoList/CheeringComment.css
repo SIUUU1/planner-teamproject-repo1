@@ -1,0 +1,12 @@
+.cheeringComment{
+  display: flex;
+  border-bottom: 0.8px solid rgb(197, 197, 197);
+  /* border-radius: 3px; */
+  padding: 5px 10px;
+  margin-top: 10px;
+}
+.comment{
+  flex-grow: 1;
+  margin: 0 10px;
+  border: 0;
+}

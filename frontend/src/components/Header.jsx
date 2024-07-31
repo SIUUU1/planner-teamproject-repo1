@@ -8,6 +8,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
 import React, { useContext, useState, useEffect } from 'react';
+import useMove from "../util/useMove";
 
 const Header = () => {
       const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,7 +53,7 @@ const Header = () => {
 return (
 <header className="header">
       <div className="headerContent">
-            <div className="headerTitle">WePlAN</div>
+            <div className="headerTitle" onClick={useMove("/")}>WePlAN</div>
                   <div className="headerBottom">
                         <div className="leftHeader">
                               <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars} onClick={toggleMenu}/>}/></div>

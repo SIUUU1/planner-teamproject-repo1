@@ -1,0 +1,32 @@
+.todoDetailContent{
+  width: 90%;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 10px;
+  margin: 50px auto;
+}
+.todoDetailSection{
+  width: 70%;
+  margin: 20px auto;
+}
+.cheeringEmojiList{
+  display: flex;
+
+}
+.cheeringCommentList{
+  margin-top: 40px;
+  padding: 5px 20px;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 7px;
+}
+.commentRegister{
+  display: flex;
+  margin: 30px 0;
+  
+}
+.commentInput{
+  border: none;
+  flex-grow: 1;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 7px;
+  margin-right: 20px;
+}
