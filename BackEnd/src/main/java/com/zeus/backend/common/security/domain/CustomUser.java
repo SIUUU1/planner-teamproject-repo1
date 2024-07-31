@@ -13,7 +13,7 @@ public class CustomUser extends User {
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> member;
 
-	public CustomUser(String user_email, String user_password,Collection<? extends GrantedAuthority> authorities) {
+	public CustomUser(String user_email, String user_password, Collection<? extends GrantedAuthority> authorities) {
 		super(user_email, user_password, authorities);
 	}
 

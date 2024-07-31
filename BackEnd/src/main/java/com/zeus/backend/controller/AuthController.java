@@ -2,11 +2,18 @@ package com.zeus.backend.controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,13 +24,84 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zeus.backend.common.security.CodeGenerator;
+import com.zeus.backend.common.security.JwtUtil;
+import com.zeus.backend.common.security.domain.AuthenticationRequest;
+import com.zeus.backend.common.security.domain.VerificationRequest;
+import com.zeus.backend.service.EmailService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
-public class LoginController {
+public class AuthController {
+
+	@Autowired
+	private EmailService emailService;
+
+	// 인증코드 이메일 보내기
+	@PostMapping("/sendVerificationCode")
+	public String sendVerificationCode(@RequestParam("user_email") String user_email, HttpSession session) {
+		String code = CodeGenerator.generateCode();
+		try {
+			emailService.sendEmail(user_email, "Email Verification Code", "Your verification code is: " + code);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 세션에 인증 코드 저장
+		session.setAttribute("verificationCode", code);
+		session.setAttribute("email", user_email);
+
+		return "Verification code sent to " + user_email;
+	}
+
+	// 인증코드 확인하기
+	@PostMapping("/verifyCode")
+	public String verifyCode(@RequestBody VerificationRequest verificationRequest, HttpSession session) {
+		String sessionCode = (String) session.getAttribute("verificationCode");
+		String sessionEmail = (String) session.getAttribute("email");
+
+		if (sessionCode == null || sessionEmail == null) {
+			return "No verification code sent.";
+		}
+
+		if (sessionEmail.equals(verificationRequest.getEmail()) && sessionCode.equals(verificationRequest.getCode())) {
+			return "Verification successful";
+		} else {
+			return "Verification failed";
+		}
+	}
+	////////////////////////////////////////////////////////////////////
+	//로그인
+	@Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @PostMapping("/login")
+    public String createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+            );
+        } catch (Exception e) {
+            throw new Exception("Incorrect username or password", e);
+        }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+
+        return jwt;
+    }
+    
+    ////////////////////////////////////////////////////////////////////
 
 	// 구글
 	@Value("${google_client_id}")
@@ -40,24 +118,24 @@ public class LoginController {
 	private String kakao_reUri;
 
 	// 로그인 처리
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(String error, String logout) {
-		String message = "";
-		if (error != null) {
-			//로그인 에러 alert
-			message="로그인 에러";
-		}
-		if (logout != null) {
-			//로그아웃 alert
-			message="로그아웃";
-		}
-		return message;
-	}
+//	@RequestMapping(value = "/login", method = RequestMethod.POST)
+//	public String login(String error, String logout) {
+//		String message = "";
+//		if (error != null) {
+//			// 로그인 에러 alert
+//			message = "로그인 에러";
+//		}
+//		if (logout != null) {
+//			// 로그아웃 alert
+//			message = "로그아웃";
+//		}
+//		return message;
+//	}
 
 	// 로그아웃 페이지를 생성한다.
 	@RequestMapping("/logout")
 	public void logoutForm() {
-		
+
 	}
 
 	// 구글 로그인 페이지
@@ -107,7 +185,9 @@ public class LoginController {
 					ObjectMapper userInfoObjectMapper = new ObjectMapper();
 					userInfoMap = userInfoObjectMapper.readValue(userInfo, new TypeReference<Map<String, Object>>() {
 					});
+					userInfoMap.put("login_type_no", 1);
 					userInfoMap.put("social_code", 0);
+					userInfoMap.put("access_token", accessToken);
 					System.out.println(userInfoMap);
 				}
 			} catch (Exception e) {
@@ -164,7 +244,9 @@ public class LoginController {
 					ObjectMapper userInfoObjectMapper = new ObjectMapper();
 					userInfoMap = userInfoObjectMapper.readValue(userInfo, new TypeReference<Map<String, Object>>() {
 					});
+					userInfoMap.put("login_type_no", 1);
 					userInfoMap.put("social_code", 1);
+					userInfoMap.put("access_token", accessToken);
 					System.out.println(userInfoMap);
 				}
 			} catch (Exception e) {

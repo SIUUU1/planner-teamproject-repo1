@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.zeus.backend.common.security.domain.CustomUser;
 import com.zeus.backend.mapper.MemberMapper;
@@ -13,6 +14,7 @@ import com.zeus.backend.mapper.MemberMapper;
 import lombok.extern.java.Log;
 
 @Log
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private MemberMapper memberMapper;

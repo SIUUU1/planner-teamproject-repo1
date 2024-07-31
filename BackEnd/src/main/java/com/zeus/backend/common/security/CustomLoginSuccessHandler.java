@@ -21,6 +21,7 @@ import lombok.extern.java.Log;
 @Log
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	private RequestCache requestCache = new HttpSessionRequestCache(); // 요청을 캐시하는 HttpSessionRequestCache 객체 생성
+	
 	//로그인 성공 처리자 메서드
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
@@ -28,7 +29,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 		CustomUser customUser = (CustomUser) auth.getPrincipal(); // 인증된 사용자 정보 가져오기
 		Map<String, Object> member = customUser.getMember(); // CustomUser 객체에서 Member 객체 가져오기
-		log.info("user_email = " + (String) member.get("user_email")); // 사용자 ID를 로그에 출력
+		log.info("user_no = " + (String) member.get("user_no")); // 사용자 user_no, email을 로그에 출력
+		log.info("user_email = " + (String) member.get("user_email"));
 
 		// 인증 과정에서 발생한 예외 정보를 세션에서 제거
 		clearAuthenticationAttribute(request);
@@ -37,7 +39,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 
 		// 기본 리디렉션 URL 설정
-		String targetUrl = "/";
+		String targetUrl = "/welcome";
 		if (savedRequest != null) { // savedRequest가 null이 아닌 경우
 			targetUrl = savedRequest.getRedirectUrl(); // savedRequest에서 리디렉션 URL을 가져옴
 		}

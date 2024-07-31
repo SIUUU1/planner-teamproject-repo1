@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.LogMapper">
+	<!-- 로그 등록 -->
+	<insert id="create">
+		INSERT INTO login_log 
+		(login_log_id, user_no, status_code, ip, fail_count, fail_reason) 
+		VALUES (login_log_id_seq.NEXTVAL,#{user_no},#{status_code},#{ip},#{fail_count},#{fail_reason})
+	</insert>
+	<!-- 로그 목록 조회 -->
+	<select id="list" resultType="java.util.Map">
+		SELECT 
+		login_log_id, user_no, status_code, ip, fail_count, fail_reason, login_date 
+		FROM login_log 
+		ORDER BY login_date DESC
+	</select>
+	<!-- 로그 상세 조회 (user_no) -->
+	<select id="read" resultType="java.util.Map">
+		SELECT 
+		login_log_id, user_no, status_code, ip, fail_count, fail_reason, login_date 
+		FROM login_log 
+		WHERE user_no = #{user_no} 
+		ORDER BY login_date DESC 
+	</select>
+</mapper>

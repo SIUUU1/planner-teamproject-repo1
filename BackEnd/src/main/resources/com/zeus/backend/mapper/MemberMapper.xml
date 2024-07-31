@@ -3,77 +3,145 @@
 <mapper namespace="com.zeus.backend.mapper.MemberMapper">
 	<!-- 사용자 정의 resultMap 요소 정의 -->
 	<resultMap type="map" id="memberMap">
-		<result property="user_name" column="user_name" />
-		<result property="coin" column="coin" />
-		<result property="user_tel" column="user_tel" />
-		<result property="user_email" column="user_email" />
-		<result property="user_gender" column="user_gender" />
-		<result property="user_birthday" column="user_birthday" />
-		<result property="user_nickname" column="user_nickname" />
-		<result property="image_url" column="image_url" />
-		<result property="reg_date" column="reg_date" />
-		<collection property="authorities" column="user_no"
-			ofType="map" select="selectAuthorities" />
+    <result property="user_no" column="user_no" />
+    <result property="user_name" column="user_name" />
+    <result property="coin" column="coin" />
+    <result property="login_type_no" column="login_type_no" />
+    <result property="user_tel" column="user_tel" />
+    <result property="user_email" column="user_email" />
+    <result property="user_gender" column="user_gender" />
+    <result property="user_birthday" column="user_birthday" />
+    <result property="enable" column="enable" />
+    <result property="user_nickname" column="user_nickname" />
+    <result property="image_url" column="image_url" />
+    <result property="reg_date" column="reg_date" />
+    <result property="update_date" column="update_date" />
+    <result property="user_password" column="user_password" />
+    <result property="pw_update_date" column="pw_update_date" />
+    <result property="social_code" column="social_code" />
+    <result property="access_token" column="access_token" />
+    <collection property="authorities" column="user_no"
+        ofType="map" select="selectAuthorities" />
 	</resultMap>
 	<resultMap type="map" id="authoritiesMap">
-		<result property="user_no" column="user_no" />
-		<result property="authority" column="authority" />
+	    <result property="user_no" column="user_no" />
+	    <result property="authority" column="authority" />
 	</resultMap>
 	<!-- 등록 처리 -->
 	<insert id="create">
         CALL insert_user_data(
             #{user_name, jdbcType=NVARCHAR, mode=IN},
-            #{login_type_no, jdbcType=NUMBER, mode=IN},
+            #{login_type_no, jdbcType=INTEGER, mode=IN},
             #{authority, jdbcType=VARCHAR, mode=IN},
             #{user_nickname, jdbcType=VARCHAR, mode=IN},
             #{user_tel, jdbcType=VARCHAR, mode=IN},
             #{user_email, jdbcType=VARCHAR, mode=IN},
+            #{restore_email, jdbcType=VARCHAR, mode=IN},
             #{user_gender, jdbcType=VARCHAR, mode=IN},
             #{image_url, jdbcType=VARCHAR, mode=IN},
             #{user_birthday, jdbcType=DATE, mode=IN},
             #{user_password, jdbcType=VARCHAR, mode=IN},
-            #{social_code, jdbcType=NUMBER, mode=IN},  
+            #{social_code, jdbcType=INTEGER, mode=IN},  
             #{access_token, jdbcType=VARCHAR, mode=IN}
         )
     </insert>
-	<!-- 권한 생성 -->
+	<!-- 권한 생성 보류 -->
 	<insert id="createAuth">
-		INSERT INTO authrities(user_no, authority) 
+		INSERT INTO authorities(user_no, authority) 
 		VALUES(user_no_seq.CURRVAL, #{authority})
 	</insert>
-	<!-- 목록 조회 -->
+	<!-- 목록 조회 (login_type_no:0 기본, 1:sns) -->
 	<select id="list" resultType="java.util.Map">
-		SELECT
-		u.user_name, u.coin,
-		a.user_tel, a.user_email, a.user_gender, a.user_birthday,
-		p.user_nickname, p.image_url, p.reg_date 
-		FROM USERS u 
-		JOIN 
-		authentication a ON u.user_no = a.user_no 
-		JOIN profile p ON u.user_no = p.user_no 
-		ORDER BY p.reg_date DESC
+	<choose>
+		<when test="login_type_no == 0">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, a.enable,
+			p.user_nickname, p.image_url, p.reg_date, p.update_date, 
+			d.user_password, d.pw_update_date   
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN default_login d ON u.user_no = d.user_no 
+			WHERE u.login_type_no = 0 
+			ORDER BY p.reg_date DESC
+		</when>
+		<when test="login_type_no == 1">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date, p.update_date, 
+			s.social_code, s.access_token  
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN social_login s ON u.user_no = s.user_no 
+			WHERE u.login_type_no = 1 
+			ORDER BY p.reg_date DESC
+		</when>
+		<otherwise>
+			SELECT 
+			u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date  
+			FROM USERS u  
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			ORDER BY p.reg_date DESC 
+		</otherwise>
+	</choose>
 	</select>
-	<!-- 상세 조회 -->
+	<!-- 상세 조회 (login_type_no:0 기본, 1:sns) -->
 	<select id="read" resultMap="memberMap">
-		SELECT
-		u.user_name, u.coin,
-		a.user_tel, a.user_email,
-		a.user_gender, a.user_birthday,
-		p.user_nickname,
-		p.image_url, p.reg_date, u.user_no 
-		FROM USERS u 
-		JOIN authentication a ON u.user_no = a.user_no 
-		JOIN profile p ON u.user_no = p.user_no 
-		LEFT JOIN authrities ar ON u.user_no = ar.user_no 
-		WHERE u.user_no = #{user_no}
+	<choose>
+		<when test="login_type_no == 0">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, a.enable, 
+			p.user_nickname, p.image_url, p.reg_date, p.update_date, 
+			d.user_password, d.pw_update_date, ar.authority 
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN default_login d ON u.user_no = d.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no} 
+			AND u.login_type_no = 0 
+		</when>
+		<when test="login_type_no == 1">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date, p.update_date,  
+			s.social_code, s.access_token, ar.authority  
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN social_login s ON u.user_no = s.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no} 
+			AND u.login_type_no = 1 
+		</when>
+		<otherwise>
+			SELECT
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date, ar.authority 
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no}
+		</otherwise>
+	</choose>
 	</select>
 	<!-- 권한 상세 조회 -->
 	<select id="selectAuthorities" resultMap="authoritiesMap">
-		SELECT user_no, authority FROM authrities WHERE user_no = #{user_no}
+		SELECT user_no, authority FROM authorities WHERE user_no = #{user_no}
 	</select>
 	<!-- 권한 수정 -->
 	<insert id="modifyAuth">
-		INSERT INTO authrities(user_no, authority) VALUES (#{user_no},#{authority})
+		INSERT INTO authorities(user_no, authority) VALUES (#{user_no},#{authority})
 	</insert>
 	<!-- 수정 처리 사용 -->
 	<update id="update">
@@ -81,14 +149,74 @@
 	</update>
 	<!-- 삭제 처리 -->
 	<delete id="delete">
-	DELETE FROM users WHERE user_no = #{user_no}
+		DELETE FROM users WHERE user_no = #{user_no}
 	</delete>
 	<!-- 권한 삭제 -->
 	<delete id="deleteAuth">
-	DELETE FROM authrities WHERE user_no = #{user_no}
+		DELETE FROM authorities WHERE user_no = #{user_no}
 	</delete>
 	<!-- 회원 테이블의 데이터 건수 조회 -->
 	<select id="countAll" resultType="int">
-	SELECT count(*) FROM users
+		SELECT count(*) FROM users
 	</select>
+	<!-- 이메일 존재 여부 조회 -->
+	<select id="checkEmail" resultType="int">
+		SELECT count(*) FROM default_login where user_email = #{user_email}
+	</select>
+	<!-- 복구 이메일 조회 -->
+	<select id="checkRestoreEmail" resultType="String">
+		SELECT count(*) FROM authentication where restore_email = #{restore_email}
+	</select>
+	<!-- 이메일로 패스워드 재설정 -->
+	<update id="updatePw">
+		UPDATE default_login SET user_password = #{user_password} WHERE user_email = #{user_email}
+	</update>
+	<!-- 복구 이메일로 이메일 아이디 보여주기 -->
+	<select id="selectEmail" resultType="String">
+		SELECT user_mail FROM authentication where restore_email = #{restore_email}
+	</select>
+	<!-- 이메일과 로그인 타입에 user_no 가져오기 보류 -->
+	<!-- <select id="selectUserNO" resultType="int">
+	<choose>
+		<when test="login_type_no == 0">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, a.enable, 
+			p.user_nickname, p.image_url, p.reg_date, p.update_date, 
+			d.user_password, d.pw_update_date, ar.authority 
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN default_login d ON u.user_no = d.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no} 
+			AND u.login_type_no = 0 
+		</when>
+		<when test="login_type_no == 1">
+			SELECT 
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date, p.update_date,  
+			s.social_code, s.access_token, ar.authority  
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			JOIN social_login s ON u.user_no = s.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no} 
+			AND u.login_type_no = 0 
+		</when>
+		<otherwise>
+			SELECT
+			u.user_no, u.user_name, u.coin, u.login_type_no, 
+			a.user_tel, a.user_email, a.user_gender, a.user_birthday, 
+			p.user_nickname, p.image_url, p.reg_date, ar.authority 
+			FROM USERS u 
+			JOIN authentication a ON u.user_no = a.user_no 
+			JOIN profile p ON u.user_no = p.user_no 
+			LEFT JOIN authorities ar ON u.user_no = ar.user_no 
+			WHERE u.user_no = #{user_no}
+		</otherwise>
+	</choose>
+	</select> -->
 </mapper>
