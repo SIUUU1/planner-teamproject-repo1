@@ -3,14 +3,14 @@ import { ResponsiveBar } from '@nivo/bar'
 const Attainment = ({ data, padding, type }) => {
     const modifiedData = data.map(item => ({
         ...item,
-        attainmentName: item.attainment_name.slice(0, 4)
+        attainment_name: item.attainment_name.slice(0, 4)
     }));
 
     return (
         <ResponsiveBar
             data={modifiedData}
-            keys={['attainmentRate']}
-            indexBy="attainmentName"
+            keys={['attainment_rate']}
+            indexBy="attainment_name"
             margin={{ top: 10, right: 20, bottom: 30, left: 62 }}
             padding={padding}
             maxValue={100}
