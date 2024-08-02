@@ -1,0 +1,19 @@
+/* .registerEmoji{
+  position: absolute;
+  min-width: 500px;
+  max-width: 800px;
+  height: 500px;
+  border: 0.6px solid rgb(155, 155, 155);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 8px;
+  font-size: 12px;
+  background-color: white;
+  visibility: hidden;
+} */
+.registerEmoji{
+  position: absolute;
+  display: flex;
+  /* visibility: hidden; */
+}

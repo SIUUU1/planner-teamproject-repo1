@@ -1,6 +1,7 @@
 import './CheeringEmoji.css';
 import EmojiItem from '../emoji/EmojiItem';
 import CheerLeader from './CheerLeader';
+import useCheckEmojiType from '../util/useCheckEmojiType';
 
 const cheeringData = [
 
@@ -65,23 +66,26 @@ const userProfileData = [
     "update_date": "2024-01-01",
   },
 ];
-const CheeringEmoji = ({ emoji_item_no, user_no }) => {
-  const emoji = emojiData.find(e => e.emoji_item_no === emoji_item_no);
+const CheeringEmoji = ({ data, user_no }) => {
+  // const emoji = emojiData.find(e => e.emoji_item_no === data.emoji_item_no);
   const user = userProfileData.find(e => e.user_no === user_no);
+  const emoji_item_url = useCheckEmojiType(data, emojiData);
 
-  if (!emoji) {
-    console.error('Invalid emoji_item_no:', emoji_item_no);
-    return <div className="cheeringEmoji">이모티콘을 찾을 수 없습니다.</div>;
-  }
+
+  // if (!emoji) {
+  //   console.error('Invalid emoji_item_no:', data.emoji_item_no);
+  //   return <div className="cheeringEmoji">이모티콘을 찾을 수 없습니다.</div>;
+  // }
 
   if (!user) {
     console.error('Invalid user_no:', user_no);
     return <div className="cheeringEmoji">유저 정보를 찾을 수 없습니다.</div>;
   }
 
+
   return (
     <div className="cheeringEmoji">
-      <EmojiItem emoji_item_url={emoji.emoji_item_url} customHeight={'22px'} />
+      <EmojiItem emoji_item_url={emoji_item_url} customHeight={'22px'} />
       <CheerLeader user_no={user.user_no} user_nickname={user.user_nickname} />
     </div>
   );
