@@ -1,11 +1,11 @@
 import './CheerLeader.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan} from "@fortawesome/free-solid-svg-icons";
-const CheerLeader=()=>{
-  return(
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import ProfileLink from '../components/ProfileLink';
+const CheerLeader = ({ user_no, user_nickname }) => {
+  return (
     <div className="cheerLeader">
-      
-      <a href="http://" className="cheerLeaderId">작성자닉네임</a>
+      <ProfileLink user_no={user_no} user_nickname={user_nickname}></ProfileLink>
       <FontAwesomeIcon icon={faTrashCan} />
     </div>
   );
