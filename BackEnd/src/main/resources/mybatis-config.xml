@@ -3,7 +3,10 @@
 PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<!-- mapUnderscoreToCamelCase 프로퍼티 값을 true로 지정 -->
-	<settings>
+	<!-- <settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
-	</settings>
+	</settings> -->
+	 <settings>
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
 </configuration>

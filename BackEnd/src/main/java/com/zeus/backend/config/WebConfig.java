@@ -10,7 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(final CorsRegistry registry) {
-		// http://localhost:8080/** 요청으로 온 것은 모두 열어서 진행하겠다.
-		registry.addMapping("/**").allowedMethods(ALLOWED_METHOD_NAMES.split(","));
+		// http://localhost:5173/** 요청으로 온 것은 모두 열어서 진행하겠다.
+		registry.addMapping("/**")
+		.allowedOrigins("http://localhost:5173")
+		.allowedMethods(ALLOWED_METHOD_NAMES.split(","));
 	}
+
 }

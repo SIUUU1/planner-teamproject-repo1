@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.UserMapper">
+	<!-- 사용자 정의 resultMap 요소 정의 -->
+	<!-- 등록 처리 -->
+	<insert id="create" parameterType="com.zeus.backend.domain.User">
+    INSERT INTO USERS (
+        user_no, user_id, password, user_name, provider, provider_id, role,
+        user_nickname, image_url, user_tel, user_email, user_gender, user_birthday
+    ) VALUES (
+        user_no_seq.NEXTVAL, #{user_id}, #{password}, #{user_name}, #{provider}, #{provider_id}, #{role},
+        #{user_nickname}, #{image_url}, #{user_tel}, #{user_email}, #{user_gender}, #{user_birthday}
+    )
+	</insert>
+	<!-- 사용자 아이디로 회원 정보 조회(인증 시 사용)-->
+	<select id="findByUserId" resultType="com.zeus.backend.domain.User">
+		SELECT * FROM users WHERE user_id = #{user_id} 
+	</select>
+	<!-- userFullInfo 있어야 함 -->
+	<!-- 권한 수정 -->
+	<insert id="modifyAuth">
+		INSERT INTO authorities (user_no, user_id, authority) VALUES (#{userNo},#{user_id},#{authority})
+	</insert>
+	<!-- 권한 삭제 -->
+	<delete id="deleteAuth">
+		DELETE FROM authorities WHERE user_no = #{userNo}
+	</delete>
+	<!-- 회원 테이블의 데이터 건수 조회 -->
+	<select id="countAll" resultType="int">
+		SELECT count(*) FROM users
+	</select>
+</mapper>

@@ -15,8 +15,8 @@ public class AdviceController {
 		String url = "https://korean-advice-open-api.vercel.app/api/advice";
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		String userInfo = response.getBody();
-		System.out.println(userInfo);
-		return userInfo;
+		String advice = response.getBody();
+		System.out.println(advice);
+		return advice;
 	}
 }

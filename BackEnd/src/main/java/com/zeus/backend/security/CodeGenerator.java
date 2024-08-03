@@ -1,4 +1,4 @@
-package com.zeus.backend.common.security;
+package com.zeus.backend.security;
 
 import java.security.SecureRandom;
 
