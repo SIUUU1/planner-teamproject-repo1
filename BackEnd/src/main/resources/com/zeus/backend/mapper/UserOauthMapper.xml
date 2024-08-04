@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.UserOauthMapper">
+	<delete id="delete">
+		delete from useroauth where user_id = #{user_id}
+	</delete>
+	<insert id="insert">
+		INSERT INTO useroauth (useroauth_id, refresh_token, user_id) VALUES (useroauth_id_seq.NEXTVAL,#{refreshToken},#{user_id})
+	</insert>
+	<select id="findUserOauthByUserId" resultType="com.zeus.backend.domain.UserOauth">
+		SELECT * FROM useroauth WHERE user_id = #{user_id} 
+	</select>
+</mapper>

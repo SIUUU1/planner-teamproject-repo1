@@ -1,0 +1,170 @@
+
+img {
+  width: 100%;
+}
+
+.login {
+  height: 1000px;
+  width: 100%;
+  background: radial-gradient(#653d84, #332042);
+  position: relative;
+}
+
+.loginBox {
+  width: 1050px;
+  height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 1px 4px 22px -8px #0004;
+  display: flex;
+  overflow: hidden;
+}
+
+.loginBox .left {
+  width: 41%;
+  height: 100%;
+  padding: 25px 25px;
+}
+
+.loginBox .right {
+  width: 59%;
+  height: 100%;
+}
+
+.loginBox .left .top_link a {
+  color: #452A5A;
+  font-weight: 400;
+}
+
+.loginBox .left .top_link {
+  height: 20px;
+}
+
+.loginBox .left .contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  height: 100%;
+  width: 73%;
+  margin: auto;
+}
+.login .left input {
+  border: none;
+  width: 80%;
+  margin: 15px 0px;
+  border-bottom: 1px solid #4f30677d;
+  padding: 7px 9px;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.login .left {
+  background: linear-gradient(-45deg, #dcd7e0, #fff);
+}
+.Google, .Kakao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  margin: 10px 0;
+  transition: background-color 0.3s ease;
+  width: 105%;
+  text-align: center;
+}
+
+.Google {
+  background-color: #4285F4; /* Google blue */
+}
+
+.Google:hover {
+  background-color: #357ae8; /* Darker Google blue */
+}
+
+.Google::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png') no-repeat center center;
+  background-size: cover;
+  margin-right: 10px;
+}
+
+.Kakao {
+  background-color: #FEE500; /* Kakao yellow */
+  color: #3C1E1E; /* Kakao text color */
+}
+
+.Kakao:hover {
+  background-color: #e4c900; /* Darker Kakao yellow */
+}
+
+.Kakao::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Kakao_logo.svg/512px-Kakao_logo.svg.png') no-repeat center center;
+  background-size: cover;
+  margin-right: 10px;
+}
+
+.login .submit {
+  border: none;
+  padding: 15px 70px;
+  border-radius: 8px;
+  display: block;
+  margin: auto;
+  margin-top: 120px;
+  background: #583672;
+  color: #fff;
+  font-weight: bold;
+  -webkit-box-shadow: 0px 9px 15px -11px rgba(88, 54, 114, 1);
+  -moz-box-shadow: 0px 9px 15px -11px rgba(88, 54, 114, 1);
+  box-shadow: 0px 9px 15px -11px rgba(88, 54, 114, 1);
+}
+
+.login .right {
+  background: linear-gradient(212.38deg, rgba(242, 57, 127, 0.7) 0%, rgba(175, 70, 189, 0.71) 100%), url(https://static.seattletimes.com/wp-content/uploads/2019/01/web-typing-ergonomics-1020x680.jpg);
+  color: #fff;
+  position: relative;
+}
+
+.login .right .right-text {
+  height: 100%;
+  position: relative;
+  transform: translate(0%, 45%);
+  
+}
+
+.login .right .rightInductor {
+  position: absolute;
+  width: 70px;
+  height: px;
+  background: #fff0;
+  left: 50%;
+  bottom: 70px;
+  transform: translate(-50%, 0%);
+}
+
+.top_link img {
+  width: 28px;
+  padding-right: 7px;
+  margin-top: -3px;
+}
+
+ 

@@ -20,16 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class OderController {
-	// PG사 채널키
-	@Value("${kg_channel}")
-	private String kg_channel;
-	@Value("${tosspayment_channel}")
-	private String tosspayment_channel;
-	// 간편결제사 채널키
-	@Value("${kakaopay_channel}")
-	private String kakaopay_channel;
-	@Value("${tosspay_channel}")
-	private String tosspay_channel;
+//	// PG사 채널키
+//	@Value("${kg_channel}")
+//	private String kg_channel;
+//	@Value("${tosspayment_channel}")
+//	private String tosspayment_channel;
+//	// 간편결제사 채널키
+//	@Value("${kakaopay_channel}")
+//	private String kakaopay_channel;
+//	@Value("${tosspay_channel}")
+//	private String tosspay_channel;
 
 //	@RequestMapping(value = "/order/{product_id}", method = RequestMethod.GET)
 //	public String order(@PathVariable(value = "product_id") int product_id) {

@@ -1,113 +1,132 @@
 package com.zeus.backend.config;
 
-import javax.sql.DataSource;
+import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.filter.CorsFilter;
 
-import com.zeus.backend.common.security.CustomAccessDeniedHandler;
-import com.zeus.backend.common.security.CustomLoginSuccessHandler;
-import com.zeus.backend.common.security.CustomUserDetailsService;
-import com.zeus.backend.common.security.JwtRequestFilter;
+import com.zeus.backend.domain.User;
+import com.zeus.backend.security.auth.PrincipalDetails;
+import com.zeus.backend.security.auth.PrincipalDetailsService;
+import com.zeus.backend.security.auth.PrincipalOAuth2UserService;
+import com.zeus.backend.security.jwt.JwtAuthenticationFilter;
+import com.zeus.backend.security.jwt.JwtAuthorizationFilter;
+import com.zeus.backend.security.jwt.JwtModel;
+import com.zeus.backend.security.jwt.JwtService;
+import com.zeus.backend.service.UserOauthService;
+import com.zeus.backend.service.UserService;
 
-import lombok.extern.java.Log;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
-@Log
+/*  (1)  */
+@RequiredArgsConstructor
+@EnableWebSecurity
 @Configuration
-@EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록이 됨
-//@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true) // 시큐리티 애너테이션 활성화를 위한 설정
 public class SecurityConfig {
 
-	// 데이터 소스
-	@Autowired
-	DataSource dataSource;
+	private final CorsFilter corsFilter;
+	private final UserOauthService userOauthService;
+	private final JwtService jwtService;
+	private final UserService userService;
+	private final PrincipalDetailsService principalDetailsService;
+	private final PrincipalOAuth2UserService principalOAuth2UserService;
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		log.info("security config ...");
+	public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		/* (2) */
+		http.csrf().disable().httpBasic().disable().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		// csrf 토큰 비활성화
+		http.cors();
+		/* (3) */
+		http.headers().cacheControl().disable().contentTypeOptions().disable().frameOptions().sameOrigin()
+				.httpStrictTransportSecurity().disable().xssProtection().disable();
 
-		http.csrf().disable()
-				.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-						.requestMatchers("/login", "/api/auth/login", "/welcome", "/signup").permitAll().anyRequest()
-						.authenticated())
-				.sessionManagement(
-						sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		/* role 주소 다시 설정할 것 */
+		http.authorizeRequests().requestMatchers("/user/**").authenticated().requestMatchers("/manager/**")
+				.hasRole("MANAGER").requestMatchers("/pro/**").hasRole("PRO").anyRequest().permitAll();
 
-		http.addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+		//실패시 url 추가할 것!
+		http.formLogin().loginPage("/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/", true);
 
-		// CustomLoginSuccessHandler를 로그인 성공 처리자로 지정한다.
-		http.formLogin().loginPage("/login").loginProcessingUrl("/api/auth/login")
-				.successHandler(createAuthenticationSuccessHandler());
+		http.oauth2Login().loginPage("/loginForm").userInfoEndpoint()
+				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
 
-		// 로그아웃을 하면 자동 로그인에 사용하는 쿠키도 삭제한다
-		http.logout().logoutUrl("/api/auth/logout").invalidateHttpSession(true).deleteCookies("remember-me",
-				"JSESSION_ID");
+		/* (5) */
+		http.logout().logoutUrl("http://localhost:5173/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("/")
+				.invalidateHttpSession(true);
 
-		// CustomLoginSuccessHandler를 접근 거부자로 지정한다.
-		http.exceptionHandling().accessDeniedHandler(createAccessDeniedHandler());
-
-		// 데이터 소스를 지정하고 테이블을 이용해서 기존 로그인 정보를 기록
-		// 쿠키의 유효시간(24시간)을 지정한다.??
-		http.rememberMe().key("zeus").tokenRepository(createJDBCRepository()).tokenValiditySeconds(60 * 60 * 24);
+		/* (6) */
+		http.addFilter(corsFilter)
+				.addFilter(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration),
+						userOauthService, jwtService))
+				.addFilter(new JwtAuthorizationFilter(authenticationManager(authenticationConfiguration), userService,
+						jwtService, userOauthService, principalDetailsService,principalOAuth2UserService));
 
 		return http.build();
+
+	}
+
+	/* (7) */
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
-			UserDetailsService userDetailsService) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
-				.passwordEncoder(passwordEncoder).and().build();
+	public AuthenticationSuccessHandler authenticationSuccessHandler() {
+		return (request, response, authentication) -> {
+			// PrincipalDetails에서 사용자 정보 가져오기
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            User user = principalDetails.getUser();
+
+            // 첫 로그인 시 추가 정보 입력 페이지로 리디렉션
+            if (user.isFirstLogin()) {
+            	System.out.println("첫 로그인 시 추가 정보 입력 페이지로 리디렉션");
+                response.sendRedirect("http://localhost:5173/joinform");
+            } else {
+                // JWT 생성 및 헤더에 추가 수정 필요함
+            	System.out.println("첫 로그인 아님");
+            	
+            	String user_id = user.getUser_id();
+            	JwtModel jwt = jwtService.createToken(user_id);
+                jwtService.createCookie(response, jwt.getAccessToken());
+                
+                try {
+					userOauthService.deleteUserOauth(user_id);
+					userOauthService.insertUserOauth(user_id, jwt);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+                response.sendRedirect("http://localhost:5173/");
+            }
+		};
 	}
 
-	@Bean
-	public PasswordEncoder createPasswordEncoder() {
-		return new BCryptPasswordEncoder();
+	// CustomAccessDeniedHandler를 정의하여 접근 거부 처리
+	private static class CustomAccessDeniedHandler implements AccessDeniedHandler {
+		@Override
+		public void handle(HttpServletRequest request, HttpServletResponse response,
+				AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			System.out.println("권한이 없는 경우 이동");
+			response.sendRedirect("http://localhost:5173/welcome"); // 권한이 없는 경우 이동할 페이지
+		}
 	}
 
-	// CustomLoginSuccessHandler를 스프링 빈으로 정의한다.
-	@Bean
-	public AuthenticationSuccessHandler createAuthenticationSuccessHandler() {
-		return new CustomLoginSuccessHandler();
-	}
-
-	// CustomAccessDeniedHandler를 스프링 빈으로 정의한다.
-	@Bean
-	public AccessDeniedHandler createAccessDeniedHandler() {
-		return new CustomAccessDeniedHandler();
-	}
-
-	@Bean
-	public JwtRequestFilter jwtRequestFilter() {
-		return new JwtRequestFilter();
-	}
-	
-	@Bean
-	public CustomUserDetailsService customUserDetailsService() {
-		return new CustomUserDetailsService();
-	}
-
-	private PersistentTokenRepository createJDBCRepository() {
-		JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
-		repo.setDataSource(dataSource);
-		return repo;
-	}
 
 }
