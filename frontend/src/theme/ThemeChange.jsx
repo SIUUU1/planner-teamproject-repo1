@@ -1,101 +1,158 @@
-// src/pages/ThemeChange.jsx
-import React, { useState, useContext } from 'react';
+// src/theme/ThemeChange.jsx
+import React, { useState } from 'react';
 import './ThemeChange.css';
-import { ThemeContext } from '../contexts/ThemeContext';
-import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Attainment from '../attainment/Attainment';
+import ToFullList from '../components/ToFullList';
+
+const themes = [
+  { name: 'Theme 1', color: '#FF6347' }, // Tomato
+  { name: 'Theme 2', color: '#4682B4' }, // SteelBlue
+  { name: 'Theme 3', color: '#FFD700' }, // Gold
+  { name: 'Theme 4', color: '#32CD32' }, // LimeGreen
+  { name: 'Theme 5', color: '#FF4500' }, // OrangeRed
+];
+
+const data1 = [
+  {
+    attainmentId: 0,
+    attainmentName: '팀프로젝트하기',
+    attainmentType: 'time',
+    attainmentTarget: 100,
+    attainmentFinish: 10,
+    attainmentRate: 10,
+    hotDogColor: 'hsl(113, 70%, 50%)',
+    star: 10,
+  },
+];
+
+const data2 = [
+  {
+    attainmentId: 0,
+    attainmentName: '팀프로젝트하기',
+    attainmentType: 'time',
+    attainmentTarget: 100,
+    attainmentFinish: 10,
+    attainmentRate: 10,
+    hotDogColor: 'hsl(113, 70%, 50%)',
+    star: 10,
+  },
+];
+
+const modifiedData1 = data1
+  .filter((item) => item.star > 0)
+  .sort((a, b) => b.attainmentRate - a.attainmentRate)
+  .slice(0, 4);
+const modifiedData2 = data2
+  .filter((item) => item.star > 0)
+  .sort((a, b) => b.attainmentRate - a.attainmentRate)
+  .slice(0, 4);
+
+const height1 = modifiedData1.length * 50;
+const height2 = modifiedData2.length * 50;
 
 const ThemeChange = () => {
-  const { setThemeColor, setThemeMode } = useContext(ThemeContext);
-  const [selectedTheme, setSelectedTheme] = useState(localStorage.getItem('themeMode') || 'light');
-  const [selectedColor, setSelectedColor] = useState(localStorage.getItem('themeColor') || null);
-  const navigate = useNavigate();
+  const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
 
-  const handleThemeChange = (theme) => {
-    setSelectedTheme(theme);
+  const handleNext = () => {
+    setCurrentThemeIndex((currentThemeIndex + 1) % themes.length);
   };
 
-  const handleColorChange = (color) => {
-    setSelectedColor(color);
-    console.log('Selected color:', color);
+  const handlePrevious = () => {
+    setCurrentThemeIndex((currentThemeIndex - 1 + themes.length) % themes.length);
   };
 
-  const handleApplyTheme = () => {
-    setThemeMode(selectedTheme);
-    if (selectedTheme === 'light') {
-      setThemeColor('#ffffff');
-    } else if (selectedTheme === 'dark') {
-      setThemeColor('#333333');
-    } else if (selectedTheme === 'sync') {
-      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setThemeColor(isDarkMode ? '#333333' : '#ffffff');
-    }
-    if (selectedColor) {
-      const colorClass = `.${selectedColor}`;
-      const colorElement = document.querySelector(colorClass);
-      const bgColor = window.getComputedStyle(colorElement).backgroundColor;
-      setThemeColor(bgColor);
-    }
-    navigate('/'); // Navigate to the main page after applying the theme
-  };
-
-  const colors = [
-    'colorGradient1', 'colorGradient2', 'colorGradient3', 'colorGradient4', 'colorGradient5', 'colorGradient6', 'colorGradient7', 'colorGradient8', 'colorGradient9', 'colorGradient10',
-    'colorGradient11', 'colorGradient12', 'colorGradient13', 'colorGradient14', 'colorGradient15', 'colorGradient16', 'colorGradient17', 'colorGradient18', 'colorGradient19', 'colorGradient20',
-    'colorGradient21', 'colorGradient22', 'colorGradient26', 'colorGradient24', 'colorGradient25', 'colorGradient26', 'colorGradient27', 'colorGradient28', 'colorGradient29', 'colorGradient30'
-  ];
+  const currentTheme = themes[currentThemeIndex];
 
   return (
-    <div className="themeChange">
-      <h1>디스플레이</h1>
-      <div className={`displayMessages ${selectedColor}`}>
-        <p><b>나를 봐봐, 나는 아름다운 나비야</b></p>
-        <p><b>달빛 속에서 춤추고 있어😊</b></p>
-        <p><b>콤팩트 모드가 켜지기만을</b></p>
-        <p><b>기다리고 있어요</b></p>
-        <p><b>아, 여기 있네요!</b></p>
+    <div className="theme-change" style={{ backgroundColor: currentTheme.color }}>
+      <div className="theme-info">
+        <h1>{currentTheme.name}</h1>
+        <button onClick={handlePrevious}>Previous</button>
+        <button onClick={handleNext}>Next</button>
       </div>
-      <div className="themeSection">
-        <h2>테마</h2>
-        <div className="themeOptions">
-          <div 
-            className={`themeOption ${selectedTheme === 'light' ? 'selected' : ''}`} 
-            onClick={() => handleThemeChange('light')}
-          >
-            <div className="lightTheme"></div>
-            <span>라이트</span>
-          </div>
-          <div 
-            className={`themeOption ${selectedTheme === 'dark' ? 'selected' : ''}`} 
-            onClick={() => handleThemeChange('dark')}
-          >
-            <div className="darkTheme"></div>
-            <span>다크</span>
-          </div>
-          <div 
-            className={`themeOption ${selectedTheme === 'sync' ? 'selected' : ''}`} 
-            onClick={() => handleThemeChange('sync')}
-          >
-            <div className="syncTheme"></div>
-            <span>자동</span>
-          </div>
-        </div>
-      </div>
-      <div className="colorSection">
-        <h2>색상</h2>
-        <p>테마를 내 것으로 만드세요. 구독 시에만 가능합니다.</p>
-        <div className="colorOptions">
-          {colors.map((color, index) => (
-            <div 
-              key={index} 
-              className={`colorOption ${selectedColor === color ? 'selected' : ''}`} 
-              onClick={() => handleColorChange(color)}
-            >
-              <div className={`colorCircle ${color}`}></div>
+      {/* Preview of User layout with the current theme */}
+      <div className="user">
+        <div className="homeMiddle">
+          <div className="homeFirstMiddle">
+            <div className="plant" style={{ backgroundColor: 'white' }}>
+              식물이미지
             </div>
-          ))}
+            <div className="firstMiddleText">
+              <div className="calendar" style={{ backgroundColor: 'white' }}>
+                2024.07.20 13:45:42(sat)
+              </div>
+              <div className="saying" style={{ backgroundColor: 'white' }}>
+                일이 불가능하다고 믿는 것은 일을 불가능하게 하는 것이다.
+                <br />
+                -풀러-
+              </div>
+            </div>
+          </div>
+
+          <div className="homeSecondMiddle">
+            <div className="toDoList" style={{ backgroundColor: 'white' }}>
+              해야 할 일을 정리해보세요 TodoList 3개만
+            </div>
+            <div className="circleSchedule" style={{ backgroundColor: 'white' }}>
+              원그래프 일정
+            </div>
+          </div>
+
+          <div className="homeThirdMiddle">
+            <div className="progress" style={{ backgroundColor: 'white' }}>
+              <div className="progress1" style={{ height: `${height1}px` }}>
+                <ToFullList URL="attainmentMain"></ToFullList>
+                <Attainment data={modifiedData1} padding={0.05} type={'short'}></Attainment>
+              </div>
+              <div className="progress2" style={{ height: `${height2}px` }}>
+                <Attainment data={modifiedData2} padding={0.05} type={'long'}></Attainment>
+              </div>
+            </div>
+            <div className="board" style={{ backgroundColor: 'white' }}>
+              <div className="userBoardList">
+                <h2>최근 게시글</h2>
+                <button onClick={() => window.location.href = '/boardlist'} className="addButton">+</button>
+                <table className="userBoardListTable">
+                  <thead>
+                    <tr>
+                      <th>제목</th>
+                      <th>카테고리</th>
+                      <th>등록일</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Post Title 1</td>
+                      <td>Category 1</td>
+                      <td>Date 1</td>
+                    </tr>
+                    <tr>
+                      <td>Post Title 2</td>
+                      <td>Category 2</td>
+                      <td>Date 2</td>
+                    </tr>
+                    <tr>
+                      <td>Post Title 3</td>
+                      <td>Category 3</td>
+                      <td>Date 3</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="homeForthMiddle">
+            <div className="studyGroup" style={{ backgroundColor: 'white' }}>
+              내 스터디 그룹
+            </div>
+            <div className="openChat" style={{ backgroundColor: 'white' }}>
+              같은 분야를 공부하는 사람들과 질문을 주고 받으세요!
+            </div>
+          </div>
         </div>
+       
       </div>
-      <button className="previewButton" onClick={handleApplyTheme}>테마 적용</button>
     </div>
   );
 };

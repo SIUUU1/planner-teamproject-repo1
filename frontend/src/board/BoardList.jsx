@@ -5,43 +5,66 @@ import './BoardList.css';
 const BoardList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [displayPosts, setDisplayPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const postsPerPage = 7;
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    setPosts(storedPosts);
+    // Assume posts already have an 'author' field; if not, initialize it here
+    const postsWithViewsAndAuthors = storedPosts.map(post => ({
+      ...post,
+      views: post.views || 0,
+      author: post.author || 'Unknown' // Assuming some default value or fetch from user session
+    }));
+    setPosts(postsWithViewsAndAuthors);
+    setDisplayPosts(postsWithViewsAndAuthors);
   }, []);
 
   const handleWrite = () => {
+    // Ensure you have a method to add 'author' when navigating to write a new post
     navigate('/BoardWrite');
   };
 
   const handleDelete = (id) => {
     const updatedPosts = posts.filter(post => post.id !== id);
-    updatedPosts.forEach((post, index) => {
-      post.id = index + 1;
-    });
-    setPosts(updatedPosts);
     localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    console.log('글이 삭제되었습니다.');
+    setPosts(updatedPosts);
+    setDisplayPosts(updatedPosts);
   };
 
   const handleEdit = (id) => {
-    navigate(`/edit/${id}`);
+    // Pass the author through state or ensure the edit page knows how to fetch it
+    navigate(`/BoardEdit/${id}`);
+  };
+
+  const handleViewIncrement = (id) => {
+    const updatedPosts = posts.map(post => {
+      if (post.id === id) {
+        return {...post, views: post.views + 1};
+      }
+      return post;
+    });
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    setPosts(updatedPosts);
+    setDisplayPosts(updatedPosts);
+    navigate(`/boarddetail/${id}`);
   };
 
   const handleSearch = () => {
-    // 검색 로직 추가
+    if (!searchTerm.trim()) {
+      setDisplayPosts(posts);
+    } else {
+      const filteredPosts = posts.filter(post =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.author.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setDisplayPosts(filteredPosts);
+      setCurrentPage(1);
+    }
   };
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
-  const totalPages = Math.ceil(posts.length / postsPerPage);
-
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -53,6 +76,12 @@ const BoardList = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = displayPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const totalPages = Math.ceil(displayPosts.length / postsPerPage);
 
   return (
     <div className="boardList">
@@ -78,29 +107,20 @@ const BoardList = () => {
             <th>카테고리</th>
             <th>제목</th>
             <th>작성자</th>
-            <th>댓글</th>
             <th>조회</th>
-            <th>추천</th>
             <th>작성일</th>
             <th>작업</th>
           </tr>
         </thead>
         <tbody>
           {currentPosts.map((post) => (
-            <tr className="boardListRow" key={post.id}>
+            <tr key={post.id}>
               <td>{post.category}</td>
-              <td>
-                <span
-                  className="postTitle"
-                  onClick={() => navigate(`/details/${post.id}`)}
-                >
-                  {post.title}
-                </span>
+              <td onClick={() => handleViewIncrement(post.id)} className="postTitle">
+                {post.title}
               </td>
               <td>{post.author}</td>
-              <td>{post.comments}</td>
               <td>{post.views}</td>
-              <td>{post.likes}</td>
               <td>{post.date}</td>
               <td>
                 <div className="buttonGroup">

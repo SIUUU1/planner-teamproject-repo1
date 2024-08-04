@@ -48,7 +48,7 @@ const MessengerButton = () => {
                 <span className="warning">⚠️ 채팅으로는 공부 및 진행률 상담을...</span>
               </div>
             </div>
-            <button className="inquiryButton">문의하기</button>
+           
             <div className="responseTime">몇 분 내 답변 받으실 수 있어요</div>
               </div>
               <div className="messengerFooter">

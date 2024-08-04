@@ -1,4 +1,3 @@
-// src/pages/Write.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BoardWrite.css';
@@ -10,6 +9,7 @@ const Write = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [author, setAuthor] = useState(''); // 상태 추가
 
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
@@ -26,6 +26,7 @@ const Write = () => {
       category: selectedCategory,
       title,
       content,
+      author, // 글쓴이 정보 추가
       date: currentDate,
     };
 
@@ -39,6 +40,15 @@ const Write = () => {
   return (
     <div className="boardWrite">
       <h1>글쓰기 게시판</h1>
+      <div className="formGroup">
+        <label htmlFor="author">글쓴이:</label> {/* 글쓴이 입력 필드 */}
+        <input
+          type="text"
+          id="author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+      </div>
       <div className="formGroup">
         <label htmlFor="category">카테고리:</label>
         <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>

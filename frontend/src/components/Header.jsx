@@ -1,13 +1,9 @@
 import "./Header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { faUserGroup } from "@fortawesome/free-solid-svg-icons";
-import { faChartSimple } from "@fortawesome/free-solid-svg-icons";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faBars, faUserGroup, faChartSimple, faRightFromBracket, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import MenuBar from './MenuBar'; // MenuBar 컴포넌트 임포트
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,13 +26,13 @@ const Header = () => {
   };
 
   const handleClickOutside = (event) => {
-    if (isMenuOpen && !event.target.closest('.menu-bar') && !event.target.closest('.fa-bars')) {
+    if (isMenuOpen && !event.target.closest('.menuBar') && !event.target.closest('.fa-bars')) {
       setIsMenuOpen(false);
     }
-    if (showNotifications && !event.target.closest('.notifications-container') && !event.target.closest('.fa-bell')) {
+    if (showNotifications && !event.target.closest('.notificationsContainer') && !event.target.closest('.fa-bell')) {
       setShowNotifications(false);
     }
-    if (showMessageForm && !event.target.closest('.message-form-container') && !event.target.closest('.fa-paper-plane')) {
+    if (showMessageForm && !event.target.closest('.messageFormContainer') && !event.target.closest('.fa-paper-plane')) {
       setShowMessageForm(false);
     }
   };
@@ -48,19 +44,17 @@ const Header = () => {
     };
   }, [isMenuOpen, showNotifications, showMessageForm]);
 
-
   return (
     <header className="header">
       <div className="headerContent">
         <div className="headerTitle">WePlAN</div>
         <div className="headerBottom">
           <div className="leftHeader">
-            <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars} onClick={toggleMenu} />} /></div>
+            <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars} />} onClick={toggleMenu} /></div>
             <div className="leftMiddleHeader">
-              <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket} />} /></div>
+              <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket} />} onClick={() => window.location.href = '/login'} /></div>
               <div className='headerThirdChild'><Button text={<FontAwesomeIcon icon={faUserGroup} />} /></div>
-              <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple} />} />
-              </div>
+              <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple} />} /></div>
             </div>
           </div>
           <div className='rightHeader'>
@@ -69,7 +63,9 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {isMenuOpen && <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />}
     </header>
   );
 };
+
 export default Header;

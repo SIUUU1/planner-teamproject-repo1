@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faCommentDots, faBell } from '@fortawesome/free-solid-svg-icons';
 
 const SettingsPage = () => {
+  const handleNavigation = (path) => {
+    window.location.href = path;
+  };
   return (
     <div className="settingsPage">
       <div className="profileSection">
@@ -56,7 +59,7 @@ const SettingsPage = () => {
           </label>
         </div>
       </div>
-      
+      <button className="inquiryButton" onClick={() => handleNavigation('/qna')}>1:1 문의하기</button>
     </div>
   );
 };

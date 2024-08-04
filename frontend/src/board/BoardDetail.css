@@ -29,3 +29,22 @@
 .boardDetail .backButton:hover {
   background-color: #45a049;
 }
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.boardDetail .button {
+  margin: 10px 0;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.boardDetail .button:hover {
+  background-color: #45a049;
+}

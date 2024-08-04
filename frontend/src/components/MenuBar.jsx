@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import './MenuBar.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faPaintRoller, faUserGroup, faBell, faChartSimple, faCircleInfo, faLock } from "@fortawesome/free-solid-svg-icons";
 
 const MenuBar = ({ isOpen, onClose }) => {
-  const [isEditingAvatar, setIsEditingAvatar] = useState(false);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
 
-  const handleAvatarEdit = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Here you can handle the file upload logic, like sending it to the server or displaying it
-      console.log('Selected file:', file);
-    }
+  const handleNavigation = (path) => {
+    window.location.href = path;
+    onClose();
+  };
+
+  const handleLogout = () => {
+    setIsLoggedOut(true);
+    setTimeout(() => {
+      setIsLoggedOut(false);
+      onClose();
+    }, 3000); // 3초 후에 메시지를 숨김
   };
 
   return (
@@ -21,46 +25,51 @@ const MenuBar = ({ isOpen, onClose }) => {
         <span className="menuTitle">마이페이지</span>
         <button className="closeButton" onClick={onClose}>×</button>
       </div>
+      <div className="profile">
+        <img src="/images/creed.png" alt="Profile" className="avatar" />
+        <span>Marcus.Lim 님</span>
+        <span>환영합니다! :)</span>
+      </div>
       <div className="menuContent">
-        <div className="profile">
-          <div 
-            className="avatarWrapper"
-            onMouseEnter={() => setIsEditingAvatar(true)}
-            onMouseLeave={() => setIsEditingAvatar(false)}
-          >
-             <img src="/images/creed.png" alt="Profile" className="avatar" />
-            {isEditingAvatar && (
-              <>
-                <label htmlFor="avatarUpload" className="editIcon">
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </label>
-                <input 
-                  type="file" 
-                  id="avatarUpload" 
-                  style={{ display: 'none' }} 
-                  onChange={handleAvatarEdit}
-                />
-              </>
-            )}
-          </div>
-          <span>Marcus.Lim 님</span>
-          <span>환영합니다! :)</span>
+        <div className="menuItem">
+          <button className="menuItemLink" onClick={() => handleNavigation('/profile')}>
+            <FontAwesomeIcon icon={faUser} /> <span>내 정보</span>
+          </button>
         </div>
         <div className="menuItem">
-          <Link to="/profile" className="menuItemLink" onClick={onClose}><b>내 정보</b></Link>
+          <button className="menuItemLink active" onClick={() => handleNavigation('/themechange')}>
+            <FontAwesomeIcon icon={faPaintRoller} /> <span>테마변경</span>
+          </button>
         </div>
         <div className="menuItem">
-          <Link to="/themeChange" className="menuItemLink" onClick={onClose}><b>테마변경</b></Link>
+          <button className="menuItemLink" onClick={() => handleNavigation('/friends')}>
+            <FontAwesomeIcon icon={faUserGroup} /> <span>친구목록</span>
+          </button>
         </div>
         <div className="menuItem">
-          <Link to="/friends" className="menuItemLink" onClick={onClose}><b>친구목록</b></Link>
+          <button className="menuItemLink" onClick={() => handleNavigation('/analytics')}>
+            <FontAwesomeIcon icon={faBell} /> <span>알림설정</span>
+          </button>
         </div>
-        <div className="menuItem"><span><b>알림설정</b></span></div>
-        <div className="menuItem"><span><b>학습통계</b></span></div>
         <div className="menuItem">
-          <Link to="/qnaCustomerSupport" className="menuItemLink" onClick={onClose}><b>고객센터</b></Link>
+          <button className="menuItemLink" onClick={() => handleNavigation('/attainmentMain')}>
+            <FontAwesomeIcon icon={faChartSimple} /> <span>학습통계</span>
+          </button>
         </div>
-        <div className="menuItem"><span><b>로그아웃</b></span></div>
+        <div className="menuItem">
+          <button className="menuItemLink" onClick={() => handleNavigation('/qna')}>
+            <FontAwesomeIcon icon={faCircleInfo} /> <span>고객센터</span>
+          </button>
+        </div>
+      </div>
+      <div className="footer">
+        {isLoggedOut ? (
+          <p className="logoutMessage">로그아웃 되었습니다</p>
+        ) : (
+          <button className="menuItemLink" onClick={handleLogout}>
+            <FontAwesomeIcon icon={faLock} /> <span>로그아웃</span>
+          </button>
+        )}
       </div>
     </div>
   );

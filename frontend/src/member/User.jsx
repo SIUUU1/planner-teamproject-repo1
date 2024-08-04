@@ -1,8 +1,9 @@
+import React, { useState, useEffect } from 'react';
 import './User.css';
-import Footer from '../components/Footer';
 import Attainment from '../attainment/Attainment';
 import BackGround from '../components/BackGround';
 import ToFullList from '../components/ToFullList';
+
 const data1 = [
   {
     "attainmentId": 0,
@@ -131,8 +132,17 @@ const modifiedData2 = data2
 const height1 = modifiedData1.length * 50;
 const height2 = modifiedData2.length * 50;
 
+const navigateToBoardList = () => {
+  window.location.href = '/boardlist'; // This will cause the browser to navigate to the 'BoardList' page
+};
+const User = () => {
+  const [posts, setPosts] = useState([]);
 
-const User = ()=>{
+  useEffect(() => {
+    // Fetch posts from localStorage or a server
+    const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    setPosts(storedPosts.slice(0, 3)); // Display only 3 posts for simplicity
+  }, []);
 
   return(
     <div className="user">
@@ -166,16 +176,38 @@ const User = ()=>{
               <Attainment data={modifiedData2} padding={0.05} type={'long'}></Attainment>
             </div>
           </div>
-          <div className='board' style={{backgroundColor: 'white' }}>게시판</div>
-        </div>
+          <div className='board' style={{backgroundColor: 'white'}}>
+          <div className="userBoardList">
+        <h2>최근 게시글</h2>
+        <button onClick={navigateToBoardList} className="addButton">+</button>
+        <table className="userBoardListTable">
+          <thead>
+            <tr>
+              <th>제목</th>
+              <th>카테고리</th>
+              <th>등록일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post, index) => (
+              <tr key={index}>
+                <td>{post.title}</td>
+                <td>{post.category}</td>
+                <td>{post.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         
-        <div className='homeForthMiddle'>
+      </div>
+    </div>
+    </div>
+      <div className='homeForthMiddle'>
           <div className='studyGroup' style={{backgroundColor: 'white' }}>내 스터디 그룹</div>
           <div className='openChat' style={{backgroundColor: 'white' }}>같은 분야를 공부하는 사람들과 질문을 주고 받으세요!</div>
         </div>
-      </div>
+        </div>
       
-      <Footer/>
     </div>
   );
 };

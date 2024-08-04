@@ -83,14 +83,16 @@
   text-decoration: underline;
 }
 
-.boardList .editButton {
+.boardList .editButton,
+.boardList .deleteButton {
   background-color: #7c4dff;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 5px 0;
+  margin: 0 2px;
+  font-size: 0.8rem; /* Adjust font size */
 }
 
 .boardList .editButton:hover {
@@ -99,12 +101,6 @@
 
 .boardList .deleteButton {
   background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 2px 0;
 }
 
 .boardList .deleteButton:hover {
@@ -113,10 +109,9 @@
 
 .boardList .buttonGroup {
   display: flex;
-  position: relative;
+  justify-content: center; /* Center the buttons */
   align-items: center;
-  gap: 5px; /* 버튼 간격 */
-  
+  gap: 5px; /* Button spacing */
 }
 
 .boardList .pagination {

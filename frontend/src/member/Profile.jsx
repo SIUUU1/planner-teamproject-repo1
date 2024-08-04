@@ -6,11 +6,11 @@ const existingNames = ['choco', '초코', 'RedOcean', 'Chris'];
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    email: 'choco4study@gmail.com',
-    password: '****',
-    name: '초코',
-    contact: '01012345678',
-    introduction: '관리자입니다.',
+    이메일: 'choco4study@gmail.com',
+    비밀번호: '****',
+    닉네임: '초코',
+    번호: '01012345678',
+    소개: '관리자입니다.',
   });
 
   const [editField, setEditField] = useState('');

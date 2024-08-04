@@ -23,21 +23,27 @@ import ThemeChange from './theme/ThemeChange';
 import FriendsList from './member/FriendsList';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Profile from './member/Profile';
-import Auth from './member/Auth';
 import Schedule from './schedule/Schedule';
 import User from './member/User';
 import LoginForm from './member/LoginForm';
 import RegisterForm from './member/RegisterForm';
+// import Login from './member/Login';
+// import Signup from './member/SignUp';
+
 
 function App() {
+  
 
   return (
-    <>
+    <div className='app'>
+    <BrowserRouter>
+      <BackGround/>
       <Header />
-      <BrowserRouter>
       <ThemeProvider>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} /> */}
           <Route path='/loginForm' element={<LoginForm/>}/>
           <Route path='/joinForm' element={<RegisterForm/>}/>
           <Route path="/user" element={<User/>} />
@@ -58,13 +64,12 @@ function App() {
           <Route path="/friends" element={<FriendsList />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/schedule" element={<Schedule />} />
-          <Route path="/auth" element={<Auth />} />
         </Routes>
         </ThemeProvider>
+        <Footer/>
+        <Messenger />
       </BrowserRouter>
-      <Messenger/>
-      <BackGround/>
-    </>
+    </div>
   )
 }
-export default App
+export default App;
