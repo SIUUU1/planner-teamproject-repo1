@@ -1,5 +1,6 @@
 package com.zeus.backend.security.auth;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.zeus.backend.domain.User;
 import com.zeus.backend.mapper.UserMapper;
-import com.zeus.backend.security.auth.provider.FacebookUserInfo;
+import com.zeus.backend.security.auth.provider.KakaoUserInfo;
 import com.zeus.backend.security.auth.provider.GoogleUserInfo;
 import com.zeus.backend.security.auth.provider.NaverUserInfo;
 import com.zeus.backend.security.auth.provider.OAuth2UserInfo;
@@ -51,21 +52,18 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 			oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
 		} else if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
 			System.out.println("카카오 로그인 요청");
-			oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+			oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
 		} else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
 			System.out.println("네이버 로그인 요청");
 			oAuth2UserInfo = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response"));
 		} else {
-			System.out.println("우리는 구글과 카카오만 지원해요!!!");
+			System.out.println("우리는 구글, 카카오, 네이버를 지원하고 있어요!!!");
 		}
 
 		String provider = oAuth2UserInfo.getProvider();
 		String providerId = oAuth2UserInfo.getProviderId();
 		String user_id = provider + "_" + providerId; // google_105156291955329144943
 		String password = bCryptPasswordEncoder.encode("weplan");
-		String email = oAuth2UserInfo.getEmail();
-		String user_name = oAuth2UserInfo.getName();
-		String role = "ROLE_USER";
 
 		// 회원 중복 체크
 		User userEntity = null;
@@ -76,17 +74,21 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 		}
 
 		if (userEntity == null) {
+			
 			System.out.println("로그인이 최초입니다.");
 			userEntity = new User();
 			userEntity.setUser_id(user_id);
-			userEntity.setRole(role);
-			userEntity.setUser_email(email);
+			userEntity.setRole("ROLE_USER");
+			userEntity.setUser_email(oAuth2UserInfo.getEmail());
 			userEntity.setPassword(password);
 			userEntity.setProvider_id(providerId);
 			userEntity.setProvider(providerId);
-			userEntity.setUser_name(user_name);
+			userEntity.setUser_name(oAuth2UserInfo.getName());
 			userEntity.setFirstLogin(true); // 첫 로그인 여부 설정
-
+			userEntity.setUser_tel((oAuth2UserInfo).getPhoneNumber());
+			userEntity.setUser_gender((oAuth2UserInfo).getGender());
+			userEntity.setUser_birthday((oAuth2UserInfo).getBirthday());
+			
 		} else {
 			userEntity.setFirstLogin(false);
 			System.out.println("로그인을 이미 한적이 있습니다. 당신은 자동회원가입이 되어 있습니다.");

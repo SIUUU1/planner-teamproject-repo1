@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.mapper.UserMapper;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,7 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper mapper;
-
+	
+	@Autowired
+	private HttpSession httpSession;
+	
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return this.bCryptPasswordEncoder;
@@ -33,6 +37,9 @@ public class UserServiceImpl implements UserService {
 		
 		user.setRole("ROLE_USER");
 		mapper.create(user);
+		
+		//세션 유저 정보 없애기
+		httpSession.invalidate();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.zeus.backend.security.auth.provider;
 
+import java.util.Date;
 import java.util.Map;
 
 public class GoogleUserInfo implements OAuth2UserInfo {
@@ -28,5 +29,20 @@ public class GoogleUserInfo implements OAuth2UserInfo {
 	@Override
 	public String getName() {
 		return (String) attributes.get("name");
+	}
+
+	@Override
+	public String getPhoneNumber() {
+		return null;
+	}
+
+	@Override
+	public Date getBirthday() {
+		return null;
+	}
+
+	@Override
+	public String getGender() {
+		return null;
 	}
 }

@@ -26,6 +26,8 @@ import Profile from './member/Profile';
 import Auth from './member/Auth';
 import Schedule from './schedule/Schedule';
 import User from './member/User';
+import LoginForm from './member/LoginForm';
+import RegisterForm from './member/RegisterForm';
 
 function App() {
 
@@ -36,9 +38,11 @@ function App() {
       <ThemeProvider>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          <Route path='/loginForm' element={<LoginForm/>}/>
+          <Route path='/joinForm' element={<RegisterForm/>}/>
           <Route path="/user" element={<User/>} />
           <Route path='/*' element={<NotFound/>}/>
-          <Route path='/groupmain' element={<StudyGroupMain/>}/>
+          <Route path='/manager/groupmain' element={<StudyGroupMain/>}/>
           <Route path='/groupnew' element={<StudyGroupNew/>}/>
           <Route path='/groupedit' element={<StudyGroupEdit/>}/>
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>

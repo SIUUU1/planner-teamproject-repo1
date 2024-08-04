@@ -56,10 +56,11 @@ public class SecurityConfig {
 		http.headers().cacheControl().disable().contentTypeOptions().disable().frameOptions().sameOrigin()
 				.httpStrictTransportSecurity().disable().xssProtection().disable();
 
-		/* (4) */
+		/* role 주소 다시 설정할 것 */
 		http.authorizeRequests().requestMatchers("/user/**").authenticated().requestMatchers("/manager/**")
 				.hasRole("MANAGER").requestMatchers("/pro/**").hasRole("PRO").anyRequest().permitAll();
 
+		//실패시 url 추가할 것!
 		http.formLogin().loginPage("/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/", true);
 
 		http.oauth2Login().loginPage("/loginForm").userInfoEndpoint()
