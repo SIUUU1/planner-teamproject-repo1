@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zeus.backend.mapper.UserMapper">
-	<!-- 사용자 정의 resultMap 요소 정의 -->
 	<!-- 등록 처리 -->
 	<insert id="create" parameterType="com.zeus.backend.domain.User">
     INSERT INTO USERS (
@@ -12,19 +11,48 @@
         #{user_nickname}, #{image_url}, #{user_tel}, #{user_email}, #{user_gender}, #{user_birthday}
     )
 	</insert>
+	<!-- 목록 페이지 -->
+	<select id="list" resultType="com.zeus.backend.domain.User">
+		SELECT * FROM users 
+	</select>
 	<!-- 사용자 아이디로 회원 정보 조회(인증 시 사용)-->
 	<select id="findByUserId" resultType="com.zeus.backend.domain.User">
 		SELECT * FROM users WHERE user_id = #{user_id} 
 	</select>
-	<!-- userFullInfo 있어야 함 -->
-	<!-- 권한 수정 -->
-	<insert id="modifyAuth">
-		INSERT INTO authorities (user_no, user_id, authority) VALUES (#{userNo},#{user_id},#{authority})
-	</insert>
-	<!-- 권한 삭제 -->
-	<delete id="deleteAuth">
-		DELETE FROM authorities WHERE user_no = #{userNo}
+	<!-- 사용자 user_no로 회원 정보 조회 -->
+	<select id="findByUserNo" resultType="com.zeus.backend.domain.User">
+		SELECT * FROM users WHERE user_no = #{user_no} 
+	</select>
+	<!-- 사용자 수정 -->
+	<update id="modify">
+		UPDATE users SET user_nickname = #{user_nickname},image_url = #{image_url}, 
+		user_tel = #{user_tel}, user_email = #{user_email} 
+		WHERE user_no = #{user_no}
+	</update>
+	<!-- 사용자 삭제 -->
+	<delete id="remove">
+		Delete from users where user_no = #{user_no}
 	</delete>
+	<!-- 권한 수정 -->
+	<update id="modifyAuth">
+		UPDATE users SET role = #{role} WHERE user_no = #{user_no}
+	</update>
+	<!-- 아이디 중복 조회 -->
+	<select id="checkId" resultType="int">
+		SELECT count(*) FROM users WHERE user_id = #{user_id}
+	</select>
+	<!-- 복구 이메일 존재 여부 조회 -->
+	<select id="checkRestoreEmail" resultType="int">
+		SELECT count(*) FROM users WHERE restore_email = #{restore_email}
+	</select>
+	<!-- 복구 이메일로 아이디 조회 -->
+	<select id="findIdByEmail" resultType="String">
+		SELECT user_id FROM users WHERE restore_email = #{restore_email}
+	</select>
+	<!-- 이메일 인증후 패스워드 재설정 -->
+	<update id="updatePw">
+		UPDATE users SET password = #{password} WHERE user_no = #{user_no}
+	</update>
 	<!-- 회원 테이블의 데이터 건수 조회 -->
 	<select id="countAll" resultType="int">
 		SELECT count(*) FROM users

@@ -57,17 +57,17 @@ public class SecurityConfig {
 				.httpStrictTransportSecurity().disable().xssProtection().disable();
 
 		/* role 주소 다시 설정할 것 */
-		http.authorizeRequests().requestMatchers("/user/**").authenticated().requestMatchers("/manager/**")
-				.hasRole("MANAGER").requestMatchers("/pro/**").hasRole("PRO").anyRequest().permitAll();
+		http.authorizeRequests().requestMatchers("/api/user/**").authenticated().requestMatchers("/api/mngr/**")
+				.hasRole("MANAGER").requestMatchers("/api/pro/**").hasRole("PRO").anyRequest().permitAll();
 
 		//실패시 url 추가할 것!
-		http.formLogin().loginPage("/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/", true);
+		http.formLogin().loginPage("/loginForm").loginProcessingUrl("/api/login").defaultSuccessUrl("/user", true);
 
 		http.oauth2Login().loginPage("/loginForm").userInfoEndpoint()
 				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
 
 		/* (5) */
-		http.logout().logoutUrl("http://localhost:5173/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("/")
+		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("/")
 				.invalidateHttpSession(true);
 
 		/* (6) */
@@ -100,7 +100,7 @@ public class SecurityConfig {
             	System.out.println("첫 로그인 시 추가 정보 입력 페이지로 리디렉션");
                 response.sendRedirect("http://localhost:5173/joinform");
             } else {
-                // JWT 생성 및 헤더에 추가 수정 필요함
+                // JWT 생성 및 쿠키에 추가 수정 필요함
             	System.out.println("첫 로그인 아님");
             	
             	String user_id = user.getUser_id();
@@ -113,7 +113,7 @@ public class SecurityConfig {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-                response.sendRedirect("http://localhost:5173/");
+                response.sendRedirect("http://localhost:5173/user");
             }
 		};
 	}

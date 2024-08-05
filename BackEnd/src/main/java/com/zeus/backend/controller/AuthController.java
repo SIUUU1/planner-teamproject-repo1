@@ -1,10 +1,14 @@
 package com.zeus.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.User;
@@ -12,44 +16,50 @@ import com.zeus.backend.security.domain.Response;
 import com.zeus.backend.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import net.minidev.json.JSONObject;
 
-@RequiredArgsConstructor
+@Log
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
-	private final UserService userService;
+	@Autowired
+	private UserService service;
 
-	//회원가입 처리
-	@PostMapping("/api/joinProc")
+	// 회원가입폼에 oauth2 인증한 사용자 정보 가져오기
+	@GetMapping("/joinform")
+	public User getjoinform(HttpSession session) {
+		System.out.println("joinform");
+		return (User) session.getAttribute("user");
+	}
+
+	// 회원가입 처리
+	@PostMapping("/joinProc")
 	public Response<String> joinProc(@RequestBody User user) throws Exception {
 		System.out.println("apiCon" + user);
 
-		userService.create(user);
+		service.create(user);
 		return new Response<>(HttpStatus.OK.value(), "회원가입 완료");
 	}
 
-	//로그인 처리?? 
-	@PostMapping("/api/loginProc")
+	// 로그인 처리??
+	@PostMapping("/loginProc")
 	public Response<JSONObject> loginProc(@RequestBody User user) {
 		return null;
 	}
 	
-	//joinform에서 초기 회원가입 정보 가져오기
-    @GetMapping("/api/user")
-    public User getUser(HttpSession session) {
-    	System.out.println("joinform");
-        return (User) session.getAttribute("user");
-    }
-    
-//	@PostMapping("/api/completeRegistration")
-//  public String completeRegistration(@RequestBody User user) {
-//      // 추가 정보 저장
-//		try {
-//			userService.create(user);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//      return "Registration complete";
-//  }
+	// 아이디 중복 조회
+	@RequestMapping(value = "/checkId", method = RequestMethod.POST)
+	public ResponseEntity<String> checkEmail(@RequestParam("user_id") String user_id) throws Exception {
+		try {
+            int result = service.checkId(user_id);
+            if (result == 0) {
+                return ResponseEntity.ok("사용가능한 아이디입니다.");
+            } else {
+                return ResponseEntity.ok("이미 존재하는 아이디입니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking the email.");
+        }
+	}
 }

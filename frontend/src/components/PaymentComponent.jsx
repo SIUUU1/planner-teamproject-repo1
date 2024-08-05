@@ -1,73 +1,62 @@
-import React, { useState} from 'react';
+import React, {useState} from "react";
+import { useNavigate } from "react-router-dom";
+import './PaymentComponent.css'
 
-const PaymentComponent = ({ emoji_group_id, price }) => {
-  const [response, setResponse] = useState(null);
-  IMP.init("imp22776507");
+const PaymentComponent = ({
+  // payInfo,
+}) => {
+  const navigate = useNavigate();
+  const payInfo={
+    user_no:1,
+    user_id: 'aaa',
+    user_name: 'hong',
+    user_email: 'aaa@gmail.com',
+    user_tel: '010-1111-1111',
+    item_id: 'asdfasdf',
+    price: 101,
+  };
 
-  const requestPay = () => {
+  const handlePayment = (e) => {
+
+    const { IMP } = window;
+    if (!IMP) {
+      console.error("IMP 객체를 찾을 수 없습니다.");
+      return;
+    }
+
+    IMP.init("imp19424728"); // 가맹점 식별코드
+
     const data = {
-      pg: "{PG사 코드}.{상점 ID}",
-      pay_method: "card",
-      merchant_uid: `payment-${crypto.randomUUID()}`, // 주문 고유 번호
-      name: "노르웨이 회전 의자",
-      amount: price,
-      buyer_email: "gildong@gmail.com",
-      buyer_name: "홍길동",
-      buyer_tel: "010-4242-4242",
-      buyer_addr: "서울특별시 강남구 신사동",
-      buyer_postcode: "01181",
+      pg: 'html5_inicis', // 기본 테스트용 PG사
+      pay_method: 'card',
+      merchant_uid: `mid${new Date().getTime()}`,
+      amount: payInfo.price,
+      buyer_email: payInfo.user_email,
+      buyer_name: payInfo.user_name,
+      buyer_tel: payInfo.user_tel,
+      //  m_redirect_url: `http://localhost:5173/mypage/${user_no}`, // 결제 완료 후 상점 페이지
     };
-    
-    IMP.request_pay(data, async (response) => { // param을 올바르게 전달
-      if (response.error_code != null) {
-        return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
-      }
-      // 고객사 서버에서 /payment/complete 엔드포인트를 구현해야 합니다.
-      const notified = await fetch(`http://localhost:8080/api/payment/complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
-        body: JSON.stringify({
-          imp_uid: response.imp_uid,
-          merchant_uid: response.merchant_uid,
-          // 추가적인 주문 정보가 필요하다면 여기에 포함
-        }),
-      });
-      
-      if (!notified.ok) {
-        console.error('Failed to notify server');
-      }
 
-      const result = await notified.json();
-      setResponse(result);
+    console.log("결제 요청 데이터:", data);
+
+    IMP.request_pay(data, (response) => {
+      console.log("결제 응답:", response);
+      if (response.success) {
+       
+        alert("결제에 성공하였습니다.");
+        navigate(`/mypage/${userNo}`);
+      } else {
+        alert("결제에 실패하였습니다: " + response.error_msg);
+      }
     });
   };
 
-  
-
-  // const Pay = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:8080/api/payments/prepare?emoji_group_id=${emoji_group_id}&price=${price}`, {
-  //       method: 'POST'
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Payment preparation failed');
-  //     }
-
-  //     const data = await response.json();
-  //     setResponse(data);
-  //   } catch (error) {
-  //     console.error('Payment preparation failed', error);
-  //     setResponse({ error: error.message });
-  //   }
-  // };
-
-  return (
-    <div className='paymentComponent'>
-      <h1>Payment Request</h1>
-      <button onClick={requestPay}>Prepare Payment</button>
-      {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
+  return(
+     <div className="paymentComponent">
+      <h2>결제하기</h2>
+      <div className="paymentMethods">
+        <button name="card" onClick={handlePayment}>결제하기</button>
+      </div>
     </div>
   );
 };

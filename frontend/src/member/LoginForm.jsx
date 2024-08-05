@@ -12,7 +12,7 @@ function LoginForm() {
       user_id : user_id.current.value,
       password: password.current.value,
     };
-    fetch('http://localhost:8080/login', {
+    fetch('http://localhost:8080/api/login', {
       method: 'post',
       credentials: 'include',
       headers: {

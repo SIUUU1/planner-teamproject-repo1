@@ -4,7 +4,5 @@ import java.util.Map;
 
 public interface PaymentService {
 	
-	String getAccessToken();
-
-	Map<String, Object> preparePayment(String merchantUid, int amount);
+	
 }

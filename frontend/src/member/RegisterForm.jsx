@@ -14,10 +14,13 @@ function RegisterForm() {
     user_birthday: '',
     password:'',
   };
+
   const [user, setUser] = useState(initUserState);
+  const [message, setMessage] = useState('');
+
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/user', { credentials: 'include' })
+    fetch('http://localhost:8080/api/auth/user', { credentials: 'include' })
       .then(response => response.json())
       .then(data => {
         // user_birthday를 YYYY-MM-DD 형식으로 변환
@@ -32,7 +35,7 @@ function RegisterForm() {
   };
 
   const handleSubmit = () => {
-    fetch('http://localhost:8080/api/joinProc', {
+    fetch('http://localhost:8080/api/auth/joinProc', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -45,6 +48,26 @@ function RegisterForm() {
        // 입력 필드 초기화
        setUser(initialUserState);
       window.location.href = '/'; // 회원가입 완료 후 대시보드로 이동
+    })
+    .catch(error => console.error('Error:', error));
+  };
+
+  // ID 중복 체크 함수
+  const checkId = () => {
+    fetch('http://localhost:8080//api/auth/checkId', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user_id: user.user_id })
+    })
+    .then(response => response.text())
+    .then(data => {
+      setMessage(data);
+      alert(data);
+      if (data === '이미 존재하는 아이디입니다.') {
+        setUser({ ...user, user_id: '' }); // 입력 필드 비우기
+      }
     })
     .catch(error => console.error('Error:', error));
   };
@@ -72,7 +95,7 @@ const formatDateString = (date) => {
           <div className="contact">
             {/* <form action="http://localhost:8080/api/joinProc" method="POST"> */}
               <input type="text" name="user_id" value={user.user_id} onChange={handleChange} placeholder="Id" />
-              <button type="button" className="emailCheckBtn">Check Email</button>
+              <button type="button" className="emailCheckBtn" onClick={checkId}>Check Email</button>
               <input type="password" name="password" value={user.password} onChange={handleChange} placeholder="Password" />
               <input type="text" name="user_name" value={user.user_name} onChange={handleChange} placeholder="Name" />
               <input type="file" name="image_url" value={user.image_url} onChange={handleChange} placeholder="Profile Image" />

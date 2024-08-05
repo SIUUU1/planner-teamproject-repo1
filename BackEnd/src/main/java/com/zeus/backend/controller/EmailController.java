@@ -2,11 +2,13 @@ package com.zeus.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.security.CodeGenerator;
+import com.zeus.backend.security.domain.VerificationRequest;
 import com.zeus.backend.service.EmailService;
 
 import jakarta.servlet.http.HttpSession;
@@ -38,20 +40,20 @@ public class EmailController {
 	}
 
 	// 인증코드 확인하기
-//	@PostMapping("/verifyCode")
-//	public String verifyCode(@RequestBody VerificationRequest verificationRequest, HttpSession session) {
-//		String sessionCode = (String) session.getAttribute("verificationCode");
-//		String sessionEmail = (String) session.getAttribute("email");
-//
-//		if (sessionCode == null || sessionEmail == null) {
-//			return "No verification code sent.";
-//		}
-//
-//		if (sessionEmail.equals(verificationRequest.getEmail()) && sessionCode.equals(verificationRequest.getCode())) {
-//			return "Verification successful";
-//		} else {
-//			return "Verification failed";
-//		}
-//	}
+	@PostMapping("/verifyCode")
+	public String verifyCode(@RequestBody VerificationRequest verificationRequest, HttpSession session) {
+		String sessionCode = (String) session.getAttribute("verificationCode");
+		String sessionEmail = (String) session.getAttribute("email");
+
+		if (sessionCode == null || sessionEmail == null) {
+			return "No verification code sent.";
+		}
+
+		if (sessionEmail.equals(verificationRequest.getEmail()) && sessionCode.equals(verificationRequest.getCode())) {
+			return "Verification successful";
+		} else {
+			return "Verification failed";
+		}
+	}
 
 }
