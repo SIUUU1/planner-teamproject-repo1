@@ -4,6 +4,7 @@ import Attainment from '../attainment/Attainment';
 import BackGround from '../components/BackGround';
 import ToFullList from '../components/ToFullList';
 import SchedulerChart from '../scheduler/SchedulerChart';
+import useLoading from '../util/useLoading';
 import useFillSchedule from '../util/useFillSchedule';
 
 //달성표 테스트 데이터
@@ -113,31 +114,6 @@ const data2 = [
     "star": 0,
   },
 ]
-//스케쥴 테스트 데이터
-const SchedulerData=
-[
-  {
-    "schedule_no": 0,
-    "schedule_name": "잠",
-    "value": 570,  //(분)
-    "start_time":0, //(분)
-    "end_time":570, //(분)
-  },
-  {
-    "schedule_no": 1,
-    "schedule_name": "운동",
-    "value": 570,  //(분)
-    "start_time":600, 
-    "end_time":630,
-  },
-  {
-    "schedule_no": 2,
-    "schedule_name": "자료구조 공부",
-    "value": 570,  //(분)
-    "start_time":630, 
-    "end_time":700,
-  },
-];
 
 const modifiedData1 = data1
 .filter(item => item.star > 0)
@@ -153,7 +129,18 @@ const height2 = modifiedData2.length * 50;
 
 
 const Home = ()=>{
-  const updatedSchedule = useFillSchedule(SchedulerData);
+   // 스케쥴 데이터 로드
+  const { data: SchedulerData, loading: loadingScheduler, error: errorScheduler } = useLoading('http://localhost:8080/api/schedule/1', 'json');
+  const modifiedScheduleData = useFillSchedule(SchedulerData || []);
+  // 로딩 중, 오류 처리
+  if (loadingScheduler) {
+    return <div>Loading...</div>;
+}
+
+if (errorScheduler) {
+    return <div>Error: {errorScheduler.message}</div>;
+}
+
 
   return(
     <div className="home">
@@ -175,7 +162,7 @@ const Home = ()=>{
         TodoList 3개만
         </div>
         <div className='circleSchedule backWhite'>
-          <SchedulerChart data={updatedSchedule}></SchedulerChart>
+          <SchedulerChart data={modifiedScheduleData}></SchedulerChart>
           </div>
         </div>
 

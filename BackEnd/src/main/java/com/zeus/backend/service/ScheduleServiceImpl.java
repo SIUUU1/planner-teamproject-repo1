@@ -1,11 +1,11 @@
 package com.zeus.backend.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zeus.backend.domain.Schedule;
 import com.zeus.backend.mapper.ScheduleMapper;
 
 @Service
@@ -15,18 +15,18 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ScheduleMapper scheduleMapper;
 
     @Override
-    public List<Map<String, Object>> getAllSchedules() {
-        return scheduleMapper.selectAllSchedules();
+    public List<Schedule> getAllSchedules() {
+        return scheduleMapper.getAllSchedules();
     }
 
     @Override
-    public List<Map<String, Object>> getSchedulesByUser(int user_no) {
-        return scheduleMapper.selectSchedulesByUser(user_no);
+    public List<Schedule> getSchedulesByUser(int user_no) {
+        return scheduleMapper.getSchedulesByUser(user_no);
     }
 
     @Override
-    public void insertSchedule(Map<String, Object> schedule) {
-        scheduleMapper.insertSchedule(schedule);
+    public void registerSchedule(Schedule schedule) {
+        scheduleMapper.registerSchedule(schedule);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void updateSchedule(Map<String, Object> schedule) {
+    public void updateSchedule(Schedule schedule) {
         scheduleMapper.updateSchedule(schedule);
     }
 }

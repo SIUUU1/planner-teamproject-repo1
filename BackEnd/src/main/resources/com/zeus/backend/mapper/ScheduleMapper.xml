@@ -9,12 +9,12 @@
     </insert>
 
     <!-- 모든 스케줄 조회 -->
-    <select id="selectAllSchedules" resultType="map">
+    <select id="getAllSchedules" resultType="com.zeus.backend.domain.Schedule">
         SELECT schedule_no, user_no, reg_date, start_time, end_time, schedule_name, value FROM SCHEDULE
     </select>
 
     <!-- 특정 유저의 스케줄 조회 -->
-    <select id="selectSchedulesByUser" resultType="map">
+    <select id="getSchedulesByUser" resultType="com.zeus.backend.domain.Schedule">
         SELECT schedule_no, user_no, reg_date, start_time, end_time, schedule_name, value 
         FROM SCHEDULE 
         WHERE user_no = #{user_no}
