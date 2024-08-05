@@ -6,7 +6,7 @@ function useLoading(url, type) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(url)
+        fetch(url, { credentials: 'include' })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -40,7 +40,7 @@ function useLoading(url, type) {
                 setError(error);
                 setLoading(false);
             });
-    }, [url]);
+    }, [url, type]);
 
     return { data, loading, error };  // 객체 형태로 반환
 }

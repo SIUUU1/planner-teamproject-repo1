@@ -9,11 +9,7 @@ const useFillSchedule = (schedulerData) => {
     let scheduleNoCounter = -1;
     const updatedSchedule = [];
 
-    schedulerData.map(item => 
-      Object.fromEntries(
-        Object.entries(item).map(([key, value]) => [key.toLowerCase(), value])
-      )
-    ).forEach((event) => {
+    schedulerData.forEach((event) => {
       if (event.start_time > currentTime) {
         updatedSchedule.push({
           schedule_no: scheduleNoCounter--,
