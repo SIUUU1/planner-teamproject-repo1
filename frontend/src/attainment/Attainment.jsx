@@ -3,7 +3,7 @@ import { ResponsiveBar } from '@nivo/bar'
 const Attainment = ({ data, padding, type }) => {
     const modifiedData = data.map(item => ({
         ...item,
-        attainment_name: item.attainment_name.slice(0, 4)
+        attainment_name: item.attainment_name ? item.attainment_name.slice(0, 4) : "Unknown"
     }));
 
     return (
