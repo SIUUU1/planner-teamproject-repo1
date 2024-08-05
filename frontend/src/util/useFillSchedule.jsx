@@ -6,13 +6,14 @@ const useFillSchedule = (schedulerData) => {
   useEffect(() => {
     const dayInMinutes = 1440;
     let currentTime = 0;
+    let scheduleNoCounter = -1;
     const updatedSchedule = [];
 
     schedulerData.forEach((event) => {
       if (event.start_time > currentTime) {
         updatedSchedule.push({
-          schedule_no: null,
-          schedule_name: "",
+          schedule_no: scheduleNoCounter--,
+          schedule_name: `미정 ${scheduleNoCounter*-1}`,
           value: event.start_time - currentTime,
           start_time: currentTime,
           end_time: event.start_time,
@@ -26,8 +27,8 @@ const useFillSchedule = (schedulerData) => {
 
     if (currentTime < dayInMinutes) {
       updatedSchedule.push({
-        schedule_no: null,
-        schedule_name: "",
+        schedule_no: scheduleNoCounter--,
+        schedule_name: `미정 ${scheduleNoCounter*-1}`,
         value: dayInMinutes - currentTime,
         start_time: currentTime,
         end_time: dayInMinutes,

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.TodoMapper">
+ <!-- 투두 데이터 등록 -->
+    <insert id="registerTodo">
+        INSERT INTO todolist (todo_no, user_no, todo_title, is_done, reg_date, type)
+        VALUES (#{todo_no}, #{user_no}, #{todo_title}, #{is_done}, #{reg_date}, #{type})
+    </insert>
+
+    <!-- 모든 투두 항목 가져오기 -->
+    <select id="getAllTodos" resultType="com.zeus.backend.domain.Todo">
+        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
+        FROM todolist
+    </select>
+
+    <!-- 특정 투두 항목 가져오기 (todo_no로 검색) -->
+    <select id="getTodoByNO" resultType="com.zeus.backend.domain.Todo">
+        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
+        FROM todolist
+        WHERE todo_no = #{todo_no}
+    </select>
+
+    <!-- 투두 데이터 업데이트 -->
+    <update id="updateTodo">
+        UPDATE todolist
+        SET user_no = #{user_no}, todo_title = #{todo_title}, is_done = #{is_done},
+            reg_date = #{reg_date}, type = #{type}
+        WHERE todo_no = #{todo_no}
+    </update>
+
+    <!-- 투두 데이터 삭제 -->
+    <delete id="deleteTodo">
+        DELETE FROM todolist WHERE todo_no = #{todo_no}
+    </delete>
+
+    <!-- 특정 사용자와 날짜에 따른 투두 항목 가져오기 -->
+    <select id="getTodosByUserAndDate" resultType="com.zeus.backend.domain.Todo">
+        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
+        FROM todolist
+        WHERE user_no = #{user_no} AND reg_date = #{reg_date}
+    </select>
+</mapper>

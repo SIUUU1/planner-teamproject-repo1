@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import BackGround from './components/BackGround';
 import NotFound from './pages/NotFound';
 import StudyGroupMain from './studygroup/StudyGroupMain';
@@ -31,7 +32,8 @@ import Footer from './components/Footer';
 import PaymentRegForm from './payment/PaymentRegForm';
 // import Login from './member/Login';
 // import Signup from './member/SignUp';
-
+import TodoMain from './todoList/TodoMain';
+import TodoDetail from './todoList/TodoDetail';
 
 function App() {
   
@@ -66,6 +68,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/pay" element={<PaymentRegForm />} />
+          <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
+          <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>

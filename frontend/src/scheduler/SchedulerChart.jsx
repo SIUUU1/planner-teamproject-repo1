@@ -1,9 +1,10 @@
 import { ResponsivePie } from '@nivo/pie'
-
+import React from 'react';
 
 const SchedulerChart = ({ data }) => {
-  const transformedData = data.map(item => ({
-    id: item.schedule_name, // id를 schedule_name으로
+  const chartData = data || [];
+  const transformedData = chartData.map(item => ({
+    id: item.schedule_name,
     ...item
   }));
   return(
@@ -23,8 +24,20 @@ const SchedulerChart = ({ data }) => {
                 ]
             ]
         }}
+        tooltip={e => {
+          let { datum: t } = e;
+          const hours = Math.floor(t.value / 60);
+          const minutes = Math.floor(t.value % 60);
+          return (
+            <div style={{ border: `1px solid ${t.color}`, padding: `3px 10px`, fontSize:`13px`}} className='backWhite'>
+                  <span>{t.id} : </span>
+                  <span style={{fontSize:`12px`, marginTop:`3px`}}>
+                      {hours > 0 && `${hours}시간 `}{minutes}분
+                  </span>
+              </div>
+          );
+        }}      
         enableArcLinkLabels={false}
-        arcLinkLabel={e=>e.id}
         arcLinkLabelsTextColor={{ theme: 'labels.text.fill' }}
         arcLinkLabelsOffset={-7}
         arcLinkLabelsDiagonalLength={20}
@@ -33,6 +46,7 @@ const SchedulerChart = ({ data }) => {
         arcLinkLabelsColor={{ from: 'color', modifiers: [] }}
         arcLabel={e=>e.id}
         arcLabelsRadiusOffset={0.6}
+        enableArcLabels={false}
         arcLabelsSkipAngle={6}
         arcLabelsTextColor="black"
         motionConfig={{
