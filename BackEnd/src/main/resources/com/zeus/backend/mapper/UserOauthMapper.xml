@@ -5,7 +5,7 @@
 		delete from useroauth where user_id = #{user_id}
 	</delete>
 	<insert id="insert">
-		INSERT INTO useroauth (useroauth_id, refresh_token, user_id) VALUES (useroauth_id_seq.NEXTVAL,#{refreshToken},#{user_id})
+		INSERT INTO useroauth (useroauth_id, refresh_token, user_id) VALUES (useroauth_id_seq.NEXTVAL,#{refresh_token},#{user_id})
 	</insert>
 	<select id="findUserOauthByUserId" resultType="com.zeus.backend.domain.UserOauth">
 		SELECT * FROM useroauth WHERE user_id = #{user_id} 

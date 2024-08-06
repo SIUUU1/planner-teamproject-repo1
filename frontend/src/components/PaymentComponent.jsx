@@ -1,22 +1,25 @@
 import React, {useState} from "react";
-import { useNavigate } from "react-router-dom";
 import './PaymentComponent.css'
+import useMove from '../util/useMove';
+import Button from '../components/Button'
 
 const PaymentComponent = ({
-  // payInfo,
+  // payInfo, url
 }) => {
-  const navigate = useNavigate();
+  const onMove = useMove('/');
+  const url = 'http://localhost:8080/api/pay/emojiPay'; //emojiPay 또는 proPay
   const payInfo={
     user_no:1,
     user_id: 'aaa',
+    item_id: 'asdfasdf', //상품아이디는 문자
     user_name: 'hong',
     user_email: 'aaa@gmail.com',
     user_tel: '010-1111-1111',
-    item_id: 'asdfasdf',
     price: 101,
   };
 
-  const handlePayment = (e) => {
+  // 결제 처리 Api
+  const Payment = (e) => {
 
     const { IMP } = window;
     if (!IMP) {
@@ -29,7 +32,7 @@ const PaymentComponent = ({
     const data = {
       pg: 'html5_inicis', // 기본 테스트용 PG사
       pay_method: 'card',
-      merchant_uid: `mid${new Date().getTime()}`,
+      merchant_uid: `mid${new Date().getTime()}`, // 결제사이트 필수요소 
       amount: payInfo.price,
       buyer_email: payInfo.user_email,
       buyer_name: payInfo.user_name,
@@ -41,22 +44,34 @@ const PaymentComponent = ({
     IMP.request_pay(data, (response) => {
       console.log("결제 응답:", response);
       if (response.success) {
-       
+        completePay(); //결제등록
         alert("결제에 성공하였습니다.");
-        navigate(`/mypage/${userNo}`);
+        onMove();
       } else {
         alert("결제에 실패하였습니다: " + response.error_msg);
       }
     });
   };
 
+  // 결제 내역 등록
+  const completePay = () => {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payInfo)
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      alert('결제등록완료');
+    })
+    .catch(error => console.error('Error:', error));
+  };
+
   return(
-     <div className="paymentComponent">
-      <h2>결제하기</h2>
-      <div className="paymentMethods">
-        <button name="card" onClick={handlePayment}>결제하기</button>
-      </div>
-    </div>
+     <><Button text={'결제하기'} onClick={Payment} className={'payBtn'}/></>
   );
 };
 

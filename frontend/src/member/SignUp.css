@@ -1,4 +1,4 @@
-img {
+.signUp img {
   width: 100%;
 }
 
@@ -9,7 +9,7 @@ img {
   position: relative;
 }
 
-.signUpBox {
+.signUp .signUpBox {
   width: 1010px;
   height: 700px;
   position: absolute;
@@ -33,22 +33,23 @@ img {
   width: 59%;
   height: 100%;
 }
-.passwordError {
+
+.signUp .redError {
   color: #ff0000; /* Red color for errors */
   font-size: 0.8rem;
   margin-top: 5px;
 }
 
-.left .topLink a {
+.signUp .left .topLink a {
   color: #452A5A;
   font-weight: 400;
 }
 
-.left .topLink {
+.signUp .left .topLink {
   height: 0px;
 }
 
-.left .contact {
+.signUp .left .contact {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,12 +59,12 @@ img {
   margin: auto;
 }
 
-.left h3 {
+.signUp .left h3 {
   text-align: center;
   margin-bottom: 40px;
 }
 
-.left input {
+.signUp .left input {
   border: none;
   width: 80%;
   margin: 15px 0px;
@@ -76,7 +77,7 @@ img {
   font-size: 14px;
 }
 
-.left select {
+.signUp .left select {
   border: none;
   width: 100%;
   margin: 15px 0px;
@@ -87,17 +88,15 @@ img {
   font-size: 14px;
 }
 
-.left {
+.signUp .left {
   background: linear-gradient(-45deg, #dcd7e0, #fff);
 }
 
-.inputGroup {
-  
-  
+/* .signUp .inputGroup {
   margin-bottom: 15px;
-}
+} */
 
-.inputGroup input[type="email"] {
+.signUp .inputGroup input[type="email"] {
   flex-grow: 1;
   margin-right: 10px; /* Creates a small space between the input and the button */
   padding: 8px 10px;
@@ -106,7 +105,7 @@ img {
   width: calc(100% - 130px); /* Adjust this value based on the actual button width */
 }
 
-.emailCheckBtn {
+.signUp .idCheckBtn {
   padding: 8px 15px;
   background-color: #17a2b8; /* Cyan-like color */
   color: white;

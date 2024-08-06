@@ -26,12 +26,11 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import Profile from './member/Profile';
 import Schedule from './schedule/Schedule';
 import User from './member/User';
-import LoginForm from './member/LoginForm';
-import RegisterForm from './member/RegisterForm';
-// import Login from './member/Login';
-// import Signup from './member/SignUp';
+import Login from './member/Login';
+import Signup from './member/SignUp';
 import TodoMain from './todoList/TodoMain';
 import TodoDetail from './todoList/TodoDetail';
+import NotAuthorized from './pages/NotAuthorized';
 
 function App() {
   
@@ -43,12 +42,11 @@ function App() {
       <ThemeProvider>
         <Routes>
           <Route path='/' element={<Home/>}/>
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} /> */}
-          <Route path='/loginForm' element={<LoginForm/>}/>
-          <Route path='/joinForm' element={<RegisterForm/>}/>
+          <Route path="/joinForm" element={<Signup />} /> 
+          <Route path='/loginForm' element={<Login/>}/>
           <Route path="/user" element={<User/>} />
           <Route path='/*' element={<NotFound/>}/>
+          <Route path='/as' element={<NotAuthorized/>}/>
           <Route path='/manager/groupmain' element={<StudyGroupMain/>}/>
           <Route path='/groupnew' element={<StudyGroupNew/>}/>
           <Route path='/groupedit' element={<StudyGroupEdit/>}/>

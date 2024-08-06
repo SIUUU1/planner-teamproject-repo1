@@ -1,0 +1,84 @@
+.errorPage .body {
+  font-family: "Nunito", sans-serif;
+  transition: all 0.5s ease;
+}
+
+.errorPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 15px;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.errorPage .pageNotFound {
+  width: 400px;
+  margin: auto;
+  position: relative;
+}
+
+.errorPage .textXl {
+  color: #000;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  line-height: 1.2;
+  font-size: 160px;
+  font-weight: 800;
+  letter-spacing: -28px;
+  text-shadow: -6px 4px 0px #fff;
+  margin: 50px 0;
+}
+
+.errorPage .textXl span {
+  transition: all 1s ease;
+  display: inline-block;
+  animation: pulse 5s infinite;
+}
+
+.errorPage .textMd {
+  font-family: "Montserrat", sans-serif;
+  font-size: 50px;
+  font-weight: 700;
+  color: #1177bd;
+  margin-bottom: 20px;
+}
+
+.errorPage .btm {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.errorPage .btm span {
+  color: #1177bd;
+  text-decoration: underline;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.errorPage .btm span:hover, .errorPage .btm span:focus {
+  text-decoration: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    color: #000;
+  }
+  50% {
+    color: rgba(240, 48, 48, 1);
+  }
+}
+
+@media (max-width: 768px) {
+  .errorPage .textXl {
+    font-size: 120px;
+    letter-spacing: -20px;
+    margin-bottom: 30px;
+  }
+
+  .errorPage .textMd {
+    font-size: 30px;
+  }
+}

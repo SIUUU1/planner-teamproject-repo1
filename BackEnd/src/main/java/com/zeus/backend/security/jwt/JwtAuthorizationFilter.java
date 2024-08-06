@@ -78,7 +78,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				e1.printStackTrace();
 			}
 			if (!ObjectUtils.isEmpty(userOauth)) {
-				refreshToken = userOauth.getRefreshToken(); // db에서 유저네임으로 리프레시 토큰 가져오기
+				refreshToken = userOauth.getRefresh_token(); // db에서 유저네임으로 리프레시 토큰 가져오기
+				System.out.println("userOauth.getUser_id() : " + userOauth.getUser_id());
 				System.out.println("refreshToken : " + refreshToken);
 			}
 		} catch (Exception e) {
