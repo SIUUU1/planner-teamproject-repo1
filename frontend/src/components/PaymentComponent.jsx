@@ -34,7 +34,6 @@ const PaymentComponent = ({
       buyer_email: payInfo.user_email,
       buyer_name: payInfo.user_name,
       buyer_tel: payInfo.user_tel,
-      //  m_redirect_url: `http://localhost:5173/mypage/${user_no}`, // 결제 완료 후 상점 페이지
     };
 
     console.log("결제 요청 데이터:", data);

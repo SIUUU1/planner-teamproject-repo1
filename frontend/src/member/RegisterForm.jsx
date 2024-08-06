@@ -20,7 +20,7 @@ function RegisterForm() {
 
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/auth/user', { credentials: 'include' })
+    fetch('http://localhost:8080/api/auth/joinform', { credentials: 'include' })
       .then(response => response.json())
       .then(data => {
         // user_birthday를 YYYY-MM-DD 형식으로 변환

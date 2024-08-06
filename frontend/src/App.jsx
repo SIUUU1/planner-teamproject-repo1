@@ -28,8 +28,6 @@ import Schedule from './schedule/Schedule';
 import User from './member/User';
 import LoginForm from './member/LoginForm';
 import RegisterForm from './member/RegisterForm';
-import Footer from './components/Footer';
-import PaymentRegForm from './payment/PaymentRegForm';
 // import Login from './member/Login';
 // import Signup from './member/SignUp';
 import TodoMain from './todoList/TodoMain';
@@ -67,7 +65,6 @@ function App() {
           <Route path="/friends" element={<FriendsList />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/schedule" element={<Schedule />} />
-          <Route path="/pay" element={<PaymentRegForm />} />
           <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
         </Routes>

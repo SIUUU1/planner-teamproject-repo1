@@ -61,13 +61,13 @@ public class SecurityConfig {
 				.hasRole("MANAGER").requestMatchers("/api/pro/**").hasRole("PRO").anyRequest().permitAll();
 
 		//실패시 url 추가할 것!
-		http.formLogin().loginPage("/loginForm").loginProcessingUrl("/api/login").defaultSuccessUrl("/user", true);
+		http.formLogin().loginPage("http://localhost:5173/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/", true);
 
-		http.oauth2Login().loginPage("/loginForm").userInfoEndpoint()
+		http.oauth2Login().loginPage("http://localhost:5173/loginForm").userInfoEndpoint()
 				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
 
 		/* (5) */
-		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("/")
+		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("http://localhost:5173/")
 				.invalidateHttpSession(true);
 
 		/* (6) */
@@ -113,7 +113,7 @@ public class SecurityConfig {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-                response.sendRedirect("http://localhost:5173/user");
+                response.sendRedirect("http://localhost:5173/");
             }
 		};
 	}

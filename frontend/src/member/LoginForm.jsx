@@ -1,6 +1,5 @@
 // src/Login.jsx
 import React, {useRef} from 'react';
-import PaymentRegForm from '../payment/PaymentRegForm';
 // import './Login.css';
 
 function LoginForm() {
@@ -12,7 +11,7 @@ function LoginForm() {
       user_id : user_id.current.value,
       password: password.current.value,
     };
-    fetch('http://localhost:8080/api/login', {
+    fetch('http://localhost:8080/login', {
       method: 'post',
       credentials: 'include',
       headers: {
@@ -56,7 +55,6 @@ function LoginForm() {
               <button className="submit"  type="button" onClick={login}>로그인</button>
             {/* </form> */}
             <a href="/joinForm">회원가입을 아직 하지 않으셨나요?</a>
-            <PaymentRegForm/>
           </div>
         </div>
         <div className="right">

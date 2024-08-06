@@ -48,9 +48,15 @@ public class AuthController {
 		return null;
 	}
 	
+	@GetMapping("/logout")
+	public Response<JSONObject> logoutProc() {
+		System.out.println("logoutProc");
+		return null;
+	}
+	
 	// 아이디 중복 조회
 	@RequestMapping(value = "/checkId", method = RequestMethod.POST)
-	public ResponseEntity<String> checkEmail(@RequestParam("user_id") String user_id) throws Exception {
+	public ResponseEntity<String> checkId(@RequestParam("user_id") String user_id) throws Exception {
 		try {
             int result = service.checkId(user_id);
             if (result == 0) {
