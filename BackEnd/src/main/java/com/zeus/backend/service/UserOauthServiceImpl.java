@@ -25,7 +25,7 @@ public class UserOauthServiceImpl implements UserOauthService {
 
 	@Override
 	public void insertUserOauth(String user_id, JwtModel jwtModel) throws Exception {
-		UserOauth userOauth = UserOauth.builder().refreshToken(jwtModel.getRefreshToken()).user_id(user_id).build();
+		UserOauth userOauth = UserOauth.builder().refresh_token(jwtModel.getRefreshToken()).user_id(user_id).build();
 		mapper.insert(userOauth);
 	}
 

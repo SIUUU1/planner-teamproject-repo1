@@ -13,9 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Payment {
 	private int payment_id;
-	private String merchant_uid;
+	private String item_id;
 	private int user_no;
 	private String user_id;
-	private int amount;
+	private String user_name;
+	private String user_email;
+	private String user_tel;
+	private int price;
 	private Date reg_date;
 }

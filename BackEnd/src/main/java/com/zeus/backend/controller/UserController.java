@@ -30,7 +30,7 @@ public class UserController {
 
 	// 쿠키 토큰으로 사용자 정보 가져오기
 	@GetMapping("/")
-	public ResponseEntity<?> findByToken(HttpServletRequest request) {
+	public ResponseEntity<?> getUser(HttpServletRequest request) {
 		User user = null;
 		String userId = null;
 		String accessToken = jwtService.resolveCookie(request);
@@ -41,7 +41,7 @@ public class UserController {
 
 		try {
 			userId = jwtService.getClaim(accessToken, "user_id");
-			log.info("findByToken() user_id: {}", userId);
+			log.info("getUser() user_id: {}", userId);
 
 			user = userService.findByUserId(userId);
 
@@ -57,24 +57,4 @@ public class UserController {
 		}
 	}
 
-//	@GetMapping("/user-info")
-//	public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token) {
-//		try {
-//			if (token != null && token.startsWith("Bearer ")) {
-//				token = token.substring(7); // Remove "Bearer " prefix
-//				if (jwtService.validateToken(token)) {
-//					String userId = jwtService.getUserIdFromToken(token);
-//					User user = userService.getUserById(userId);
-//					if (user != null) {
-//						return ResponseEntity.ok(user);
-//					} else {
-//						return ResponseEntity.status(404).body("User not found");
-//					}
-//				}
-//			}
-//			return ResponseEntity.status(401).body("Invalid token");
-//		} catch (Exception e) {
-//			return ResponseEntity.status(500).body("An error occurred while processing the token");
-//		}
-//	}
 }

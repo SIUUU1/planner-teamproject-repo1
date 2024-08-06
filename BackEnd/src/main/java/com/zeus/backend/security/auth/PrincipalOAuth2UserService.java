@@ -63,7 +63,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 		String provider = oAuth2UserInfo.getProvider();
 		String providerId = oAuth2UserInfo.getProviderId();
 		String user_id = provider + "_" + providerId; // google_105156291955329144943
-		String password = bCryptPasswordEncoder.encode("weplan");
+		String password = "@1weplan1@";
 
 		// 회원 중복 체크
 		User userEntity = null;

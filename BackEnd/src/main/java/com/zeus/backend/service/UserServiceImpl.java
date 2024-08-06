@@ -1,23 +1,23 @@
 package com.zeus.backend.service;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zeus.backend.domain.User;
 import com.zeus.backend.mapper.UserMapper;
+import com.zeus.backend.security.jwt.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -26,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private HttpSession httpSession;
+
+	@Autowired
+	private JwtService jwtService;
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -91,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
 	// 아이디 중복 조회
 	@Override
-	public int checkId(String user_id)  throws Exception {
+	public int checkId(String user_id) throws Exception {
 		return mapper.checkId(user_id);
 	}
 
@@ -141,7 +144,34 @@ public class UserServiceImpl implements UserService {
 		mapper.modifyAuth(user);
 	}
 
-	// 현재 인증된 사용자 정보 반환(토큰) 
-	
+	// 현재 인증된 사용자 정보 반환(토큰)
+	// 쿠키 토큰으로 사용자 객체 반환하기
+	public User findUserbyToken(HttpServletRequest request) {
+
+		User user = null;
+		String userId = null;
+		
+		String accessToken = jwtService.resolveCookie(request);
+
+		if (accessToken == null) {
+			throw new RuntimeException("Access token is missing");
+		}
+
+		try {
+			userId = jwtService.getClaim(accessToken, "user_id");
+			log.info("findByToken() user_id: {}", userId);
+
+			user = findByUserId(userId);
+
+			if (user == null) {
+				throw new RuntimeException("User not found");
+			}
+
+			return user;
+		} catch (Exception e) {
+			log.error("Error while fetching user by token", e);
+			throw new RuntimeException("An error occurred while fetching user by token", e);
+		}
+	}
 
 }

@@ -13,6 +13,6 @@ import lombok.Setter;
 @Builder
 public class UserOauth {
 	private int useraouth_id;
-	private String refreshToken;
+	private String refresh_token;
 	private String user_id;
 }

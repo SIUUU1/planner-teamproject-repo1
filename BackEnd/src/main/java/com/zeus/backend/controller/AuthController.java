@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.User;
@@ -39,6 +38,7 @@ public class AuthController {
 		System.out.println("apiCon" + user);
 
 		service.create(user);
+		
 		return new Response<>(HttpStatus.OK.value(), "회원가입 완료");
 	}
 
@@ -55,10 +55,12 @@ public class AuthController {
 	}
 	
 	// 아이디 중복 조회
-	@RequestMapping(value = "/checkId", method = RequestMethod.POST)
-	public ResponseEntity<String> checkId(@RequestParam("user_id") String user_id) throws Exception {
+	@RequestMapping("/checkId/{user_id}")
+	public ResponseEntity<String> checkId(@PathVariable(name="user_id") String user_id) throws Exception {
+		System.out.println("checkId user_id"+user_id);
 		try {
             int result = service.checkId(user_id);
+            System.out.println("checkId result"+result);
             if (result == 0) {
                 return ResponseEntity.ok("사용가능한 아이디입니다.");
             } else {

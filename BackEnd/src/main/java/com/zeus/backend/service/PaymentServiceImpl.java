@@ -1,24 +1,32 @@
 package com.zeus.backend.service;
 
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import com.zeus.backend.domain.Payment;
+import com.zeus.backend.mapper.PaymentMapper;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-	
 
-	
-	
+	@Autowired
+	private PaymentMapper mapper;
+
+	@Override
+	public void create(Payment payment) throws Exception {
+		mapper.create(payment);
+	}
+
+	@Override
+	public List<Payment> list() throws Exception {
+		return mapper.list();
+	}
+
+	@Override
+	public List<Payment> userPayList(int user_no) throws Exception {
+		return mapper.userPayList(user_no);
+	}
+
 }
