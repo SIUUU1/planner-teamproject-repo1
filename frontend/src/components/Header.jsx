@@ -4,6 +4,7 @@ import { faBell, faBars, faUserGroup, faChartSimple, faRightFromBracket, faPaper
 import Button from "./Button";
 import React, { useState, useEffect } from 'react';
 import MenuBar from './MenuBar'; // MenuBar 컴포넌트 임포트
+import useMove from "../util/useMove";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +13,11 @@ const Header = () => {
   const [notifications] = useState([
     { id: 1, date: '7월 12일', category: '보안기능', message: '새로운 환경에서 로그인 되었습니다.' }
   ]);
+ 
+  const onMoveLogingform = useMove('/loginForm');
+  const onMoveLogout = ()=>{
+
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -52,7 +58,8 @@ const Header = () => {
           <div className="leftHeader">
             <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars} />} onClick={toggleMenu} /></div>
             <div className="leftMiddleHeader">
-              <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket} />} onClick={() => window.location.href = '/login'} /></div>
+              {/* 로그인 성공 시: 로그아웃 기능, 아니면 : 로그인 기능 */}
+              <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket} />} onClick={() => onMoveLogingform()} /></div>
               <div className='headerThirdChild'><Button text={<FontAwesomeIcon icon={faUserGroup} />} /></div>
               <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple} />} /></div>
             </div>
