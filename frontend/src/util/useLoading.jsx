@@ -6,43 +6,57 @@ function useLoading(url, type) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(url, { credentials: 'include' })
-            .then((response) => {
+        const fetchData = async () => {
+            try {
+                let response = await fetch(url, { credentials: 'include' });
+
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    if (response.status === 499) {
+                        await fetchData(); // 토큰 만료가 발생했을 때 재요청 시도
+                        return; // 재요청 완료 후 추가 로직을 실행하지 않음
+                    }
+                    // throw new Error(`HTTP error! Status: ${response.status}`);
                 }
+
+                let result;
                 switch (type) {
                     case 'json':
-                        return response.json();
+                        result = await response.json();
+                        break;
                     case 'text':
-                        return response.text();
+                        result = await response.text();
+                        break;
                     case 'blob':
-                        return response.blob();
+                        result = await response.blob();
+                        break;
                     case 'arrayBuffer':
-                        return response.arrayBuffer();
+                        result = await response.arrayBuffer();
+                        break;
                     case 'formData':
-                        return response.formData();
+                        result = await response.formData();
+                        break;
                     case 'image':
-                        // Assuming 'image' means 'blob' for images
-                        return response.blob();
+                        result = await response.blob(); // 이미지의 경우 'blob'으로 처리
+                        break;
                     case 'map':
-                        // Assuming 'map' means 'text' for text-based maps or other custom handling
-                        return response.text();
+                        result = await response.text(); // 텍스트 기반의 맵 처리
+                        break;
                     default:
                         throw new Error('Unsupported type');
                 }
-            })
-            .then((data) => {
-                setData(data);
+
+                setData(result);
                 setLoading(false);
-            })
-            .catch((error) => {
-                setError(error);
+            } catch (error) {
+                setError(error.message || 'An error occurred');
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchData();
     }, [url, type]);
 
-    return { data, loading, error };  // 객체 형태로 반환
+    return { data, loading, error };
 }
 
 export default useLoading;
