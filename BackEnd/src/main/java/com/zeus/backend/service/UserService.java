@@ -17,13 +17,13 @@ public interface UserService {
 	public User findByUserId(String user_id) throws Exception;
 
 	// 사용자 user_no pk로 회원 정보 조회
-	public User findByUserNo(int user_no) throws Exception;
+	public User findByUserNo() throws Exception;
 	
 	// 수정 처리
 	public void modify(User user) throws Exception;
 
 	// 삭제 처리
-	public void remove(int user_no) throws Exception;
+	public void remove() throws Exception;
 
 	// 아이디 중복 조회
 	public int checkId(String user_id) throws Exception;

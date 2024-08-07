@@ -6,6 +6,7 @@ import ToFullList from '../components/ToFullList';
 import SchedulerChart from '../scheduler/SchedulerChart';
 import useLoading from '../util/useLoading';
 import useFillSchedule from '../util/useFillSchedule';
+import AdviceComponent from '../components/AdviceComponent';
 
 //달성표 테스트 데이터
 const data1 = [
@@ -151,7 +152,9 @@ if (errorScheduler) {
           <div className='plant backWhite'>식물이미지</div>
           <div className='firstMiddleText'>
             <div className='calendar backWhite'>2024.07.20 13:45:42(sat)</div>
-            <div className='saying backWhite' >일이 불가능하다고 믿는 것은 일을 불가능하게 하는 것이다.<br/>
+            <div className='saying backWhite' >
+              {/* <AdviceComponent/> */}
+              일이 불가능하다고 믿는 것은 일을 불가능하게 하는 것이다.<br/>
               -풀러-
             </div>
           </div>

@@ -24,10 +24,12 @@ function Login() {
     }).then(response => response.json())
     .then(res => {
       console.log(res);
+      alert('로그인 성공');
       onMove(); // 로그인 성공 후 유저홈으로 이동
     })
     .catch(error => {
       console.log(error);
+      alert('로그인 실패');
     });
   };
 

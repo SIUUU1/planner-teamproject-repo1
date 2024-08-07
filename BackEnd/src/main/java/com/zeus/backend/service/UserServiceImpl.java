@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.mapper.UserMapper;
 import com.zeus.backend.security.jwt.JwtService;
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	HttpServletRequest request;
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -68,7 +73,8 @@ public class UserServiceImpl implements UserService {
 
 	// 사용자 user_no pk로 회원 정보 조회
 	@Override
-	public User findByUserNo(int user_no) throws Exception {
+	public User findByUserNo() throws Exception {
+		int user_no = findUserbyToken(request);
 		return mapper.findByUserNo(user_no);
 	}
 
@@ -88,7 +94,8 @@ public class UserServiceImpl implements UserService {
 	// 삭제 처리
 	@Transactional
 	@Override
-	public void remove(int user_no) throws Exception {
+	public void remove() throws Exception {
+		int user_no = findUserbyToken(request);
 		mapper.remove(user_no);
 	}
 
@@ -146,32 +153,44 @@ public class UserServiceImpl implements UserService {
 
 	// 현재 인증된 사용자 정보 반환(토큰)
 	// 쿠키 토큰으로 사용자 객체 반환하기
-	public User findUserbyToken(HttpServletRequest request) {
+	private int findUserbyToken(HttpServletRequest request) {
+		System.out.println("=====================================");
+		System.out.println("findUserbyToken 시작");
 
 		User user = null;
-		String userId = null;
-		
-		String accessToken = jwtService.resolveCookie(request);
+		String user_id = null;
 
-		if (accessToken == null) {
-			throw new RuntimeException("Access token is missing");
-		}
+		String accessToken = jwtService.resolveCookie(request);
+		System.out.println("findUserbyToken resolvecookie");
 
 		try {
-			userId = jwtService.getClaim(accessToken, "user_id");
-			log.info("findByToken() user_id: {}", userId);
-
-			user = findByUserId(userId);
-
-			if (user == null) {
-				throw new RuntimeException("User not found");
+			// 페이지 요청할 때 권한을 확인하기 때문에 따로 처리하지 않는다.
+			if (StringUtils.isBlank(accessToken)) {
+				System.out.println("findUserbyToken Access token is missing");
 			}
 
-			return user;
+			user_id = jwtService.getClaim(accessToken, "user_id");
+			System.out.println("findUserbyToken getClaim");
+			log.info("findByToken() user_id: {}", user_id);
+
+			if (StringUtils.isBlank(user_id)) {
+				System.out.println("findUserbyToken Access token is exist, but cannot find user_id");
+			}
+
+			user = findByUserId(user_id);
+			if (user == null) {
+				System.out.println("findUserbyToken Access token is exist, but cannot find user");
+			}
+
+		} catch (TokenExpiredException e) {
+			System.out.println("findUserbyToken access 토큰 만료됨");
+			user_id = jwtService.getClaimFromExpiredToken(accessToken, "user_id"); // 만료된 토큰에서 유저네임 클레임 추출
+			System.out.println("findUserbyToken access 토큰 검증 username : " + user_id);
+
 		} catch (Exception e) {
-			log.error("Error while fetching user by token", e);
-			throw new RuntimeException("An error occurred while fetching user by token", e);
+			log.error("FindUserbyToken Error while fetching user by token", e);
 		}
+		return user.getUser_no();
 	}
 
 }
