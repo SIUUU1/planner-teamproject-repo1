@@ -24,7 +24,7 @@ public interface UserMapper {
 	public void modify(User user) throws Exception;
 
 	// 회원 정보 삭제 처리
-	public void remove(int user_no) throws Exception;
+	public void remove(String user_id) throws Exception;
 
 	// 아이디 중복 조회
 	public int checkId(String user_id) throws Exception;

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@Autowired
 	HttpServletRequest request;
 
@@ -65,17 +65,17 @@ public class UserServiceImpl implements UserService {
 		return mapper.list();
 	}
 
+	// 회원 정보 조회
+	@Override
+	public User read() throws Exception {
+		String user_id = findUserbyToken(request);
+		return mapper.findByUserId(user_id);
+	}
+
 	// 사용자 아이디로 회원 정보 조회
 	@Override
 	public User findByUserId(String user_id) throws Exception {
 		return mapper.findByUserId(user_id);
-	}
-
-	// 사용자 user_no pk로 회원 정보 조회
-	@Override
-	public User findByUserNo() throws Exception {
-		int user_no = findUserbyToken(request);
-		return mapper.findByUserNo(user_no);
 	}
 
 	// 회원 테이블의 데이터 건수 조회
@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void remove() throws Exception {
-		int user_no = findUserbyToken(request);
-		mapper.remove(user_no);
+		String user_id = findUserbyToken(request);
+		mapper.remove(user_id);
 	}
 
 	// 아이디 중복 조회
@@ -153,44 +153,41 @@ public class UserServiceImpl implements UserService {
 
 	// 현재 인증된 사용자 정보 반환(토큰)
 	// 쿠키 토큰으로 사용자 객체 반환하기
-	private int findUserbyToken(HttpServletRequest request) {
+	private String findUserbyToken(HttpServletRequest request) {
 		System.out.println("=====================================");
 		System.out.println("findUserbyToken 시작");
 
-		User user = null;
 		String user_id = null;
 
 		String accessToken = jwtService.resolveCookie(request);
 		System.out.println("findUserbyToken resolvecookie");
 
 		try {
-			// 페이지 요청할 때 권한을 확인하기 때문에 따로 처리하지 않는다.
+			// accessToken이 존재하지 않을 때(페이지마다 권한 인증할 예정)
 			if (StringUtils.isBlank(accessToken)) {
 				System.out.println("findUserbyToken Access token is missing");
+				throw new RuntimeException("Access token is missing");
 			}
 
 			user_id = jwtService.getClaim(accessToken, "user_id");
 			System.out.println("findUserbyToken getClaim");
 			log.info("findByToken() user_id: {}", user_id);
-
+			// accessToken에서 user_id를 찾을 수 없을 때(해킹??)
 			if (StringUtils.isBlank(user_id)) {
 				System.out.println("findUserbyToken Access token is exist, but cannot find user_id");
+				throw new RuntimeException("User_id not found");
 			}
-
-			user = findByUserId(user_id);
-			if (user == null) {
-				System.out.println("findUserbyToken Access token is exist, but cannot find user");
-			}
-
+			// accessToken이 만료되었을 때
 		} catch (TokenExpiredException e) {
 			System.out.println("findUserbyToken access 토큰 만료됨");
-			user_id = jwtService.getClaimFromExpiredToken(accessToken, "user_id"); // 만료된 토큰에서 유저네임 클레임 추출
-			System.out.println("findUserbyToken access 토큰 검증 username : " + user_id);
-
+			String expiredUser_id = jwtService.getClaimFromExpiredToken(accessToken, "user_id"); // 만료된 토큰에서 유저네임 클레임 추출
+			System.out.println("findUserbyToken access 토큰 만료됨 username : " + expiredUser_id);
+			
 		} catch (Exception e) {
 			log.error("FindUserbyToken Error while fetching user by token", e);
 		}
-		return user.getUser_no();
+
+		return user_id;
 	}
 
 }

@@ -15,9 +15,9 @@ public interface UserService {
 
 	// 사용자 아이디로 회원 정보 조회
 	public User findByUserId(String user_id) throws Exception;
-
-	// 사용자 user_no pk로 회원 정보 조회
-	public User findByUserNo() throws Exception;
+	
+	// 회원 정보 조회
+	public User read() throws Exception;
 	
 	// 수정 처리
 	public void modify(User user) throws Exception;

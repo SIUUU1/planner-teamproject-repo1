@@ -31,7 +31,7 @@
 	</update>
 	<!-- 사용자 삭제 -->
 	<delete id="remove">
-		Delete from users where user_no = #{user_no}
+		Delete from users where user_id = #{user_id}
 	</delete>
 	<!-- 권한 수정 -->
 	<update id="modifyAuth">
