@@ -31,6 +31,7 @@ import Signup from './member/SignUp';
 import TodoMain from './todoList/TodoMain';
 import TodoDetail from './todoList/TodoDetail';
 import NotAuthorized from './pages/NotAuthorized';
+import Welcome from './pages/Welcome';
 
 function App() {
   
@@ -44,6 +45,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path="/joinForm" element={<Signup />} /> 
           <Route path='/loginForm' element={<Login/>}/>
+          <Route path='/welcome' element={<Welcome/>}/>
           <Route path="/user" element={<User/>} />
           <Route path='/*' element={<NotFound/>}/>
           <Route path='/as' element={<NotAuthorized/>}/>

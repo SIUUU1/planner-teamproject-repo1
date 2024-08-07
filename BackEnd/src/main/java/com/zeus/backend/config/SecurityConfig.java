@@ -61,14 +61,13 @@ public class SecurityConfig {
 				.hasRole("MANAGER").requestMatchers("/api/pro/**").hasRole("PRO").anyRequest().permitAll();
 
 		//실패시 url 추가할 것!
-		http.formLogin().loginPage("http://localhost:5173/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/", true);
+		http.formLogin().disable();
 
-		http.oauth2Login().loginPage("http://localhost:5173/loginForm").userInfoEndpoint()
+		http.oauth2Login().userInfoEndpoint()
 				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
 
 		/* (5) */
-		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).logoutSuccessUrl("http://localhost:5173/")
-				.invalidateHttpSession(true);
+		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).invalidateHttpSession(true);
 
 		/* (6) */
 		http.addFilter(corsFilter)

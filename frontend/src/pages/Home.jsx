@@ -6,7 +6,9 @@ import ToFullList from '../components/ToFullList';
 import SchedulerChart from '../scheduler/SchedulerChart';
 import useLoading from '../util/useLoading';
 import useFillSchedule from '../util/useFillSchedule';
-import AdviceComponent from '../components/AdviceComponent';
+import Advice from '../components/Advice';
+import Weather from '../components/Weather';
+import { useState,useEffect } from 'react';
 
 //달성표 테스트 데이터
 const data1 = [
@@ -133,6 +135,25 @@ const Home = ()=>{
    // 스케쥴 데이터 로드
   const { data: SchedulerData, loading: loadingScheduler, error: errorScheduler } = useLoading('http://localhost:8080/api/schedule/1', 'json');
   const modifiedScheduleData = useFillSchedule(SchedulerData || []);
+  
+  //명언
+  const [advice , setAdvice]= useState({message:'',author:'',});
+  const { data: adviceData, loading: loadingAdvice, error: errorAdvice } = useLoading('http://localhost:8080/api/advice', 'json');
+  
+  // 날씨
+  const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
+  const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
+
+  useEffect(() => {
+    if (adviceData) {
+      setAdvice(adviceData);
+    }
+    if(weatherData){
+      setWeather(weatherData);
+    }
+  }, [adviceData,weatherData]);
+
+
   // 로딩 중, 오류 처리
   if (loadingScheduler) {
     return <div>Loading...</div>;
@@ -141,8 +162,6 @@ const Home = ()=>{
 if (errorScheduler) {
     return <div>Error: {errorScheduler.message}</div>;
 }
-
-
   return(
     <div className="home">
 
@@ -151,11 +170,12 @@ if (errorScheduler) {
         <div className='homeFirstMiddle'>
           <div className='plant backWhite'>식물이미지</div>
           <div className='firstMiddleText'>
-            <div className='calendar backWhite'>2024.07.20 13:45:42(sat)</div>
+            <div className='calendar backWhite'>
+              {/* 2024.07.20 13:45:42(sat) */}
+              {<Weather date={weather.date} skyState={weather.sky} ptyState={weather.pty} error={errorWeather} loading={loadingWeather}/>}
+            </div>
             <div className='saying backWhite' >
-              {/* <AdviceComponent/> */}
-              일이 불가능하다고 믿는 것은 일을 불가능하게 하는 것이다.<br/>
-              -풀러-
+              {<Advice message={advice.message} author={advice.author} error={errorAdvice} loading={loadingAdvice}/>}
             </div>
           </div>
         </div>

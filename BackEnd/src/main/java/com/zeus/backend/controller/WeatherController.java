@@ -7,9 +7,15 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +27,8 @@ public class WeatherController {
 	@Value("${weather_service_key}")
 	private String weather_service_key;
 
-	@RequestMapping("/api/weather")
-	public String main(String[] args) throws Exception {
+	@GetMapping("/api/weather")
+	public ResponseEntity<?> getWeather() throws Exception {
 		Date date = new Date();
 		SimpleDateFormat formmat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat formmat2 = new SimpleDateFormat("HHmm");
@@ -53,22 +59,96 @@ public class WeatherController {
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
 		System.out.println("Response code: " + conn.getResponseCode());
-		BufferedReader rd;
+
+		BufferedReader rd = null;
 		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		} else {
 			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 		}
+
 		StringBuilder sb = new StringBuilder();
-		String line;
+		String line = "";
 		while ((line = rd.readLine()) != null) {
 			sb.append(line);
 		}
 		rd.close();
 		conn.disconnect();
 		System.out.println(sb.toString());
-		//나중에 데이터 처리하기
-		//sky, pty
-		return sb.toString();
+
+		JSONObject jsonResponse = new JSONObject(sb.toString());
+		JSONArray weatherItems = jsonResponse.getJSONObject("response").getJSONObject("body").getJSONObject("items")
+				.getJSONArray("item");
+
+		String sky = null, pty = null;
+
+		for (int i = 0; i < weatherItems.length(); i++) {
+			JSONObject item = weatherItems.getJSONObject(i);
+
+			String category = item.getString("category");
+			String fcstValue = item.getString("fcstValue");
+
+			if ("SKY".equals(category)) {
+				if (StringUtils.isBlank(sky)) {
+					sky = fcstValue;
+					System.out.println("SKY item " + item);
+				}
+			} else if ("PTY".equals(category)) {
+				if (StringUtils.isBlank(pty)) {
+					pty = fcstValue;
+					System.out.println("PTY item " + item);
+				}
+			}
+		}
+
+		System.out.println("sky " + sky + " pty " + pty);
+		Map<String, Object> weather = new HashMap<>();
+		SimpleDateFormat format3 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss(E)", Locale.ENGLISH);
+		String formattedDate = format3.format(date);
+		weather.put("date", formattedDate);
+
+		String skyState = "";
+		switch (sky) {
+		case "1":
+			skyState = "맑음";
+			break;
+		case "3":
+			skyState = "구름많음";
+			break;
+		case "4":
+			skyState = "흐림";
+			break;
+		default:
+			skyState = "맑음";
+			break;
+		}
+
+		String ptyState = "";
+		switch (pty) {
+		case "0":
+			ptyState = "없음";
+			break;
+		case "1":
+			ptyState = "비";
+			break;
+		case "2":
+			ptyState = "비/눈";
+			break;
+		case "3":
+			ptyState = "눈";
+			break;
+		case "4":
+			ptyState = "소나기";
+			break;
+		default:
+			ptyState = "없음";
+			break;
+		}
+
+		weather.put("sky", skyState);
+		weather.put("pty", ptyState);
+		System.out.println("weather map " + weather);
+
+		return ResponseEntity.ok(weather);
 	}
 }

@@ -1,9 +1,28 @@
 // src/pages/QnaCustomerSupport.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './QnaCustomerSupport.css';
 import NoticeBoard from './NoticeBoard';
 
 const QnaCustomerSupport = () => {
+  const initQan = {
+    user_id: '',
+    user_name: '',
+    image_url:'',
+    user_email:'',
+    user_tel: '',
+    user_nickname: '',
+    user_gender: '',
+    user_birthday: '',
+    password:'',
+  };
+
+  const [qna, setQna] = useState(initQan);
+
+
+
+
+
+
   const [selectedTab, setSelectedTab] = useState(null);
   const [selectedType, setSelectedType] = useState('불편/불만');
 
@@ -96,8 +115,7 @@ const QnaCustomerSupport = () => {
               <label>
                 <input 
                   type="radio" 
-                  value="불편/불만" 
-                  checked={selectedType === '불편/불만'} 
+                  value="불편/불만" name="category"
                   onChange={handleTypeChange} 
                 />
                 불편/불만
@@ -105,8 +123,7 @@ const QnaCustomerSupport = () => {
               <label>
                 <input 
                   type="radio" 
-                  value="칭찬/격려" 
-                  checked={selectedType === '칭찬/격려'} 
+                  value="칭찬/격려" name="category"
                   onChange={handleTypeChange} 
                 />
                 칭찬/격려
@@ -114,8 +131,7 @@ const QnaCustomerSupport = () => {
               <label>
                 <input 
                   type="radio" 
-                  value="기타문의" 
-                  checked={selectedType === '기타문의'} 
+                  value="기타문의" name="category" 
                   onChange={handleTypeChange} 
                 />
                 기타문의
@@ -124,15 +140,15 @@ const QnaCustomerSupport = () => {
           </div>
           <div className="formGroup">
             <label className="formLabel">이름</label>
-            <input type="text" className="formInput" placeholder="*익명으로 문의 시 답변을 드릴 수 없습니다." />
+            <input type="text" className="formInput" readOnly/>
           </div>
           <div className="formGroup">
             <label className="formLabel">전화번호</label>
-            <input type="text" className="formInput" placeholder="*전화번호를 정확하게 입력하지 않으면 답변을 드릴 수 없습니다." />
+            <input type="text" className="formInput" readOnly/>
           </div>
           <div className="formGroup">
-            <label className="formLabel">수강명</label>
-            <input type="text" className="formInput" placeholder="*보다 원활한 상담을 위해 수강명을 꼭 입력해주세요." />
+            <label className="formLabel">이메일</label>
+            <input type="text" className="formInput" placeholder="*이메일을 정확하게 입력하지 않으면 답변을 드릴 수 없습니다." />
           </div>
           <div className="formGroup">
             <label className="formLabel">제목</label>
