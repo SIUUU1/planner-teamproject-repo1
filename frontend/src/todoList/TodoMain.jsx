@@ -9,31 +9,7 @@ import DateNav from '../components/DateNav';
 import TodoItem from './TodoItem';
 import useLoading from '../util/useLoading';
 import dayjs from 'dayjs';
-const todoData = [
-  {
-    "todo_no": 0,
-    "user_no": 1,
-    "todo_title": "스트레칭하기",
-    "is_done": "N",
-    "reg_date": "2024-07-30",
-  },
-  {
-    "todo_no": 2,
-    "user_no": 1,
-    "todo_title": "다이소 다녀오기",
-    "is_done": "N",
-    "reg_date": "2024-07-31",
-    "type": "my",
-  },
-  {
-    "todo_no": 3,
-    "user_no": 1,
-    "todo_title": "운동하기",
-    "is_done": "N",
-    "reg_date": "2024-07-31",
-    "type": "my",
-  },
-];
+
 const TodoMain = () => {
   const moveToDetail = useMove(); // useMove 훅 호출
   const { type, date } = useParams();
@@ -45,16 +21,16 @@ const TodoMain = () => {
 
   const onClickLeft = useMove(`/todomain/${type}/${previousDay}`);
   const onClickRight = useMove(`/todomain/${type}/${nextDay}`);
-//   // todo 데이터 로드
-//   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${date}`, 'json');
-//   // 로딩 중, 오류 처리
-//   if (loadingdata) {
-//     return <div>Loading...</div>;
-// }
+  // todo 데이터 로드
+  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${date}`, 'json');
+  // 로딩 중, 오류 처리
+  if (loadingdata) {
+    return <div>Loading...</div>;
+}
 
-// if (errordata) {
-//     return <div>Error: {errordata.message}</div>;
-// }
+if (errordata) {
+    return <div>Error: {errordata.message}</div>;
+}
 
   let data;
 
@@ -79,7 +55,8 @@ const TodoMain = () => {
             <TodoItem
               key={i.todo_no}
               todoNo={i.todo_no}
-              clickEvent={moveToDetail(`/todoDetail/${i.todo_no}/${type}/${date}`)}
+              todoData={todoData}
+              clickEvent={()=>moveToDetail(`/todoDetail/${i.todo_no}/${type}/${date}`)}
             />
           ))}
         </div>
