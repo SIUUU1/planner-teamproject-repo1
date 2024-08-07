@@ -17,4 +17,6 @@ public interface TodoService {
 	void deleteTodo(int todo_no);
 
 	List<Todo> getTodosByUserAndDate(int user_no, Date reg_date);
+
+	void updateTodoState(int todo_no, String isDone);
 }

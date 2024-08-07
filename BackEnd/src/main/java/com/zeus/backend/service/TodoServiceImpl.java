@@ -35,6 +35,12 @@ public class TodoServiceImpl implements TodoService {
     public void updateTodo(Todo todo) {
         todoMapper.updateTodo(todo);
     }
+    
+    @Override
+	public void updateTodoState(int todo_no, String is_done) {
+		todoMapper.updateTodoState(todo_no, is_done);
+		
+	}
 
     @Override
     public void deleteTodo(int todo_no) {
@@ -45,4 +51,6 @@ public class TodoServiceImpl implements TodoService {
     public List<Todo> getTodosByUserAndDate(int user_no, Date reg_date) {
         return todoMapper.getTodosByUserAndDate(user_no, reg_date);
     }
+
+	
 }

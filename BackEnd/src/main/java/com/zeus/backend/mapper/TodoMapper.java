@@ -28,4 +28,7 @@ public interface TodoMapper {
 
     // 특정 사용자와 날짜에 따른 투두 항목 가져오기
     List<Todo> getTodosByUserAndDate(int user_no, Date reg_date);
+    
+    // 투두 완료 여부 업데이트
+	void updateTodoState(int todo_no, String is_done);
 }
