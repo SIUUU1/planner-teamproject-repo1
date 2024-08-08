@@ -14,3 +14,12 @@
   margin: 0 auto;
   padding: 0;
 }
+.isResigterTodo,.resigterTodo{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+}
+.resigterTodoInput{
+  flex-grow: 1;
+  margin-right: 10px;
+}

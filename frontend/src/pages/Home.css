@@ -82,3 +82,9 @@
 .backWhite{
   background-color: white;
 }
+.todoListP{
+  margin-left: 35px;
+}
+.sliceTodoList{
+  padding: 0 20px;
+}

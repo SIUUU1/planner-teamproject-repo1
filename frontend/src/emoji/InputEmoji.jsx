@@ -90,7 +90,6 @@ const InputEmoji = ({ isInputEmojiVisible }) => {
         <EmojiPicker emojiStyle={"apple"} onEmojiClick={onEmojiClick} categories={categories} customEmojis={modifiedData} />
       )}
       {<EmojiItem emoji_item_url={newInputEmojiUrl} customHeight={50}></EmojiItem>}
-      {newEmojiName}
     </div>
   )
 }

@@ -3,8 +3,8 @@
 <mapper namespace="com.zeus.backend.mapper.TodoMapper">
  <!-- 투두 데이터 등록 -->
     <insert id="registerTodo">
-        INSERT INTO todolist (todo_no, user_no, todo_title, is_done, reg_date, type)
-        VALUES (#{todo_no}, #{user_no}, #{todo_title}, #{is_done}, #{reg_date}, #{type})
+        INSERT INTO todolist (todo_no, user_no, todo_title, reg_date, type)
+        VALUES (todolList_sep.nextval, #{user_no}, #{todo_title}, #{reg_date}, #{type})
     </insert>
 
     <!-- 모든 투두 항목 가져오기 -->

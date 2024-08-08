@@ -18,10 +18,10 @@ function useLoading(url, type) {
                         return; // 재요청 완료 후 추가 로직을 실행하지 않음
                     }
                     // throw new Error(`HTTP error! Status: ${response.status}`);
-                    if(response.status === 404){
-                        navigate('/notFound');
-                        return;
-                    }
+                    // if(response.status === 404){
+                    //     navigate('/notFound');
+                    //     return;
+                    // }
                     if(response.status === 403){
                         navigate('/notAuthorized');
                         return;

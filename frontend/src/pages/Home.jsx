@@ -1,14 +1,15 @@
 import './Home.css';
-import Footer from '../components/Footer';
 import Attainment from '../attainment/Attainment';
-import BackGround from '../components/BackGround';
 import ToFullList from '../components/ToFullList';
+import TodoItem from '../todoList/TodoItem';
 import SchedulerChart from '../scheduler/SchedulerChart';
 import useLoading from '../util/useLoading';
 import useFillSchedule from '../util/useFillSchedule';
 import Advice from '../components/Advice';
 import Weather from '../components/Weather';
 import { useState,useEffect } from 'react';
+import dayjs from 'dayjs';
+import useMove from '../util/useMove';
 
 //달성표 테스트 데이터
 const data1 = [
@@ -129,9 +130,10 @@ const modifiedData2 = data2
 
 const height1 = modifiedData1.length * 50;
 const height2 = modifiedData2.length * 50;
-
+const currentDate = dayjs().format('YYYY-MM-DD');
 
 const Home = ()=>{
+
    // 스케쥴 데이터 로드
   const { data: SchedulerData, loading: loadingScheduler, error: errorScheduler } = useLoading('http://localhost:8080/api/schedule/1', 'json');
   const modifiedScheduleData = useFillSchedule(SchedulerData || []);
@@ -141,17 +143,22 @@ const Home = ()=>{
   const { data: adviceData, loading: loadingAdvice, error: errorAdvice } = useLoading('http://localhost:8080/api/advice', 'json');
   
   // 날씨
-  const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
-  const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
+  // const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
+  // const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
+  
+  // todo 데이터 로드
+  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${currentDate}`, 'json');
+
+
 
   useEffect(() => {
     if (adviceData) {
       setAdvice(adviceData);
     }
-    if(weatherData){
-      setWeather(weatherData);
-    }
-  }, [adviceData,weatherData]);
+    // if(weatherData){
+    //   setWeather(weatherData);
+    // }
+  }, [adviceData/*,weatherData*/]);
 
 
   // 로딩 중, 오류 처리
@@ -170,10 +177,10 @@ if (errorScheduler) {
         <div className='homeFirstMiddle'>
           <div className='plant backWhite'>식물이미지</div>
           <div className='firstMiddleText'>
-            <div className='calendar backWhite'>
-              {/* 2024.07.20 13:45:42(sat) */}
+             <div className='calendar backWhite'>
+              {/*2024.07.20 13:45:42(sat)
               {<Weather date={weather.date} skyState={weather.sky} ptyState={weather.pty} error={errorWeather} loading={loadingWeather}/>}
-            </div>
+            */}</div> 
             <div className='saying backWhite' >
               {<Advice message={advice.message} author={advice.author} error={errorAdvice} loading={loadingAdvice}/>}
             </div>
@@ -181,8 +188,22 @@ if (errorScheduler) {
         </div>
 
         <div className='homeSecondMiddle'> 
-        <div className='toDoList backWhite'>해야 할 일을 정리해보세요 
-        TodoList 3개만
+        <div className='toDoList backWhite'>
+          <ToFullList URL={`/todomain/my/${currentDate}`}></ToFullList>
+          {(todoData===null||todoData.length === 0) ? (
+            <p className='todoListP'>오늘 해야할 일을 정리해보세요!</p>
+          ) : (
+            <div className='sliceTodoList'>
+              {todoData.slice(0, 4).map((i) => (
+                <TodoItem
+                  key={i.todo_no}
+                  todoNo={i.todo_no}
+                  todoData={i}
+                  clickEvent={`/todoDetail/${i.todo_no}/my/${currentDate}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className='circleSchedule backWhite'>
           <SchedulerChart data={modifiedScheduleData}></SchedulerChart>
@@ -207,8 +228,6 @@ if (errorScheduler) {
           <div className='openChat backWhite'>같은 분야를 공부하는 사람들과 질문을 주고 받으세요!</div>
         </div>
       </div>
-      
-      <Footer/>
     </div>
   );
 };

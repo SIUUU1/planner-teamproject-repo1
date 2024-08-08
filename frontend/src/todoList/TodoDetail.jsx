@@ -13,34 +13,35 @@ import CheeringComment from './CheeringComment';
 import ToBack from '../components/ToBack';
 import RegisterEmoji from './RegisterEmoji'
 import InputEmoji from '../emoji/InputEmoji.jsx'
+import useLoading from '../util/useLoading.jsx';
 
 const TodoDetail = () => {
-  const todoData = [
-    {
-      "todo_no": 0,
-      "user_no": 1,
-      "todo_title": "스트레칭하기",
-      "is_done": "N",
-      "reg_date": "2024-07-30",
-      "type": "my",
-    },
-    {
-      "todo_no": 2,
-      "user_no": 1,
-      "todo_title": "다이소 다녀오기",
-      "is_done": "N",
-      "reg_date": "2024-07-31",
-      "type": "my",
-    },
-    {
-      "todo_no": 3,
-      "user_no": 1,
-      "todo_title": "운동하기",
-      "is_done": "N",
-      "reg_date": "2024-07-31",
-      "type": "my",
-    },
-  ];
+  // const todoData = [
+  //   {
+  //     "todo_no": 0,
+  //     "user_no": 1,
+  //     "todo_title": "스트레칭하기",
+  //     "is_done": "N",
+  //     "reg_date": "2024-07-30",
+  //     "type": "my",
+  //   },
+  //   {
+  //     "todo_no": 2,
+  //     "user_no": 1,
+  //     "todo_title": "다이소 다녀오기",
+  //     "is_done": "N",
+  //     "reg_date": "2024-07-31",
+  //     "type": "my",
+  //   },
+  //   {
+  //     "todo_no": 3,
+  //     "user_no": 1,
+  //     "todo_title": "운동하기",
+  //     "is_done": "N",
+  //     "reg_date": "2024-07-31",
+  //     "type": "my",
+  //   },
+  // ];
 
   const todoCommentData = [
     {
@@ -102,13 +103,24 @@ const TodoDetail = () => {
 
   const { no, type, date } = useParams();
   const todoNo = parseInt(no, 10);
-  const data = todoData.find(i => i.todo_no === todoNo);
+  
   const commentData = todoCommentData.filter(i => i.todo_no === todoNo);
   const emojiData = CheeringEmojiData.filter(e => e.todo_no == todoNo);
   const [isRegisterEmojiVisible, setRegisterEmojiVisible] = useState(false);
   const [isInputEmojiVisible, setInputEmojiVisible] = useState(false);
-
-  if (!data) {
+  //todo 데이터 로드
+  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/${no}`, 'json');
+  // 로딩 중, 오류 처리
+  if (loadingdata) {
+    return <div>Loading...</div>;
+  }
+  
+  if (errordata) {
+    return <div>Error: {errordata.message}</div>;
+  }
+  
+  // const data = todoData/*.find(i => i.todo_no === todoNo)*/;
+  if (!todoData) {
     return <div className='todoDetail'><div className='todoDetailContent backWhite'>Todo not found</div></div>;
   }
 
@@ -118,11 +130,11 @@ const TodoDetail = () => {
         <ToBack URL={`/todomain/${type}/${date}`} />
         <div className='todoDate'>
           <DateInfo firstChild={<Button text={<FontAwesomeIcon icon={faCalendar} />} />}
-            title={data.reg_date}
+            title={todoData.reg_date}
           />
         </div>
         <div className='todoDetailSection'>
-          <TodoItem todoNo={data.todo_no} />
+          <TodoItem todoNo={todoData.todo_no} todoData={todoData}/>
           <div className='cheeringEmojiList'>
             <Button text={<FontAwesomeIcon icon={faPlus} />} className={'registerEmojiBtn'} onClick={() => setRegisterEmojiVisible(!isRegisterEmojiVisible)} />
             {isRegisterEmojiVisible && <RegisterEmoji />}

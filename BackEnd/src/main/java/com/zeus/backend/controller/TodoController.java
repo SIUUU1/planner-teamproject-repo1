@@ -44,9 +44,27 @@ public class TodoController {
 	@Autowired
 	private HttpServletRequest request;
 
-	@PostMapping
-	public void registerTodo(@RequestBody Todo todo) {
+	@PostMapping("/register")
+	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
+		System.out.println("todo_title: " + todo.getTodo_title());
+		System.out.println("reg_date: " + todo.getReg_date());
+		System.out.println("type: " + todo.getType());
+		
+		User user = null;
+		try {
+			user = userServiceImpl.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    if (user == null) {
+	        return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+	    }
+	    todo.setUser_no(user.getUser_no());
+	    
 		todoService.registerTodo(todo);
+		System.out.println("getUser_no: " + todo.getUser_no());
+		
+		return new ResponseEntity<>(HttpStatus.OK); // 200 OK
 	}
 
 	@GetMapping
@@ -56,8 +74,35 @@ public class TodoController {
 
 	@GetMapping("/{todo_no}")
 	public Todo getTodoByNO(@PathVariable int todo_no) {
+		System.out.println("=============================");
+      System.out.println("start getTodoByNO");
+      System.out.println("todoNo:"+todo_no);
 		return todoService.getTodoByNO(todo_no);
 	}
+//	@PostMapping("/{todo_no}")
+//    public ResponseEntity<Map<String, Object>> getTodoByNO(@RequestBody Map<String, String> payload) {
+//        int todoNo = Integer.parseInt(payload.get("todo_no"));
+//
+//        System.out.println("=============================");
+//        System.out.println("start getTodoByNO");
+//        System.out.println("todoNo:"+todoNo);
+//
+//        // 상태 업데이트 처리 로직
+//        todoService.getTodoByNO(todoNo);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        try {
+//            // 성공적인 업데이트 후 JSON 응답 반환
+//            response.put("success", true);
+//            response.put("message", "Todo 상태가 업데이트되었습니다.");
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            response.put("success", false);
+//            response.put("message", "Todo 상태 업데이트 중 오류가 발생했습니다.");
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//    }
+	
 	@PostMapping("/updateState")
     public ResponseEntity<Map<String, Object>> updateTodoState(@RequestBody Map<String, String> payload) {
         int todoNo = Integer.parseInt(payload.get("todo_no"));
@@ -106,14 +151,33 @@ public class TodoController {
 //		todoService.updateTodo(todo);
 //	}
 
-	@DeleteMapping("/{todo_no}")
-	public void deleteTodo(@PathVariable int todo_no) {
-		todoService.deleteTodo(todo_no);
+	@PostMapping("/delete")
+	public ResponseEntity<Map<String, Object>> deleteTodo(@RequestBody Map<String, String> payload) {
+		int todoNo = Integer.parseInt(payload.get("todo_no"));
+		
+		System.out.println("=============================");
+        System.out.println("start deleteTodo");
+        System.out.println("todoNo:"+todoNo);
+        todoService.deleteTodo(todoNo);
+        
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 성공적인 업데이트 후 JSON 응답 반환
+            response.put("success", true);
+            response.put("message", "Todo가 삭제 되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Todo 삭제 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
 	}
 
 	@GetMapping("/search")
 	public ResponseEntity<List<Todo>> getTodosByUserAndDate(
 	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
+		System.out.println("=============================");
+        System.out.println("start getTodosByUserAndDate");
 
 	    User user = null;
 		try {

@@ -3,15 +3,26 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faX } from "@fortawesome/free-solid-svg-icons";
 import useSendPost from '../util/useSendPost';
+import useMove from '../util/useMove';
 
 const TodoItem = ({ todoNo, todoData, clickEvent }) => {
-  const [localData, setLocalData] = useState(todoData.find((i) => i.todo_no === todoNo));
+  const onClick = useMove(clickEvent);
+  const [localData, setLocalData] = useState(todoData);
 
-  const { postRequest, loading, error } = useSendPost(
+  const updateStateRequest = useSendPost(
     'http://localhost:8080/api/user/todos/updateState',
     { todo_no: localData.todo_no, is_done: localData.is_done },
     'json'
   );
+
+  const deleteRequest = useSendPost(
+    'http://localhost:8080/api/user/todos/delete',
+    { todo_no: localData.todo_no },
+    'json'
+  );
+
+  const { postRequest, loading, error } = updateStateRequest;
+  const { postRequest: postRequestDel, loading: loadingDel, error: errorDel } = deleteRequest;
 
   const handleCheckboxClick = async () => {
     const newStatus = localData.is_done === 'Y' ? 'N' : 'Y';
@@ -25,6 +36,16 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
     } catch (error) {
       console.error("Error updating status:", error);
     }
+      // window.location.reload();
+  };
+
+  const onclickDel = async () => {
+    try {
+      await postRequestDel({ todo_no: localData.todo_no });
+    } catch (error) {
+      console.error("Error delete:", error);
+    }
+    window.location.reload();
   };
 
   return (
@@ -41,15 +62,15 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
           type="text"
           className="todoTitle"
           value={localData.todo_title}
-          onClick={clickEvent}
+          onClick={onClick}
           readOnly
         />
         <div className='btnIcon'>
-          <FontAwesomeIcon icon={faPencil} id='pencil' />
-          <FontAwesomeIcon icon={faX} id='del' />
+          <FontAwesomeIcon icon={faPencil} id='pencil'/>
+          <FontAwesomeIcon icon={faX} id='del' onClick={onclickDel}/>
         </div>
       </div>
-      {error && <p className="error">{error}</p>}
+      {(error || errorDel) && <p className="error">{error || errorDel}</p>}
     </div>
   );
 };
