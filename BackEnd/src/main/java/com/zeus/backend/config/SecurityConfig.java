@@ -57,8 +57,11 @@ public class SecurityConfig {
 				.httpStrictTransportSecurity().disable().xssProtection().disable();
 
 		/* role 주소 다시 설정할 것 */
-		http.authorizeRequests().requestMatchers("/api/user/**").authenticated().requestMatchers("/api/mngr/**")
-				.hasRole("MANAGER").requestMatchers("/api/pro/**").hasRole("PRO").anyRequest().permitAll();
+		http.authorizeRequests().requestMatchers("/api/user/**").authenticated()
+								.requestMatchers("/api/mngr/**").hasRole("MANAGER")
+								.requestMatchers("/api/pro/**").hasRole("PRO")
+								.requestMatchers("/chat/**").permitAll()								
+								.anyRequest().permitAll();
 
 		//실패시 url 추가할 것!
 		http.formLogin().disable();
