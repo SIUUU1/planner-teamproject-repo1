@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function useLoading(url, type) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,6 +18,14 @@ function useLoading(url, type) {
                         return; // 재요청 완료 후 추가 로직을 실행하지 않음
                     }
                     // throw new Error(`HTTP error! Status: ${response.status}`);
+                    if(response.status === 404){
+                        navigate('/notFound');
+                        return;
+                    }
+                    if(response.status === 403){
+                        navigate('/notAuthorized');
+                        return;
+                    }
                 }
 
                 let result;
@@ -54,7 +64,7 @@ function useLoading(url, type) {
         };
 
         fetchData();
-    }, [url, type]);
+    }, [url, type, navigate]);
 
     return { data, loading, error };
 }

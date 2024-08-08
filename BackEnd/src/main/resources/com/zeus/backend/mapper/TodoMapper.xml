@@ -27,6 +27,12 @@
             reg_date = #{reg_date}, type = #{type}
         WHERE todo_no = #{todo_no}
     </update>
+    
+    <!-- 투두 완료 여부 업데이트 -->
+    <update id="updateTodoState">
+        UPDATE todolist
+        SET is_done = #{is_done} WHERE todo_no = #{todo_no}
+    </update>
 
     <!-- 투두 데이터 삭제 -->
     <delete id="deleteTodo">
