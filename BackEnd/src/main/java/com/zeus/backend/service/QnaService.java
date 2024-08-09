@@ -26,9 +26,13 @@ public interface QnaService {
 	// 문의내역 조회
 	public Qna read(int qna_id) throws Exception;
 
+	// 카테고리별 문의내역 조회
+	public Qna listByCategory(String category) throws Exception;
+
 	// 문의내역 수정
 	public void modify(Qna qna) throws Exception;
 
 	// 문의내역 삭제
 	public void delete(int qna_id) throws Exception;
+
 }

@@ -36,9 +36,7 @@ public class AuthController {
 	@PostMapping("/joinProc")
 	public Response<String> joinProc(@RequestBody User user) throws Exception {
 		System.out.println("apiCon" + user);
-
 		service.create(user);
-		
 		return new Response<>(HttpStatus.OK.value(), "회원가입 완료");
 	}
 
@@ -48,10 +46,11 @@ public class AuthController {
 		return null;
 	}
 	
+	// 로그아웃
 	@GetMapping("/logout")
-	public Response<JSONObject> logoutProc() {
+	public Response<String> logoutProc() {
 		System.out.println("logoutProc");
-		return null;
+		return new Response<>(HttpStatus.OK.value(), "로그아웃 성공");
 	}
 	
 	// 아이디 중복 조회
@@ -67,7 +66,7 @@ public class AuthController {
                 return ResponseEntity.ok("이미 존재하는 아이디입니다.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking the email.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking the id.");
         }
 	}
 }

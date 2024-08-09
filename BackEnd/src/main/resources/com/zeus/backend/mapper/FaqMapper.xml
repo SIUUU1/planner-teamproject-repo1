@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.FaqMapper">
+	<!-- 등록 -->
+	<insert id="create">
+		INSERT INTO FAQ (faq_id, faq_category, faq_title, faq_content) 
+		VALUES (faq_id_SEQ.NEXTVAL, #{faq_category}, #{faq_title}, #{faq_content})
+	</insert>
+	<!-- 목록 페이지 -->
+	<select id="list" resultType="com.zeus.backend.domain.Faq">
+		SELECT * FROM FAQ
+	</select>
+	<!-- faq 보기 -->
+    <select id="read" resultType="com.zeus.backend.domain.Faq">
+	    SELECT * FROM FAQ WHERE faq_id = #{faq_id}
+    </select>
+	<!-- 수정 처리 -->
+	<update id="modify">
+		UPDATE FAQ
+		SET faq_category = #{faq_category}, faq_title = #{faq_title}, faq_content = #{faq_content} 
+		WHERE faq_id = #{faq_id}
+	</update>
+	<!-- 삭제 처리 -->
+	<delete id="delete">
+		DELETE FROM FAQ	WHERE faq_id = #{faq_id}
+	</delete>
+</mapper>

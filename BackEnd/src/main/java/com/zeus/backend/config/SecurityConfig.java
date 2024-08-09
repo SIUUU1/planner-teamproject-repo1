@@ -64,7 +64,7 @@ public class SecurityConfig {
 		http.formLogin().disable();
 
 		http.oauth2Login().userInfoEndpoint()
-				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
+				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());
 
 		/* (5) */
 		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).invalidateHttpSession(true);

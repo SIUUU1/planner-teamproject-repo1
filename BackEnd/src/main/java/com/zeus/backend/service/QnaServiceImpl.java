@@ -21,15 +21,23 @@ public class QnaServiceImpl implements QnaService {
 
 	@Override
 	public void createByMngr(Qna qna) throws Exception {
+		//문의내역 답변 처리
+		mapper.reply(qna.getGroup_id());
+		
+		//답변 등록
 		qna.setQora(2);	//답변
-		qna.setReply(1); //답변 여부
 		mapper.create(qna);
 	}
 
 	@Override
 	public void createByUser(Qna qna) throws Exception {
 		qna.setQora(1);
-		qna.setGroup_id(mapper.maxGroupId());
+		Integer group_id = mapper.maxGroupId();
+	    if (group_id == null) {
+	    	qna.setGroup_id(1); // 기본값 설정
+	    }else {
+	    	qna.setGroup_id(++group_id);
+	    }
 		mapper.create(qna);
 	}
 
@@ -60,12 +68,24 @@ public class QnaServiceImpl implements QnaService {
 
 	@Override
 	public void delete(int qna_id) throws Exception {
-		mapper.delete(qna_id);
+		// 문의내역 삭제시 답변도 같이 삭제
+		if(mapper.read(qna_id).getQora()==1) {
+			mapper.deleteByGroupId(mapper.read(qna_id).getGroup_id());	
+		}else { //답변 삭제시 답변만 삭제
+			mapper.delete(qna_id);
+		}
 	}
 
 	@Override
 	public void modify(Qna qna) throws Exception {
 		mapper.modify(qna);
 	}
+
+	@Override
+	public Qna listByCategory(String category) throws Exception {
+		return mapper.listByCategory(category);
+	}
+
+	
 
 }

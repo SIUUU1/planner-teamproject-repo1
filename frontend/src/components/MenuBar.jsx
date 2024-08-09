@@ -57,7 +57,7 @@ const MenuBar = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/qna')}>
+          <button className="menuItemLink" onClick={() => handleNavigation('/qna/create/0')}>
             <FontAwesomeIcon icon={faCircleInfo} /> <span>고객센터</span>
           </button>
         </div>

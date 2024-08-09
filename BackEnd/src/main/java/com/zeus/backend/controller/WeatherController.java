@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 public class WeatherController {
-	// 날씨 api
+	// 날씨 정보 가져오기
 	@Value("${weather_service_key}")
 	private String weather_service_key;
 
