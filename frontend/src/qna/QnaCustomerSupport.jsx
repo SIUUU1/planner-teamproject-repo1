@@ -13,33 +13,38 @@ const QnaCustomerSupport = () => {
   
   // 메뉴 선택
   const [selectedTab, setSelectedTab] = useState(null);
-  const handleTypeChange = (e) => {
-    setSelectedType(e.target.value);
-  };
+  // const handleTypeChange = (e) => {
+  //   setSelectedType(e.target.value);
+  // };
 
   // 수정 예정 문의내역 정보
-  // 수정 예정 문의내역 정보
-  const qnaDataUrl = mode === 'edit' ? `http://localhost:8080/api/qna/read/${qna_id}` : null;
-  const { data: qnaData, loading: loadingQnaData, error: errorQnaData } = useLoading(qnaDataUrl, 'json');
+  //const qnaDataUrl = mode === 'edit' ? `http://localhost:8080/api/qna/read/${qna_id}` : null;
+  //const [qna, setQna] = useState();
+  //const { data: qnaData, loading: loadingQnaData, error: errorQnaData, refetch: refetchQnaData } = useLoading(qnaDataUrl, 'json');
 
-  // Faq
+  // FaqList
   const { data: faqListData, loading: loadingFaqList, error: errorFaqList } = useLoading('http://localhost:8080/api/faq/list', 'json');
   
   // 사용자 QnaList
   const [qnaList, setQnaList] = useState([]);
-  const { data: qnaListData, loading: loadingQnaList, error: errorQnaList } = useLoading('http://localhost:8080/api/user/qna/list', 'json');
+  const { data: qnaListData, loading: loadingQnaList, error: errorQnaList, refetch: refetchQnaList} = useLoading('http://localhost:8080/api/user/qna/list', 'json');
   
   useEffect(() => {
-    // if(mode==='list'){
-    //   setSelectedTab('myqna');
-    // }
     if(mode==='edit'){
       setSelectedTab('voice');
     }
+    // if (qnaData) {
+    //   setQna(qna);
+    // }
     if (qnaListData) {
       setQnaList(qnaListData);
     }
-  }, [qnaListData,mode, qna_id]);
+  }, [qnaListData, qna_id, mode]);
+
+  const onEventHandler = ()=>{
+    refetchQnaList();
+    // refetchQnaData();
+  };
 
 //   if (loadingQnaList) {
 //     return <div>Loading...</div>;
@@ -70,8 +75,8 @@ const QnaCustomerSupport = () => {
       </div>
       {selectedTab === 'notice' && <NoticeBoard />}
       {selectedTab === 'faq' && <Faq faqs={faqListData || []} />}
-      {selectedTab === 'voice' && <QnaVocie mode={mode} qnaData={qnaData || null}/>}
-      {selectedTab === 'myqna' && <MyQnaList qnas={qnaListData || []}/>}
+      {selectedTab === 'voice' && <QnaVocie mode={mode} qna_id={qna_id} onEvent={onEventHandler} onChangeTab={setSelectedTab} />}
+      {selectedTab === 'myqna' && <MyQnaList qnas={qnaListData || []} onChangeTab={setSelectedTab}/>}
     </div>
   );
 };

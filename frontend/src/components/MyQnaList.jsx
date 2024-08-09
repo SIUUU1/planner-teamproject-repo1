@@ -6,11 +6,18 @@ import Button from '../components/Button';
 import useSendPost from '../util/useSendPost';
 import { useNavigate } from 'react-router-dom';
 
-function MyQnaList({qnas}) {
+function MyQnaList({qnas,onChangeTab}) {
+  
+  // qnas가 변경될 때 inquiries 상태를 업데이트
+  useEffect(() => {
+    setInquiries(qnas);
+  }, [qnas]);
+
   // 클릭 시 내용 보기 
   const [visible, setVisible] = useState({});
   const [inquiries, setInquiries] = useState(qnas);
 
+  //답변 숨기기, 보이기
   const handleToggle = (group_id) => {
     setVisible((prevVisible) => ({
       ...prevVisible,
@@ -22,7 +29,7 @@ function MyQnaList({qnas}) {
   const { postRequest, loading, error } = useSendPost(
     'http://localhost:8080/api/qna/delete',{},'json'
   );
-
+  
   const onDelete = async (qna_id) => {
     try {
       await postRequest({ qna_id });
@@ -38,6 +45,7 @@ function MyQnaList({qnas}) {
   // 수정 페이지로 이동
   const goEdit = (qna_id) => {
     navigate(`/qna/edit/${qna_id}`);
+    onChangeTab('voice'); //탭 바꾸기
   };
 
   const formatDate = (dateString) => {

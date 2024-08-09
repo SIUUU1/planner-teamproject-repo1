@@ -1,9 +1,8 @@
 import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
 import React, { useState , useEffect} from 'react';
-import useMove from '../util/useMove';
-
-const QnaVoice =({ mode = 'create', qnaData = null })=>{
+import useMove from'../util/useMove';
+const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, })=>{
   const initQan = {
     qna_id: '',
     user_id: '',
@@ -19,23 +18,53 @@ const QnaVoice =({ mode = 'create', qnaData = null })=>{
     reg_date:'',
   };
 
-  const [qna, setQna] = useState(qnaData || initQan);
+  //qna 정보
+  const [qna, setQna] = useState(initQan);
+  const qnaDataUrl = mode === 'edit' ? `http://localhost:8080/api/qna/read/${qna_id}` : null;
+  const { data: qnaData, loading: loadingQnaData, error: errorQnaData, refetch: refetchQnaData } = useLoading(qnaDataUrl, 'json');
+  
+  // 사용자 정보
+  const [user, setUser] = useState({ user_id: '', user_name: '', user_email:'', user_tel: '',});
+  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  
+  //mode === 'create'
+  useEffect(() => {
+    if (userData) {
+      setUser(userData);
+      if (mode === 'create') {
+        setQna((prevQna) => ({
+          ...prevQna,
+          user_id: userData.user_id,
+          user_name: userData.user_name,
+          user_tel: userData.user_tel,
+          user_email: userData.user_email,
+          category : "불편/불만",
+        }));
+      }
+    }
+  }, [userData, mode]);
+
+  //mode === 'edit'
+ useEffect(() => {
+  if (mode === 'edit' && qnaData) {
+    setQna(qnaData);
+  }
+}, [mode, qnaData, qna_id]);
+
   // qna insert
   const insertRequest = useSendPost('http://localhost:8080/api/user/qna/insert', {}, 'json');
   // qna update
   const updateRequest = useSendPost('http://localhost:8080/api/qna/update', {}, 'json');
 
-  // const onInsertQna = async () => {
-  //   try {
-  //     await postRequest(qna);
-  //     alert('Qna 등록 성공');
-  //     setQna({...qna, category:'불편/불만', qna_subject: '', qna_content: '',}); // 입력 필드 초기화
-  //   } catch (error) {
-  //     alert('Qna 등록 실패');
-  //     console.error("Error updating status:", error);
-  //   }
-  // };
-  const onMove = useMove('/qna/list/0');
+  const onMove =useMove(`/qna/create/0`);
+  const onInit = ()=>{
+     // 입력 초기화
+     setQna(prevQna => ({...prevQna, category: '불편/불만',qna_subject: '',qna_content: '',}));
+     onEvent(); //refetch
+     onMove(); //주소 초기화하기
+     onChangeTab('myqna'); //탭 바꾸기
+  };
+
   const handleRequest = async () => {
     try {
       if (mode === 'create') {
@@ -45,8 +74,7 @@ const QnaVoice =({ mode = 'create', qnaData = null })=>{
         await updateRequest.postRequest(qna);
         alert('Qna 수정 성공');
       }
-      setQna({...qna, category:'불편/불만', qna_subject: '', qna_content: '',}); // 입력 필드 초기화
-     // onMove(); //내 문의내역으로 가기
+      onInit();
     } catch (error) {
       alert(`Qna ${mode === 'create' ? '등록' : '수정'} 실패`);
       console.error(`Error ${mode === 'create' ? 'creating' : 'updating'} Qna:`, error);
@@ -69,38 +97,15 @@ const QnaVoice =({ mode = 'create', qnaData = null })=>{
   }));
   };
 
-  // 사용자 정보
-  const [user, setUser] = useState({ user_id: '', user_name: '', user_email:'', user_tel: '',});
-  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   
-  // useEffect(() => {
-  //   if (userData) {
-  //     setUser(userData);
-  //     setQna({user_id: userData.user_id, user_name: userData.user_name, user_tel: userData.user_tel, user_email: userData.user_email,category:'불편/불만',});
-  //   }
-  // }, [userData]);
-  useEffect(() => {
-    if (userData) {
-      setUser(userData);
-      if (mode === 'create') {
-        setQna((prevQna) => ({
-          ...prevQna,
-          user_id: userData.user_id,
-          user_name: userData.user_name,
-          user_tel: userData.user_tel,
-          user_email: userData.user_email,
-          category : "불편/불만",
-        }));
-      }
-    }
-  }, [userData, mode]);
+  
+//   if (loadingQnaData) {
+//     return <div>Loading...</div>;
+// }
 
-  useEffect(() => {
-    if (mode === 'edit' && qnaData) {
-      setQna(qnaData);
-    }
-  }, [mode, qnaData]);
-  
+// if (errorQnaData) {
+//     return <div>Error: {errorQnaData.message}</div>;
+// }
   return(
     <div className="supportForm">
           <label className="formLabel title">
@@ -143,7 +148,8 @@ const QnaVoice =({ mode = 'create', qnaData = null })=>{
             <label className="formLabel">내용</label>
             <textarea className="formTextarea"  name="qna_content" value={qna.qna_content} onChange={onChange}></textarea>
           </div>
-          <button type="button" className="submitButton" onClick={handleRequest}>{mode === 'create' ? '제출하기' : '수정하기'}</button>
+          <button type="button" className="submitButton" onClick={handleRequest}>{mode === 'create' ? '등록' : '수정'}</button>
+          {mode==='edit' && <button type="button" className="submitButton" onClick={() => onInit()}>취소</button>}
         </div>
   );
 };

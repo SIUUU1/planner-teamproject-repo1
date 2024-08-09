@@ -32,7 +32,6 @@ import TodoMain from './todoList/TodoMain';
 import TodoDetail from './todoList/TodoDetail';
 import NotAuthorized from './pages/NotAuthorized';
 import Welcome from './pages/Welcome';
-import EditQna from './components/EditQna';
 
 
 function App() {
@@ -62,7 +61,6 @@ function App() {
           <Route path="/boarddetail/:id" element={<BoardDetail />} />
           <Route path="/boardedit/:id" element={<BoardEdit />} />
           <Route path="/qna/:mode/:qna_id" element={<QnaCustomerSupport />} />
-          {/* <Route path="/qna/edit/:qna_id" element={<EditQna />} /> */}
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/themechange" element={<ThemeChange />} />
           <Route path="/friends" element={<FriendsList />} />
