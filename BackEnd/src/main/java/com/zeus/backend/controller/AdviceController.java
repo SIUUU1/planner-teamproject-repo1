@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 public class AdviceController {
+	// 명언 가져오기
 	@GetMapping("/api/advice")
 	public ResponseEntity<?> getAdvice() {
 		String url = "https://korean-advice-open-api.vercel.app/api/advice";

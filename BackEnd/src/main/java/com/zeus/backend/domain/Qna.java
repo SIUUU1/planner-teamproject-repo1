@@ -15,6 +15,7 @@ public class Qna {
 	private String user_name; // 작성자 이름
 	private String user_tel; // 작성자 전화번호
 	private String user_email; // 문의내역 받을 이메일
+	private String category; // 카테고리
 	private String qna_subject; // 제목
 	private String qna_content; // 내용
 	private int group_id; // 그룹아이디
