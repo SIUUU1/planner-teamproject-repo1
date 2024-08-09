@@ -1,0 +1,15 @@
+.openChatRoom{
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.roomItem{
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px 15px;
+  margin-bottom: 10px;
+}
+.roomName{
+  margin-top: 0px;
+  margin-bottom: 5px;
+}

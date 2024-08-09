@@ -1,0 +1,41 @@
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Take up full height of the parent container */
+  width: 100%;
+}
+
+.chatWindow {
+  flex: 1;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  background-color: #fff;
+  padding: 0px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.chatMessage {
+  margin: 5px 0;
+}
+
+input[type="text"] {
+  width: calc(100% - 80px);
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.subButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+.chatSub{
+  display: flex;
+}

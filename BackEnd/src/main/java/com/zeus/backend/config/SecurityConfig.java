@@ -57,14 +57,17 @@ public class SecurityConfig {
 				.httpStrictTransportSecurity().disable().xssProtection().disable();
 
 		/* role 주소 다시 설정할 것 */
-		http.authorizeRequests().requestMatchers("/api/user/**").authenticated().requestMatchers("/api/mngr/**")
-				.hasRole("MANAGER").requestMatchers("/api/pro/**").hasRole("PRO").anyRequest().permitAll();
+		http.authorizeRequests().requestMatchers("/api/user/**").authenticated()
+								.requestMatchers("/api/mngr/**").hasRole("MANAGER")
+								.requestMatchers("/api/pro/**").hasRole("PRO")
+								.requestMatchers("/api/chat/**").permitAll()								
+								.anyRequest().permitAll();
 
 		//실패시 url 추가할 것!
 		http.formLogin().disable();
 
 		http.oauth2Login().userInfoEndpoint()
-				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());
+				.userService(principalOAuth2UserService).and().successHandler(authenticationSuccessHandler());;
 
 		/* (5) */
 		http.logout().logoutUrl("/logout").deleteCookies(jwtService.getHEADER_NAME()).invalidateHttpSession(true);
