@@ -11,4 +11,6 @@ public interface ChatRoomService {
     ChatRoom getChatRoomById(String room_id);
 
     List<ChatRoom> getAllChatRooms();
+
+	List<ChatRoom> getMyChatRooms(String user_id);
 }

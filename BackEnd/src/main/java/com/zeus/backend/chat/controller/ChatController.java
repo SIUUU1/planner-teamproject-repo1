@@ -87,6 +87,11 @@ public class ChatController {
 	public List<ChatRoom> getAllChatRooms() {
 		return chatRoomService.getAllChatRooms();
 	}
+	
+	@PostMapping("/Myrooms")
+	public List<ChatRoom> getMyChatRooms(@RequestBody User user) {
+		return chatRoomService.getMyChatRooms(user.getUser_id());
+	}
 
 	@GetMapping("/room/{room_id}")
 	public ChatRoom getChatRoomById(@PathVariable String room_id) {

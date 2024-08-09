@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faComments, faCog, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
 import SettingsPage from './SettingsPage';
-import OpenChatRoom from '../openChat/OpenChatRoom';
-import CreateRoom from '../openChat/CreateRoom';
+import OpenChatRoom from './OpenChatRoom';
+import CreateRoom from './CreateRoom';
+import MyOpenChatRoom from './MyOpenChatRoom';
 
 const Chat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +50,7 @@ const Chat = () => {
               <OpenChatRoom />
           )}
           {view === 'groupChats' && (
-              <OpenChatRoom />
+              <MyOpenChatRoom />
           )}
           {view === 'home' && (
 

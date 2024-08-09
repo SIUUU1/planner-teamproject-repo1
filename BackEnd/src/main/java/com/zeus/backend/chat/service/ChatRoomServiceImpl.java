@@ -39,4 +39,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomMapper.getAllChatRooms();
     }
+
+	@Override
+	public List<ChatRoom> getMyChatRooms(String user_id) {
+		return chatRoomMapper.getMyChatRooms(user_id);
+	}
+    
+    
 }
