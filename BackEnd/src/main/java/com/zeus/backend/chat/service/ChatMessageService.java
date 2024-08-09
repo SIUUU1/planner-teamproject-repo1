@@ -3,6 +3,7 @@ package com.zeus.backend.chat.service;
 import java.util.List;
 
 import com.zeus.backend.domain.ChatMessage;
+import com.zeus.backend.domain.ChatRoom;
 
 public interface ChatMessageService {
 

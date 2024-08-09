@@ -7,9 +7,11 @@
 
 	<!-- 채팅방 생성 -->
 	<insert id="createChatRoom">
-		INSERT INTO CHAT_ROOM (ROOM_NO, ROOM_ID, ROOM_NAME, CREATER, ROOM_URL,
+		INSERT INTO CHAT_ROOM (ROOM_NO, ROOM_ID, ROOM_NAME,
+		CREATER, ROOM_URL,
 		ROOM_INFO)
-		VALUES (CHAT_ROOM_SEQ.NEXTVAL, #{room_id}, #{room_name}, #{creater},
+		VALUES (CHAT_ROOM_SEQ.NEXTVAL, #{room_id},
+		#{room_name}, #{creater},
 		#{room_url}, #{room_info})
 	</insert>
 
@@ -32,11 +34,33 @@
 		FROM CHAT_ROOM
 		WHERE ROOM_ID IN (
 		SELECT ROOM_ID
-		FROM CHAT_ROOM_MEMBER
+		FROM
+		CHAT_ROOM_MEMBER
 		WHERE USER_ID = #{user_id}
 		)
 		ORDER BY REG_DATE DESC
+	</select>
 
+	<!-- 내가 생성한 채팅방 조회 -->
+	<select id="getChatRoomsByCreater"
+		resultType="com.zeus.backend.domain.ChatRoom">
+		SELECT *
+		FROM CHAT_ROOM
+		WHERE CREATER = #{user_id} ORDER BY
+		REG_DATE DESC
+	</select>
+
+	<!-- 채팅방 수정 -->
+	<select id="updateChatRoom">
+		UPDATE CHAT_ROOM SET ROOM_NAME= #{room_name},
+		ROOM_INFO=#{room_info}
+		WHERE ROOM_ID = #{room_id}
+	</select>
+	
+	<!-- 채팅방 삭제 -->
+	<select id="deleteChatRoom">
+		DELETE FROM CHAT_ROOM 
+		WHERE ROOM_ID = #{room_id}
 	</select>
 
 </mapper>

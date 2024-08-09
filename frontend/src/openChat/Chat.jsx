@@ -3,18 +3,18 @@ import './Chat.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faComments, faCog, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
-import SettingsPage from './SettingsPage';
 import OpenChatRoom from './OpenChatRoom';
 import CreateRoom from './CreateRoom';
 import MyOpenChatRoom from './MyOpenChatRoom';
+import SettingChatRoom from './SettingChatRoom'
 
 const Chat = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState('home');
+  const [view, setView] = useState('my');
 
   useEffect(() => {
     if (!isOpen) {
-      setView('home');
+      setView('my');
     }
   }, [isOpen]);
 
@@ -23,7 +23,7 @@ const Chat = () => {
   };
 
   const registerChatRoom = () => {
-    setView('home');
+    setView('register');
   };
 
   const openSettings = () => {
@@ -31,11 +31,11 @@ const Chat = () => {
   };
 
   const allChatList = () => {
-    setView('individualChat');
+    setView('all');
   };
 
   const myChatList = () => {
-    setView('groupChats');
+    setView('my');
   };
 
   return (
@@ -45,44 +45,11 @@ const Chat = () => {
       </button>
       {isOpen && (
         <div className="messengerWindow">
-          {view === 'settings' && <SettingsPage />}
-          {view === 'individualChat' && (
-              <OpenChatRoom />
-          )}
-          {view === 'groupChats' && (
-              <MyOpenChatRoom />
-          )}
-          {view === 'home' && (
-
-            <div className='registerChat'>
-              <CreateRoom></CreateRoom>
-            </div>
-            // <>
-            //   <div className="messengerHeader">
-            //     <div className="messengerTitle">
-            //       <img src="/images/creed.png" alt="Logo" className="logo" />
-            //       <div>
-            //         <div className="messengerCompany">위플 We&Plan</div>
-            //         <div className="messengerHours">공부시간 보기</div>
-            //       </div>
-            //     </div>
-            //     <button onClick={toggleOpen} className="closeButton">×</button>
-            //   </div>
-            //   <div className="messengerBody">
-            //     <div className="messengerMessage">
-            //       <div className="messengerMessageHeader">
-            //         <span className="messengerMessageTitle">위플</span>
-            //       </div>
-            //       <div className="messengerMessageContent">
-            //         안녕하세요, 학생여러분 🧑‍💼<br />
-            //         위플 서비스 이용에 도움이 필요하신가요?<br />
-            //         문의를 남겨주시면 답변 드리겠습니다.<br />
-            //         <span className="warning">⚠️ 채팅으로는 공부 및 진행률 상담을...</span>
-            //       </div>
-            //     </div>
-            //   </div>
-            // </>
-          )}
+          {view === 'settings' && <SettingChatRoom />}
+          {view === 'all' && (<OpenChatRoom />)}
+          {view === 'my' && (<MyOpenChatRoom />)}
+          {view === 'register' && (<div className='registerChat'><CreateRoom/></div>)}
+          
           <div className="messengerFooter">
             <button className="footerButton" onClick={registerChatRoom}>
               <FontAwesomeIcon icon={faHome} />
@@ -96,10 +63,10 @@ const Chat = () => {
               <FontAwesomeIcon icon={faComments} />
               <span>내 채팅</span>
             </button>
-            {/* <button className="footerButton" onClick={openSettings}>
+            <button className="footerButton" onClick={openSettings}>
               <FontAwesomeIcon icon={faCog} />
               <span>설정</span>
-            </button> */}
+            </button>
           </div>
         </div>
       )}

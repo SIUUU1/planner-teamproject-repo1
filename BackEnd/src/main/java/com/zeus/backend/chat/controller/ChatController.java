@@ -88,9 +88,13 @@ public class ChatController {
 		return chatRoomService.getAllChatRooms();
 	}
 	
-	@PostMapping("/Myrooms")
+	@PostMapping("/myRooms")
 	public List<ChatRoom> getMyChatRooms(@RequestBody User user) {
 		return chatRoomService.getMyChatRooms(user.getUser_id());
+	}
+	@PostMapping("/settingMyRoom")
+	public List<ChatRoom> getChatRoomsByCreater(@RequestBody User user) {
+		return chatRoomService.getChatRoomsByCreater(user.getUser_id());
 	}
 
 	@GetMapping("/room/{room_id}")
@@ -102,22 +106,6 @@ public class ChatController {
 	public ResponseEntity<String> saveChatMessage(@RequestBody ChatMessage chatMessage) {
 		System.out.println("========================");
 		System.out.println("sart save message");
-//		User user = null;
-//		try {
-//			user = userServiceImpl.read();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (user == null) {
-//			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
-//		}
-//		
-//		
-//		chatMessage.setUser_id(user.getUser_id());
-//		chatMessage.setUser_nickname(user.getUser_nickname());
-//		
-//		System.out.println("chatMessage.getUser_nickname: "+chatMessage.getUser_nickname());
-//		System.out.println("chatMessage.getUser_id: "+chatMessage.getUser_id());
 		try {
 			chatMessageService.saveMessage(chatMessage);
 			return ResponseEntity.ok("Message saved successfully");
@@ -149,6 +137,34 @@ public class ChatController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add member to room.");
+		}
+	}
+	
+	
+	@PostMapping("/update-room")
+	public ResponseEntity<String> updateChatRoom(@RequestBody ChatRoom roomRequest) {
+		System.out.println("========================");
+		System.out.println("sart updateChatRoom");
+		try {
+			chatRoomService.updateChatRoom(roomRequest);
+			return ResponseEntity.ok("chat room update successfully");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update chat rooom");
+		}
+	}
+	
+	@PostMapping("/delete-room")
+	public ResponseEntity<String> deleteChatRoom(@RequestBody ChatRoom roomRequest) {
+		System.out.println("========================");
+		System.out.println("sart deleteChatRoom");
+		System.out.println("room id: "+roomRequest.getRoom_id());
+		try {
+			chatRoomService.deleteChatRoom(roomRequest.getRoom_id());
+			return ResponseEntity.ok("chat room delete successfully");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete chat rooom");
 		}
 	}
 

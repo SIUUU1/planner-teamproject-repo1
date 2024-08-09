@@ -1,13 +1,13 @@
 import React, { useState,useEffect } from 'react';
-import OpenChat from './OpenChat';
+import SettingChatRoomItem from './SettingChatRoomItem';
 import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
 import './OpenChatRoom.css';
 
-const MyOpenChatRoom = () => {
+const SettingChatRoom = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-  const { data: rooms, loading, error, postRequest } = useSendPost('http://localhost:8080/api/chat/myRooms', {}, 'json');
+  const { data: rooms, loading, error, postRequest } = useSendPost('http://localhost:8080/api/chat/settingMyRoom', {}, 'json');
 
 
   useEffect(() => {
@@ -25,12 +25,12 @@ const MyOpenChatRoom = () => {
   }
 
   if (selectedRoom) {
-    return <OpenChat room={selectedRoom} />;
+    return <SettingChatRoomItem room={selectedRoom} />;
   }
 
   return (
     <div className='openChatRoom'>
-      <h1>내 채팅 목록</h1>
+      <h1>채팅방 설정</h1>
       <div className="roomList">
         {rooms&&rooms.map(room => (
           <div
@@ -39,14 +39,12 @@ const MyOpenChatRoom = () => {
             className="roomItem">
             <h2 className='roomName'>{room.room_name}</h2>
             <p>{room.room_info}</p>
-            {/* <p>Room ID: {room.room_id}</p>
-            <p>Created by: {room.creater}</p>
-            <p>Registered on: {new Date(room.reg_date).toLocaleDateString()}</p> */}
+            <p>생성일: {new Date(room.reg_date).toLocaleDateString()}</p>
           </div>
         ))}
         {!rooms&&
           <div>
-            <p>참여한 채팅이 없습니다.</p>
+            <p>생성한 채팅이 없습니다.</p>
           </div>
         }
       </div>
@@ -54,4 +52,4 @@ const MyOpenChatRoom = () => {
   );
 }
 
-export default MyOpenChatRoom;
+export default SettingChatRoom;

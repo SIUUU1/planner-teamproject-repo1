@@ -13,4 +13,10 @@ public interface ChatRoomService {
     List<ChatRoom> getAllChatRooms();
 
 	List<ChatRoom> getMyChatRooms(String user_id);
+
+	List<ChatRoom> getChatRoomsByCreater(String user_id);
+
+	void updateChatRoom(ChatRoom room);
+
+	void deleteChatRoom(String room_id);
 }

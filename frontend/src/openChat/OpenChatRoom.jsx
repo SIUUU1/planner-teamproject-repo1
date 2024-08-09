@@ -6,7 +6,7 @@ import './OpenChatRoom.css';
 
 const OpenChatRoom = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const { data: rooms, loading, error, refetch } = useLoading('http://localhost:8080/api/chat/rooms', 'json');
+  const { data: rooms, loading, error } = useLoading('http://localhost:8080/api/chat/rooms', 'json');
 
   if (loading) {
     return <div>Loading...</div>;

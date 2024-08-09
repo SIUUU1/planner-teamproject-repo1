@@ -44,6 +44,24 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	public List<ChatRoom> getMyChatRooms(String user_id) {
 		return chatRoomMapper.getMyChatRooms(user_id);
 	}
+
+	@Override
+	public List<ChatRoom> getChatRoomsByCreater(String user_id) {
+		return chatRoomMapper.getChatRoomsByCreater(user_id);
+	}
+
+	@Override
+	public void updateChatRoom(ChatRoom room) {
+		chatRoomMapper.updateChatRoom(room);
+	}
+
+	@Override
+	public void deleteChatRoom(String room_id) {
+		chatRoomMapper.deleteChatRoom(room_id);
+	}
+	
+	
+	
     
     
 }
