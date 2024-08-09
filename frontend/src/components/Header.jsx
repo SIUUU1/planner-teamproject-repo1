@@ -71,7 +71,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="headerContent">
-        <div className="headerTitle">WePlAN</div>
+        <div className="headerTitle"><a href="http://localhost:5173/">WePlAN</a></div>
         <div className="headerBottom">
           <div className="leftHeader">
             <div className='headerFirstChild'><Button text={<FontAwesomeIcon icon={faBars} />} onClick={toggleMenu} /></div>

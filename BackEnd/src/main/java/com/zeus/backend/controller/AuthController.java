@@ -47,7 +47,7 @@ public class AuthController {
 	}
 	
 	// 로그아웃
-	@GetMapping("/logout")
+	@RequestMapping("/logout")
 	public Response<String> logoutProc() {
 		System.out.println("logoutProc");
 		return new Response<>(HttpStatus.OK.value(), "로그아웃 성공");

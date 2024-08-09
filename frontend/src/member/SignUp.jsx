@@ -188,7 +188,7 @@ function SignUp() {
                 <input type="password" name="password" value={user.password} onChange={handleChange} placeholder="비밀번호 (문자, 숫자, 특수문자 포함 6~20자)" />
                 </> )
               }
-              <input type="file"  name="image_url" value={user.image_url} onChange={handleChange} placeholder="프로필 사진" />
+              {/* <input type="file"  name="image_url" value={user.image_url} onChange={handleChange} placeholder="프로필 사진" /> 기본이미지*/}
               <input type="text" name="user_email" value={user.user_email} onChange={handleChange} placeholder="복구 이메일" />
               <select name="user_gender" value={user.user_gender} onChange={handleChange}>
                 <option value="">성별 선택</option>

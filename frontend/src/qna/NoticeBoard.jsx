@@ -1,87 +1,98 @@
 // src/pages/NoticeBoard.jsx
 import React, { useState, useEffect } from 'react';
 import './NoticeBoard.css';
+import Pagination from '../components/Pagination';
+import NoticeItem from './NoticeItem';
+import useLoading from '../util/useLoading';
 
-const NoticeBoard = () => {
+const NoticeBoard = ({userData=null}) => {
   const [notices, setNotices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5); // 초기값 5
+  const [totalPages, setTotalPages] = useState(0);
   const [selectedNotice, setSelectedNotice] = useState(null);
-  const noticesPerPage = 7;
+  
+  //const noticesPerPage = 10; //페이지당 
 
+  const { data: noticeListData, loading: loadingNoticeList, error: errorNoticeList,refetch: refetchNoticeData } = useLoading('http://localhost:8080/api/notice/list', 'json');
   useEffect(() => {
-    // 임시 공지사항 데이터
-    const sampleNotices = [
-      { id: 1, title: '공지사항 1', date: '2024-07-01', views: 10, content: '공부는 내일부터 하시면 됩니다.' },
-      { id: 2, title: '공지사항 2', date: '2024-07-02', views: 20, content: ' 내용' },
-      { id: 3, title: '공지사항 3', date: '2024-07-03', views: 30, content: ' 내용' },
-      { id: 4, title: '공지사항 4', date: '2024-07-04', views: 40, content: ' 내용' },
-      { id: 5, title: '공지사항 5', date: '2024-07-05', views: 50, content: ' 내용' },
-      { id: 6, title: '공지사항 6', date: '2024-07-06', views: 60, content: ' 내용' },
-      { id: 7, title: '공지사항 7', date: '2024-07-07', views: 70, content: ' 내용' },
-      { id: 8, title: '공지사항 8', date: '2024-07-08', views: 80, content: ' 내용' },
-      { id: 9, title: '공지사항 9', date: '2024-07-09', views: 90, content: ' 내용' },
-      { id: 10, title: '공지사항 10', date: '2024-07-10', views: 100, content: ' 내용' },
-      // 더 많은 공지사항 데이터 추가 가능
-    ];
-
-    setNotices(sampleNotices);
-  }, []);
-
-  const indexOfLastNotice = currentPage * noticesPerPage;
-  const indexOfFirstNotice = indexOfLastNotice - noticesPerPage;
-  const currentNotices = notices.slice(indexOfFirstNotice, indexOfLastNotice);
-
-  const totalPages = Math.ceil(notices.length / noticesPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+    if(noticeListData){
+      setNotices(noticeListData);
+      setTotalPages(Math.ceil(noticeListData.length / itemsPerPage));
     }
-  };
+}, [noticeListData]);
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+// 페이지 이동
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+};
 
-  const handleTitleClick = (notice) => {
-    setSelectedNotice(notice);
-  };
+// 페이지 당 게시글 수 선택
+const handleItemsPerPageChange = (e) => {
+  setItemsPerPage(Number(e.target.value));
+  setCurrentPage(1);
+};
 
-  const handleBackToList = () => {
-    setSelectedNotice(null);
-  };
+// 상세페이지
+const handleTitleClick = (notice) => {
+  setSelectedNotice(notice);
+};
+
+//목록
+const backToList = () => {
+  setSelectedNotice(null);
+};
+
+//refetch
+const onEvent = ()=>{
+  refetchNoticeData();
+};
+  
+const indexOfLastNotice = currentPage * itemsPerPage;
+const indexOfFirstNotice = indexOfLastNotice - itemsPerPage;
+const currentNotices = notices.slice(indexOfFirstNotice, indexOfLastNotice);
+
+// comments 필터링
+const filteredComments = notices.filter(
+  (n) => n.ref === (selectedNotice ? selectedNotice.ref : 0) && n.step !== 0
+);
 
   return (
     <div className="noticeBoard">
+      <button>생성</button><br />
+       <label>
+        페이지 수
+        <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+        </select>
+      </label>
          {selectedNotice ? (
-        <div className="noticeDetail">
-          <h2>{selectedNotice.title}</h2>
-          <p>{selectedNotice.content}</p>
-          <button onClick={handleBackToList}>목록으로</button>
-        </div>
-      ) : (
+         <NoticeItem 
+         selectedNotice ={selectedNotice}
+         comments={filteredComments}
+         backToList={backToList}
+         userData={userData}
+         onEvent={onEvent}/>
+        ) : (
         <>
-          
-            {currentNotices.map((notice, index) => (
-              <div className="noticeBoardRow" key={notice.id}>
-                <div className="noticeBoardCell">{notice.id}</div>
+            {currentNotices.map((notice) => (
+              <div className="noticeBoardRow" key={notice.no}>
+                <div className="noticeBoardCell">{notice.no}</div>
                 <div className="noticeBoardCell">
                   <button className="noticeTitle" onClick={() => handleTitleClick(notice)}>
-                    {notice.title}
+                    {notice.subject}
                   </button>
                 </div>
-                <div className="noticeBoardCell">{notice.date}</div>
-                <div className="noticeBoardCell">{notice.views}</div>
+                <div className="noticeBoardCell">{notice.reg_date}</div>
+                <div className="noticeBoardCell">{notice.read_count}</div>
               </div>
             ))}
-        
-          <div className="pagination">
-            <button onClick={handlePrevPage} disabled={currentPage === 1}>이전</button>
-            <span>{currentPage} / {totalPages}</span>
-            <button onClick={handleNextPage} disabled={currentPage === totalPages}>다음</button>
-          </div>
+          <Pagination totalPages={totalPages} 
+        currentPage={currentPage} 
+        onPageChange={handlePageChange} />
         </>
       )}
     </div>
