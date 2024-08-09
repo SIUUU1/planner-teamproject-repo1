@@ -27,7 +27,7 @@ public class UserController {
 		try {
 			User user = userService.read();
 			if (user == null) {
-				return ResponseEntity.status(404).body("User not found");
+				return ResponseEntity.status(499).body("User not found");
 			}
 			System.out.println("userInfo user "+user);
 			return ResponseEntity.ok(user);

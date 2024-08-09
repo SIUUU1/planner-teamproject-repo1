@@ -4,23 +4,15 @@ import './QnaCustomerSupport.css';
 import NoticeBoard from './NoticeBoard';
 import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
-import QnaVocie from '../components/QnaVoice';
-import Faq from '../components/Faq';
-import MyQnaList from '../components/MyQnaList';
+import QnaVocie from './QnaVoice';
+import Faq from './Faq';
+import MyQnaList from './MyQnaList';
 import { useParams } from 'react-router-dom';
 const QnaCustomerSupport = () => {
   const { mode, qna_id } = useParams();
   
   // 메뉴 선택
   const [selectedTab, setSelectedTab] = useState(null);
-  // const handleTypeChange = (e) => {
-  //   setSelectedType(e.target.value);
-  // };
-
-  // 수정 예정 문의내역 정보
-  //const qnaDataUrl = mode === 'edit' ? `http://localhost:8080/api/qna/read/${qna_id}` : null;
-  //const [qna, setQna] = useState();
-  //const { data: qnaData, loading: loadingQnaData, error: errorQnaData, refetch: refetchQnaData } = useLoading(qnaDataUrl, 'json');
 
   // FaqList
   const { data: faqListData, loading: loadingFaqList, error: errorFaqList } = useLoading('http://localhost:8080/api/faq/list', 'json');
@@ -29,21 +21,20 @@ const QnaCustomerSupport = () => {
   const [qnaList, setQnaList] = useState([]);
   const { data: qnaListData, loading: loadingQnaList, error: errorQnaList, refetch: refetchQnaList} = useLoading('http://localhost:8080/api/user/qna/list', 'json');
   
+   // 사용자 정보
+   const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  
   useEffect(() => {
     if(mode==='edit'){
       setSelectedTab('voice');
     }
-    // if (qnaData) {
-    //   setQna(qna);
-    // }
     if (qnaListData) {
       setQnaList(qnaListData);
     }
-  }, [qnaListData, qna_id, mode]);
+  }, [qnaListData, mode]);
 
   const onEventHandler = ()=>{
     refetchQnaList();
-    // refetchQnaData();
   };
 
 //   if (loadingQnaList) {
@@ -73,9 +64,9 @@ const QnaCustomerSupport = () => {
           위플랜에 보내주신 관심은 더욱 좋은 서비스로 보답하겠습니다.
         </p>
       </div>
-      {selectedTab === 'notice' && <NoticeBoard />}
+      {selectedTab === 'notice' && <NoticeBoard userData={userData}/>}
       {selectedTab === 'faq' && <Faq faqs={faqListData || []} />}
-      {selectedTab === 'voice' && <QnaVocie mode={mode} qna_id={qna_id} onEvent={onEventHandler} onChangeTab={setSelectedTab} />}
+      {selectedTab === 'voice' && <QnaVocie mode={mode} qna_id={qna_id} onEvent={onEventHandler} onChangeTab={setSelectedTab} userData={userData}/>}
       {selectedTab === 'myqna' && <MyQnaList qnas={qnaListData || []} onChangeTab={setSelectedTab}/>}
     </div>
   );

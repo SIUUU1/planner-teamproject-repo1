@@ -2,7 +2,7 @@ import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
 import React, { useState , useEffect} from 'react';
 import useMove from'../util/useMove';
-const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, })=>{
+const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null})=>{
   const initQan = {
     qna_id: '',
     user_id: '',
@@ -25,7 +25,7 @@ const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, })=>{
   
   // 사용자 정보
   const [user, setUser] = useState({ user_id: '', user_name: '', user_email:'', user_tel: '',});
-  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  //const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   
   //mode === 'create'
   useEffect(() => {
