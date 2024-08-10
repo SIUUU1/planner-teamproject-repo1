@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState,useEffect } from 'react';
 import OpenChat from './OpenChat';
 import useLoading from '../util/useLoading';
+import useSendPost from '../util/useSendPost';
 import './OpenChatRoom.css';
 
-const OpenChatRoom = () => {
+const MyOpenChatRoom = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const { data: rooms, loading, error } = useLoading('http://localhost:8080/api/chat/rooms', 'json');
+  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  const { data: rooms, loading, error, postRequest } = useSendPost('http://localhost:8080/api/chat/myRooms', {}, 'json');
+
+
+  useEffect(() => {
+    if (userData) {
+      postRequest({ user_id: userData.user_id }); 
+    }
+  }, [userData, postRequest]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -22,9 +30,9 @@ const OpenChatRoom = () => {
 
   return (
     <div className='openChatRoom'>
-      <h1>채팅 목록</h1>
+      <h1>내 채팅 목록</h1>
       <div className="roomList">
-        {rooms.map(room => (
+        {rooms&&rooms.map(room => (
           <div
             key={room.room_id}
             onClick={() => setSelectedRoom(room)}
@@ -36,9 +44,14 @@ const OpenChatRoom = () => {
             <p>Registered on: {new Date(room.reg_date).toLocaleDateString()}</p> */}
           </div>
         ))}
+        {!rooms&&
+          <div>
+            <p>참여한 채팅이 없습니다.</p>
+          </div>
+        }
       </div>
     </div>
   );
 }
 
-export default OpenChatRoom;
+export default MyOpenChatRoom;

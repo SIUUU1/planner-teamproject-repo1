@@ -6,9 +6,9 @@ const CreateRoom = () => {
   const [roomInfo, setRoomInfo] = useState('');
   const { data: roomUrl, loading, error, postRequest } = useSendPost(
     'http://localhost:8080/api/chat/create-room',
-    null, // initialForm은 사용하지 않으므로 null로 설정
-    'text', // 서버에서 반환하는 응답이 텍스트라고 가정
-    false // FormData를 사용하지 않으므로 false
+    null, 
+    'text', 
+    false 
   );
 
   const handleCreateRoom = async () => {

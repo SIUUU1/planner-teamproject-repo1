@@ -18,4 +18,16 @@ public interface ChatRoomMapper {
 
     // 모든 채팅방 조회
     List<ChatRoom> getAllChatRooms();
+
+    //내 채팅방 조회
+	List<ChatRoom> getMyChatRooms(String user_id);
+
+	//방장인 채팅방 조회
+	List<ChatRoom> getChatRoomsByCreater(String user_id);
+	
+	//채팅방 수정
+	void updateChatRoom(ChatRoom room);
+
+	//채팅방 삭제
+	void deleteChatRoom(String room_id);
 }
