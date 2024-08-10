@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zeus.backend.domain.Todo;
+import com.zeus.backend.domain.TodoComment;
 import com.zeus.backend.domain.User;
+import com.zeus.backend.service.TodoCommentService;
 import com.zeus.backend.service.TodoService;
 import com.zeus.backend.service.UserServiceImpl;
 
@@ -43,6 +45,9 @@ public class TodoController {
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+    private TodoCommentService todoCommentService;
 
 	@PostMapping("/register")
 	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
@@ -191,5 +196,37 @@ public class TodoController {
 	    List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), reg_date);
 	    return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
+	
+	@GetMapping("/{todo_no}/comments")
+    public ResponseEntity<List<TodoComment>> getCommentsByTodoNo(@PathVariable Long todo_no) {
+        List<TodoComment> comments = todoCommentService.getCommentsByTodoNo(todo_no);
+        return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/{todo_no}/comments")
+    public ResponseEntity<TodoComment> addComment(@PathVariable Long todo_no, @RequestBody TodoComment comment) {
+        comment.setTodo_no(todo_no);
+        
+        User user = null;
+		try {
+			user = userServiceImpl.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    if (user == null) {
+	        return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+	    }
+	    comment.setUser_id(user.getUser_id());
+		System.out.println("getUser_no: " + comment.getUser_id());
+		
+        TodoComment savedComment = todoCommentService.addComment(comment);
+        return ResponseEntity.ok(savedComment);
+    }
+
+    @DeleteMapping("/comments/{todo_comment_no}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long todo_comment_no) {
+        todoCommentService.deleteComment(todo_comment_no);
+        return ResponseEntity.ok().build();
+    }
 
 }

@@ -64,7 +64,7 @@ const categories = [
   },
 
 ];
-const InputEmoji = ({ isInputEmojiVisible }) => {
+const InputEmoji = ({ isInputEmojiVisible, setEmoji_url,emoji__url }) => {
   const modifiedData = emojiData.map(item => ({
     ...item,
     id: `custom_${item.emoji_item_no}`,
@@ -73,15 +73,10 @@ const InputEmoji = ({ isInputEmojiVisible }) => {
 
   }));
 
-  const [newEmoji, setNewEmoji] = useState("")
-  const [newEmojiName, serNewEmojiName] = useState("")
-  const [newInputEmojiUrl, setNewInputEmojiUrl] = useState("")
   const [showInputPicker, setShowInputPicker] = useState(isInputEmojiVisible);
   const onEmojiClick = (emojiObject) => {
-    setNewEmoji(emojiObject)
-    setNewInputEmojiUrl(emojiObject.getImageUrl)
-    setShowInputPicker(false);
-    serNewEmojiName(emojiObject.names)
+    setEmoji_url(emojiObject.getImageUrl)
+    setShowInputPicker(!showInputPicker);
   };
 
   return (
@@ -89,7 +84,7 @@ const InputEmoji = ({ isInputEmojiVisible }) => {
       {showInputPicker && ( // showInputPicker true일 때만 EmojiPicker를 보여줌
         <EmojiPicker emojiStyle={"apple"} onEmojiClick={onEmojiClick} categories={categories} customEmojis={modifiedData} />
       )}
-      {<EmojiItem emoji_item_url={newInputEmojiUrl} customHeight={50}></EmojiItem>}
+      {<EmojiItem emoji_item_url={emoji__url} customHeight={50}></EmojiItem>}
     </div>
   )
 }

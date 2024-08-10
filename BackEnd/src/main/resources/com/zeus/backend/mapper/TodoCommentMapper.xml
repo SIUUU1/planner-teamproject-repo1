@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zeus.backend.mapper.TodoCommentMapper">
+
+	<insert id="insertComment"
+		parameterType="com.zeus.backend.domain.TodoComment">
+		INSERT INTO TODO_COMMENT (TODO_COMMENT_NO, TODO_NO, USER_ID,
+		EMOJI_ITEM_URL, TODO_COMMENT_TEXT)
+		VALUES (TODO_COMMENT_SEQ.NEXTVAL,
+		#{todo_no}, #{user_id}, #{emoji_item_url},
+		#{todo_comment_text})
+		<selectKey keyProperty="todo_comment_no" resultType="long"
+			order="AFTER">
+			SELECT TODO_COMMENT_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<select id="selectCommentsByTodoNo"
+		resultType="com.zeus.backend.domain.TodoComment">
+		SELECT
+		tc.todo_comment_no,
+		tc.todo_no,
+		tc.user_id,
+		u.user_nickname,
+		tc.emoji_item_url,
+		tc.todo_comment_text,
+		tc.reg_date
+		FROM
+		TODO_COMMENT tc
+		JOIN
+		USERS u ON tc.user_id = u.user_id
+		WHERE
+		tc.todo_no = #{todo_no}
+		ORDER BY
+		tc.reg_date DESC
+	</select>
+
+	<delete id="deleteComment">
+		DELETE FROM TODO_COMMENT WHERE TODO_COMMENT_NO =
+		#{todo_comment_no}
+	</delete>
+
+</mapper>

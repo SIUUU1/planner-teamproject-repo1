@@ -10,7 +10,7 @@
 
 .messengerButton {
   background-color: #1A1A1A;
-  /* color: white; */
+  color: white;
   border: none;
   border-radius: 50%;
   padding: 15px;
@@ -98,7 +98,7 @@
 
 .inquiryButton {
   background-color: #1A1A1A;
-  /* color: white; */
+  color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;

@@ -14,63 +14,9 @@ import ToBack from '../components/ToBack';
 import RegisterEmoji from './RegisterEmoji'
 import InputEmoji from '../emoji/InputEmoji.jsx'
 import useLoading from '../util/useLoading.jsx';
+import useSendPost from '../util/useSendPost.jsx';
 
 const TodoDetail = () => {
-  // const todoData = [
-  //   {
-  //     "todo_no": 0,
-  //     "user_no": 1,
-  //     "todo_title": "스트레칭하기",
-  //     "is_done": "N",
-  //     "reg_date": "2024-07-30",
-  //     "type": "my",
-  //   },
-  //   {
-  //     "todo_no": 2,
-  //     "user_no": 1,
-  //     "todo_title": "다이소 다녀오기",
-  //     "is_done": "N",
-  //     "reg_date": "2024-07-31",
-  //     "type": "my",
-  //   },
-  //   {
-  //     "todo_no": 3,
-  //     "user_no": 1,
-  //     "todo_title": "운동하기",
-  //     "is_done": "N",
-  //     "reg_date": "2024-07-31",
-  //     "type": "my",
-  //   },
-  // ];
-
-  const todoCommentData = [
-    {
-      "todo_comment_no": 0,
-      "todo_no": 2,
-      "user_no": 0,
-      "todo_comment_content": "화이팅~",
-      "reg_date": "2024-07-31 16:53:23",
-      "emoji_item_no": null,
-      "emoji_item_url": 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f970.png',
-    },
-    {
-      "todo_comment_no": 1,
-      "todo_no": 2,
-      "user_no": 1,
-      "todo_comment_content": "화이팅~!!!",
-      "reg_date": "2024-07-31 16:59:23",
-      "emoji_item_no": 0,
-      "emoji_item_url": null,
-    },
-    {
-      "todo_comment_no": 1,
-      "todo_no": 4,
-      "user_no": 1,
-      "todo_comment_content": "화이팅~!!!",
-      "reg_date": "2024-07-31 16:59:23",
-    },
-  ];
-
   const CheeringEmojiData = [
     {
       "cheering_emoji_no": 0,
@@ -104,12 +50,38 @@ const TodoDetail = () => {
   const { no, type, date } = useParams();
   const todoNo = parseInt(no, 10);
   
-  const commentData = todoCommentData.filter(i => i.todo_no === todoNo);
+  // const commentData = todoCommentData.filter(i => i.todo_no === todoNo);
   const emojiData = CheeringEmojiData.filter(e => e.todo_no == todoNo);
   const [isRegisterEmojiVisible, setRegisterEmojiVisible] = useState(false);
   const [isInputEmojiVisible, setInputEmojiVisible] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [new_comment_emoji_url, setNew_comment_emoji_url] = useState(null);
+
+  //사용자 정보를 가져옵니다.
+  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+
   //todo 데이터 로드
   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/${no}`, 'json');
+  // useLoading 훅을 사용하여 댓글 목록을 가져옵니다.
+  const { data: comments = [], loading, error, refetch } = useLoading(`http://localhost:8080/api/user/todos/${todoNo}/comments`, 'json');
+
+  // useSendPost 훅을 사용하여 새 댓글을 추가합니다.
+  const { postRequest, loading: postLoading, error: postError } = useSendPost(`http://localhost:8080/api/user/todos/${todoNo}/comments`);
+  const addComment = async () => {
+    await postRequest({
+      todoNo,
+      todo_comment_text: newComment,
+      emoji_item_url: new_comment_emoji_url,
+    });
+
+    if (!postError) {
+      setNewComment('');
+      refetch(); // 댓글 목록을 다시 불러옵니다.
+      setNew_comment_emoji_url(null);
+      setInputEmojiVisible(false);
+    }
+  };
+  
   // 로딩 중, 오류 처리
   if (loadingdata) {
     return <div>Loading...</div>;
@@ -123,6 +95,9 @@ const TodoDetail = () => {
   if (!todoData) {
     return <div className='todoDetail'><div className='todoDetailContent backWhite'>Todo not found</div></div>;
   }
+  if (loading) return <div>댓글을 불러오는 중...</div>;
+  if (error) return <div> 댓글 로드 중 오류 발생: {error}</div>;
+
 
   return (
     <div className='todoDetail'>
@@ -134,7 +109,7 @@ const TodoDetail = () => {
           />
         </div>
         <div className='todoDetailSection'>
-          <TodoItem todoNo={todoData.todo_no} todoData={todoData}/>
+          <TodoItem todoNo={todoData.todo_no} todoData={todoData} userData={userData}/>
           <div className='cheeringEmojiList'>
             <Button text={<FontAwesomeIcon icon={faPlus} />} className={'registerEmojiBtn'} onClick={() => setRegisterEmojiVisible(!isRegisterEmojiVisible)} />
             {isRegisterEmojiVisible && <RegisterEmoji />}
@@ -143,17 +118,22 @@ const TodoDetail = () => {
             ))}
           </div>
           <div className='cheeringCommentList'>
-            {commentData.map((i) => (
-              <CheeringComment key={i.todo_comment_no} commentData={i} />
-            ))}
+            {comments && comments.length > 0 ? (
+                comments.map((i) => (
+                  <CheeringComment key={i.todo_comment_no} commentData={i} userData={userData}/>
+                ))
+              ) : (
+                <p>첫 번째 응원 메시지를 남겨보세요!</p>
+            )}
             <div className='commentRegister'>
               <div className='commentInputDiv'>
-                <input className='commentInput' placeholder='응원의 메세지를 남겨주세요!' />
+                <input className='commentInput' placeholder='응원의 메세지를 남겨주세요!' value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}/>
                 <Button text={<FontAwesomeIcon icon={faFaceSmile} />} className={'inputEmojiBtn'} onClick={() => setInputEmojiVisible(!isInputEmojiVisible)} />
               </div>
-              <Button text={'등록'} />
+              <Button text={'등록'} onClick={addComment}/>
             </div>
-            {isInputEmojiVisible && <InputEmoji isInputEmojiVisible={isInputEmojiVisible}></InputEmoji>}
+            {isInputEmojiVisible && <InputEmoji isInputEmojiVisible={isInputEmojiVisible} setEmoji_url={setNew_comment_emoji_url} emoji__url={new_comment_emoji_url}></InputEmoji>}
           </div>
         </div>
       </div>

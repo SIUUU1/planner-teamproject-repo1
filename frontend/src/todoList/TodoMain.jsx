@@ -17,6 +17,8 @@ const TodoMain = () => {
   const [todoTitle, setTodoTitle] = useState(''); 
   const [localData,setLocalData]=useState([]);
   const { postRequest } = useSendPost('http://localhost:8080/api/user/todos/register', {}, 'json');
+  //사용자 정보를 가져옵니다.
+  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
   const onClickResigter=()=>{
     setIsResigter(!isResigter);
@@ -35,7 +37,7 @@ const TodoMain = () => {
     } catch (error) {
       console.error('Error adding todo:', error);
     }
-    window.location.reload();
+    refetch();
   };
 
   // date가 주어지지 않았을 경우를 대비하여 기본값을 설정
@@ -46,7 +48,19 @@ const TodoMain = () => {
   const onClickLeft = useMove(`/todomain/${type}/${previousDay}`);
   const onClickRight = useMove(`/todomain/${type}/${nextDay}`);
   // todo 데이터 로드
-  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${date}`, 'json');
+  const { data: todoData, loading: loadingdata, error: errordata, refetch  } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${date}`, 'json');
+  
+  
+  useEffect(() => {
+    if (todoData) {
+      if (type === 'my') {
+        setLocalData(todoData.filter(i => i.type === 'my' && i.reg_date === date));
+      } else if (type === 'team') {
+        setLocalData(todoData.filter(i => i.type === 'team' && i.reg_date === date));
+      }
+    }
+  }, [todoData, type, date]);
+  
   // 로딩 중, 오류 처리
   if (loadingdata) {
     return <div>Loading...</div>;
@@ -55,14 +69,6 @@ const TodoMain = () => {
   if (errordata) {
     return <div>Error: {errordata.message}</div>;
   }
-
-  let data;
-  if (type === 'my') {
-    data = todoData.filter(i => i.type === 'my' && i.reg_date === date);
-  } else if (type === 'team') {
-    data = todoData.filter(i => i.type === 'team' && i.reg_date === date);
-  }
-
 
   return (
     <div className='todoMain'>
@@ -89,14 +95,16 @@ const TodoMain = () => {
 
 
         <div className='todoItemList'>
-          {data.map((i) => (
+          {localData.map((i) => (
             <TodoItem
               key={i.todo_no}
-              todoNo={i.todo_no}
-              todoData={todoData.find((e) => e.todo_no === i.todo_no)}
+              todoData={localData.find((e) => e.todo_no === i.todo_no)}
               clickEvent={`/todoDetail/${i.todo_no}/${type}/${date}`}
+              refetch={refetch}
+              userData={userData}
             />
           ))}
+          {localData.length === 0 && <p className='noDataInfo'>아직 등록된 내용이 없습니다</p>}
         </div>
       </div>
     </div>

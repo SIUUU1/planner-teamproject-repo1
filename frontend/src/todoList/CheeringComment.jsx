@@ -1,65 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './CheeringComment.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faX,faPencil } from "@fortawesome/free-solid-svg-icons";
 import ProfileLink from '../components/ProfileLink';
 import EmojiItem from '../emoji/EmojiItem';
-import useCheckEmojiType from '../util/useCheckEmojiType';
+import Button from '../components/Button';
+import InputEmoji from '../emoji/InputEmoji';
+import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 
-const userProfileData = [
-  {
-    "profile_id": 0,
-    "user_no": 0,
-    "user_nickname": "유저1",
-    "image_url": "어쩌구 주소",
-    "reg_date": "2024-01-01",
-    "update_date": "2024-01-01",
-  },
-  {
-    "profile_id": 1,
-    "user_no": 1,
-    "user_nickname": "유저2",
-    "image_url": "어쩌구 주소",
-    "reg_date": "2024-01-01",
-    "update_date": "2024-01-01",
-  },
-];
-const emojiData = [
-  {
-    "emoji_item_no": 0,
-    "emoji_item_url": 'http://localhost:8080/static/images/emoji/default/default1.png',
-  },
-  {
-    "emoji_item_no": 1,
-    "emoji_item_url": 'http://localhost:8080/static/images/emoji/default/default2.png',
-  },
-  {
-    "emoji_item_no": 2,
-    "emoji_item_url": 'http://localhost:8080/static/images/emoji/default/default3.png',
-  },
-  {
-    "emoji_item_no": 3,
-    "emoji_item_url": 'http://localhost:8080/static/images/emoji/default/default4.png',
-  },
-];
+const CheeringComment = ({ commentData, userData }) => {
+  const [isEmojiNull, setIsEmojiNull] = useState(commentData.emoji_item_url === null);
+  const [isCreater, setIsCreater] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [commentText, setCommentText] = useState(commentData.todo_comment_text);
+  const [localEmojiUrl,setLocalEmojiUrl]=useState(commentData.emoji_item_url);
+  const [isEditEmojiVisible, setEditEmojiVisible] = useState(false);
+  useEffect(() => {
+    if (userData && userData.user_no) {
+      setIsCreater(commentData.user_ip === userData.user_ip);
+    }
+  }, [userData, commentData.user_ip]);
 
-const CheeringComment = ({ commentData }) => {
-  const [isEmojiNull, setIsEmojiNull] = useState(commentData.emoji_item_url !== null || commentData.emoji_no !== null);
-  const modifiedData = userProfileData.find(i => i.user_no === commentData.user_no);
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
 
-  const emoji_item_url = useCheckEmojiType(commentData, emojiData)
+  const updateClick = () => {
+    // Logic to save the updated comment text
+    setIsEditing(false);
+  };
+
   return (
     <div className="cheeringComment">
       <div className="cheeringCommentText">
-        <ProfileLink user_nickname={modifiedData?.user_nickname} user_no={commentData.user_no}></ProfileLink>
-        <input className='comment' value={commentData.todo_comment_content} readOnly />
-        <div className='btnIcon'>
-          <FontAwesomeIcon icon={faPencil} id='pencil' />
-          <FontAwesomeIcon icon={faX} id='del' />
-        </div>
+        <ProfileLink user_nickname={commentData.user_nickname} user_no={commentData.user_no} />
+        :<input
+          className='comment'
+          value={commentText}
+          readOnly={!isEditing}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+        {isCreater && (
+          <div className='btnIcon'>
+            {isEditing ? (
+              <>
+              <div className='editComment'>
+                <Button text={<FontAwesomeIcon icon={faFaceSmile} />} className={'inputEmojiBtn'} onClick={() => setEditEmojiVisible(!isEditEmojiVisible)} />
+                <Button className='updateBtn' onClick={updateClick} text={'수정'}></Button>
+                {isEditEmojiVisible&&<InputEmoji isInputEmojiVisible={isEditEmojiVisible} setEmoji_url={setLocalEmojiUrl} emoji__url={localEmojiUrl}></InputEmoji>}
+              </div>
+              </>
+            ) : (
+              <FontAwesomeIcon icon={faPencil} id='pencil' onClick={handleEditClick} />
+            )}
+            <Button text={<FontAwesomeIcon icon={faX} id='del' />}></Button>
+          </div>
+        )}
       </div>
-      {isEmojiNull && <EmojiItem emoji_item_url={emoji_item_url} customHeight={50}></EmojiItem>}
+      {!isEmojiNull && <EmojiItem emoji_item_url={localEmojiUrl} customHeight={50} />}
     </div>
   );
 };

@@ -1,13 +1,21 @@
 import './TodoItem.css';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faX } from "@fortawesome/free-solid-svg-icons";
 import useSendPost from '../util/useSendPost';
 import useMove from '../util/useMove';
 
-const TodoItem = ({ todoNo, todoData, clickEvent }) => {
+const TodoItem = ({todoData, clickEvent, refetch, userData }) => {
   const onClick = useMove(clickEvent);
   const [localData, setLocalData] = useState(todoData);
+  const [isCreater,setIsCreater]=useState(false);
+
+  useEffect(() => {
+    if (userData && userData.user_no) {
+      setIsCreater(todoData.user_no === userData.user_no);
+    }
+  }, [userData, todoData.user_no]);
+
 
   const updateStateRequest = useSendPost(
     'http://localhost:8080/api/user/todos/updateState',
@@ -37,6 +45,7 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
       console.error("Error updating status:", error);
     }
       // window.location.reload();
+      refetch();
   };
 
   const onclickDel = async () => {
@@ -45,7 +54,7 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
     } catch (error) {
       console.error("Error delete:", error);
     }
-    window.location.reload();
+    refetch();
   };
 
   return (
@@ -55,7 +64,7 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
         className={localData.todo_no}
         checked={localData.is_done === 'Y'}
         onChange={handleCheckboxClick}
-        disabled={loading}
+        disabled={!isCreater || loading}
       />
       <div className="todoInput">
         <input
@@ -65,10 +74,10 @@ const TodoItem = ({ todoNo, todoData, clickEvent }) => {
           onClick={onClick}
           readOnly
         />
-        <div className='btnIcon'>
+        {isCreater&&<div className='btnIcon'>
           <FontAwesomeIcon icon={faPencil} id='pencil'/>
           <FontAwesomeIcon icon={faX} id='del' onClick={onclickDel}/>
-        </div>
+        </div>}
       </div>
       {(error || errorDel) && <p className="error">{error || errorDel}</p>}
     </div>

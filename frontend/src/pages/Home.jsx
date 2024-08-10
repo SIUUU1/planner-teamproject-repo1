@@ -134,6 +134,9 @@ const currentDate = dayjs().format('YYYY-MM-DD');
 
 const Home = ()=>{
 
+  //사용자 정보를 가져옵니다.
+  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+
    // 스케쥴 데이터 로드
   const { data: SchedulerData, loading: loadingScheduler, error: errorScheduler } = useLoading('http://localhost:8080/api/schedule/1', 'json');
   const modifiedScheduleData = useFillSchedule(SchedulerData || []);
@@ -197,9 +200,9 @@ if (errorScheduler) {
               {todoData.slice(0, 4).map((i) => (
                 <TodoItem
                   key={i.todo_no}
-                  todoNo={i.todo_no}
                   todoData={i}
                   clickEvent={`/todoDetail/${i.todo_no}/my/${currentDate}`}
+                  userData={userData}
                 />
               ))}
             </div>

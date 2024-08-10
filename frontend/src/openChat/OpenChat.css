@@ -33,9 +33,9 @@ input[type="text"] {
   cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
   background-color: #0056b3;
-}
+} */
 .chatSub{
   display: flex;
 }

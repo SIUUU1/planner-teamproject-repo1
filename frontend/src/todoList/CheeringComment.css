@@ -10,3 +10,17 @@
   margin: 0 10px;
   border: 0;
 }
+.cheeringComment>.emojiItem{
+  margin-left: 40px;
+}
+.updateBtn{
+  border: 1px solid rgb(88, 129, 167);
+  padding: 5px 10px;
+  margin-right: 5px;
+}
+.editComment .emojiItem{
+  display: none;
+}
+.editComment .inputEmoji{
+  position: absolute;
+}

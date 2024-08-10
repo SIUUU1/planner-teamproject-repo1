@@ -31,10 +31,12 @@ const EmojiItem = ({ emoji_item_url, customHeight, customWidth }) => {
   };
 
   return (
-    <div className="emojiItem">
-      <img src={emoji_item_url} style={imgStyle} alt="Emoji" />
-      {/* {imageSrc && <img src={imageSrc} style={imgStyle} alt="Emoji" />} */}
-    </div>
+    <>
+      {emoji_item_url&&<div className="emojiItem">
+        <img src={emoji_item_url} style={imgStyle} alt="Emoji" />
+        {/* {imageSrc && <img src={imageSrc} style={imgStyle} alt="Emoji" />} */}
+      </div>}
+    </>
   );
 };
 

@@ -17,7 +17,7 @@ import BoardList from './board/BoardList';
 import BoardWrite from './board/BoardWrite';
 import BoardDetail from './board/BoardDetail';
 import BoardEdit from './board/BoardEdit';
-import Messenger from './messenger/Messenger';
+import Chat from './openChat/Chat';
 import QnaCustomerSupport from './qna/QnaCustomerSupport';
 import NoticeBoard from './qna/NoticeBoard';
 import ThemeChange from './theme/ThemeChange';
@@ -71,7 +71,7 @@ function App() {
         </Routes>
         </ThemeProvider>
         <Footer/>
-        <Messenger />
+        <Chat/>
       </BrowserRouter>
     </div>
   )
