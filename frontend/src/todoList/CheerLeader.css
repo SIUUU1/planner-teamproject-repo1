@@ -9,3 +9,8 @@
   font-size: 12px;
   visibility: hidden;
 }
+.cheerLeader .button{
+  font-size: 12px;
+  margin: 2px 0;
+  padding: 0;
+}

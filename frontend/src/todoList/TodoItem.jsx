@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faX } from "@fortawesome/free-solid-svg-icons";
 import useSendPost from '../util/useSendPost';
 import useMove from '../util/useMove';
+import Button from '../components/Button';
 
 const TodoItem = ({todoData, clickEvent, refetch, userData }) => {
   const onClick = useMove(clickEvent);
   const [localData, setLocalData] = useState(todoData);
   const [isCreater,setIsCreater]=useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(todoData.todo_title);
 
   useEffect(() => {
     if (userData && userData.user_no) {
@@ -23,6 +26,11 @@ const TodoItem = ({todoData, clickEvent, refetch, userData }) => {
     'json'
   );
 
+  const {postRequest: updateRequest, error:updateError} = useSendPost(
+    'http://localhost:8080/api/user/todos/update',
+    {},
+    'json'
+  );
   const deleteRequest = useSendPost(
     'http://localhost:8080/api/user/todos/delete',
     { todo_no: localData.todo_no },
@@ -32,6 +40,22 @@ const TodoItem = ({todoData, clickEvent, refetch, userData }) => {
   const { postRequest, loading, error } = updateStateRequest;
   const { postRequest: postRequestDel, loading: loadingDel, error: errorDel } = deleteRequest;
 
+  const onclickEdit=  () => {
+    setIsEditing(true);
+  };
+  const updateClick=async()=>{
+    const updatedData = {
+      todo_no: todoData.todo_no,
+      todo_title: newTitle
+    };
+    await updateRequest(updatedData);
+    setIsEditing(false);
+    
+    if (!updateError) {
+      refetch();
+    }
+
+  }
   const handleCheckboxClick = async () => {
     const newStatus = localData.is_done === 'Y' ? 'N' : 'Y';
 
@@ -70,12 +94,15 @@ const TodoItem = ({todoData, clickEvent, refetch, userData }) => {
         <input
           type="text"
           className="todoTitle"
-          value={localData.todo_title}
-          onClick={onClick}
-          readOnly
+          value={newTitle}
+          onClick={!isEditing&&onClick}
+          readOnly={!isEditing}
+          onChange={(e) => setNewTitle(e.target.value)}
         />
         {isCreater&&<div className='btnIcon'>
-          <FontAwesomeIcon icon={faPencil} id='pencil'/>
+          {isEditing ? (
+            <Button className='updateBtn' onClick={updateClick} text={'수정'}></Button>
+            ):(<FontAwesomeIcon icon={faPencil} id='pencil'  onClick={onclickEdit}/>)}
           <FontAwesomeIcon icon={faX} id='del' onClick={onclickDel}/>
         </div>}
       </div>

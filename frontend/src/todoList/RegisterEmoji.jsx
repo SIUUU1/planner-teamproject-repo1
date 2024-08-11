@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import './RegisterEmoji.css';
 import EmojiPicker from 'emoji-picker-react'
+import useSendPost from '../util/useSendPost';
 import EmojiItem from '../emoji/EmojiItem';
 const emojiData = [
   {
@@ -63,7 +64,8 @@ const categories = [
   },
 
 ];
-const RegisterEmoji = () => {
+const RegisterEmoji = ({userData,todoNo,refetchEmoji}) => {
+  const { postRequest: addRequest, loading: registerLoading, error: registerError } = useSendPost(`http://localhost:8080/api/user/todos/cheering-emojis`, {});
   const modifiedData = emojiData.map(item => ({
     ...item,
     id: `custom_${item.emoji_item_no}`,
@@ -74,18 +76,40 @@ const RegisterEmoji = () => {
   // const [newEmoji, setNewEmoji] = useState("")
   const [newEmojiUrl, setNewEmojiUrl] = useState("")
   const [showPicker, setShowPicker] = useState(true);
+  // const [selectedEmoji, setSelectedEmoji] = useState(null);
 
-  const onEmojiClick = (emojiObject) => {
-    // setNewEmoji(emojiObject)
-    setNewEmojiUrl(emojiObject.getImageUrl)
-    setShowPicker(false);
-  };
+useEffect(() => {
+  if (newEmojiUrl) {
+    const sendData = async () => {
+      const newData = {
+        todo_no: todoNo,
+        user_id: userData.user_id,
+        emoji_item_url: newEmojiUrl,
+      };
+      
+      try {
+        await addRequest(newData);
+        if (!registerError) {
+          refetchEmoji();
+        }
+      } catch (error) {
+        console.error('Error sending emoji data:', error);
+      }
+    };
+
+    sendData();
+  }
+}, [newEmojiUrl]);
+
+const onEmojiClick = (emojiObject) => {
+  setNewEmojiUrl(emojiObject.getImageUrl);
+  setShowPicker(false);
+};
   return (
     <div className="registerEmoji">
       {showPicker && ( // showPicker가 true일 때만 EmojiPicker를 보여줌
         <EmojiPicker emojiStyle={"apple"} onEmojiClick={onEmojiClick} categories={categories} customEmojis={modifiedData} />
       )}
-      <EmojiItem emoji_item_url={newEmojiUrl} customHeight={20}></EmojiItem>
     </div>
   );
 };

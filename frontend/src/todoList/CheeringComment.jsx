@@ -9,7 +9,7 @@ import InputEmoji from '../emoji/InputEmoji';
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import useSendPost from '../util/useSendPost';
 const CheeringComment = ({ commentData, userData, refetch }) => {
-  const [isEmojiNull, setIsEmojiNull] = useState(commentData.emoji_item_url === null);
+  // const [isEmojiNull, setIsEmojiNull] = useState(commentData.emoji_item_url === null);
   const [isCreater, setIsCreater] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [commentText, setCommentText] = useState(commentData.todo_comment_text);
@@ -21,9 +21,9 @@ const CheeringComment = ({ commentData, userData, refetch }) => {
 
   useEffect(() => {
     if (userData && userData.user_no) {
-      setIsCreater(commentData.user_ip === userData.user_ip);
+      setIsCreater(commentData.user_id === userData.user_id);
     }
-  }, [userData, commentData.user_ip]);
+  }, [userData, commentData.user_id]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -55,7 +55,7 @@ const CheeringComment = ({ commentData, userData, refetch }) => {
     <div className="cheeringComment">
       <div className="cheeringCommentText">
         <ProfileLink user_nickname={commentData.user_nickname} user_no={commentData.user_no} />
-        :<input
+        <input
           className='comment'
           value={commentText}
           readOnly={!isEditing}
@@ -78,7 +78,7 @@ const CheeringComment = ({ commentData, userData, refetch }) => {
           </div>
         )}
       </div>
-      {!isEmojiNull && <EmojiItem emoji_item_url={localEmojiUrl} customHeight={50} />}
+      {commentData.emoji_item_url && <EmojiItem emoji_item_url={localEmojiUrl} customHeight={50} />}
     </div>
   );
 };
