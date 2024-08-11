@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.zeus.backend.mapper.TodoCheeringEmojiMapper">
+
+	<select id="getAllCheeringEmojis"
+		resultType="com.zeus.backend.domain.TodoCheeringEmoji">
+		SELECT * FROM TODO_CHEERING_EMOJI
+	</select>
+	
+	<select id="getEmojiByTodoNo"
+		resultType="com.zeus.backend.domain.TodoCheeringEmoji">
+		SELECT * FROM TODO_CHEERING_EMOJI WHERE TODO_NO = #{todo_no}
+	</select>
+
+	<select id="getCheeringEmojiById" parameterType="long"
+		resultType="com.zeus.backend.domain.TodoCheeringEmoji">
+		SELECT * FROM TODO_CHEERING_EMOJI WHERE cheering_emoji_no =
+		#{cheering_emoji_no}
+	</select>
+
+	<insert id="addCheeringEmoji"
+		parameterType="com.zeus.backend.domain.TodoCheeringEmoji">
+		INSERT INTO TODO_CHEERING_EMOJI (cheering_emoji_no,todo_no, user_id, emoji_item_url)
+		VALUES (TODO_CHEERING_EMOJI_SEQ.NEXTVAL,#{todo_no}, #{user_id}, #{emoji_item_url})
+	</insert>
+
+	<update id="updateCheeringEmoji"
+		parameterType="com.zeus.backend.domain.TodoCheeringEmoji">
+		UPDATE TODO_CHEERING_EMOJI
+		SET todo_no = #{todo_no},
+		user_id = #{user_id},
+		emoji_item_url = #{emoji_item_url}
+		WHERE cheering_emoji_no = #{cheering_emoji_no}
+	</update>
+
+	<delete id="deleteCheeringEmoji">
+		DELETE FROM TODO_CHEERING_EMOJI WHERE cheering_emoji_no =
+		#{cheering_emoji_no}
+	</delete>
+
+</mapper>
+	

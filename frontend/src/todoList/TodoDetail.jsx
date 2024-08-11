@@ -17,55 +17,27 @@ import useLoading from '../util/useLoading.jsx';
 import useSendPost from '../util/useSendPost.jsx';
 
 const TodoDetail = () => {
-  const CheeringEmojiData = [
-    {
-      "cheering_emoji_no": 0,
-      "emoji_item_no": 0,
-      "user_no": 1,
-      "todo_no": 2,
-      "emoji_item_url": null,
-    },
-    {
-      "cheering_emoji_no": 1,
-      "emoji_item_no": 1,
-      "user_no": 1,
-      "todo_no": 2,
-      "emoji_item_url": null,
-    },
-    {
-      "cheering_emoji_no": 2,
-      "emoji_item_no": null,
-      "user_no": 2,
-      "todo_no": 2,
-      "emoji_item_url": 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f970.png',
-    },
-    {
-      "cheering_emoji_no": 3,
-      "emoji_item_no": 3,
-      "user_no": 3,
-      "todo_no": 1,
-    },
-  ];
-
   const { no, type, date } = useParams();
   const todoNo = parseInt(no, 10);
-  
-  // const commentData = todoCommentData.filter(i => i.todo_no === todoNo);
-  const emojiData = CheeringEmojiData.filter(e => e.todo_no == todoNo);
+
   const [isRegisterEmojiVisible, setRegisterEmojiVisible] = useState(false);
   const [isInputEmojiVisible, setInputEmojiVisible] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [new_comment_emoji_url, setNew_comment_emoji_url] = useState(null);
 
-  //사용자 정보를 가져옵니다.
+  //사용자 정보 로드
   const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
   //todo 데이터 로드
   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/${no}`, 'json');
-  // useLoading 훅을 사용하여 댓글 목록을 가져옵니다.
+  
+  //응원 이모지 로드
+  const { data: cheeringEmojis, loadingEmoji, errorEmoji,refetch:refetchEmoji } = useLoading(`http://localhost:8080/api/user/todos/${todoNo}/cheering-emojis`, 'json');
+  
+  // useLoading 훅을 사용하여 댓글 목록 로드
   const { data: comments = [], loading, error, refetch } = useLoading(`http://localhost:8080/api/user/todos/${todoNo}/comments`, 'json');
 
-  // useSendPost 훅을 사용하여 새 댓글을 추가합니다.
+  // useSendPost 훅을 사용하여 새 댓글을 추가
   const { postRequest, loading: postLoading, error: postError } = useSendPost(`http://localhost:8080/api/user/todos/${todoNo}/comments`);
   const addComment = async () => {
     await postRequest({
@@ -83,12 +55,12 @@ const TodoDetail = () => {
   };
   
   // 로딩 중, 오류 처리
-  if (loadingdata) {
-    return <div>Loading...</div>;
+  if (loadingdata||loadingUser) {
+    return <div className='todoDetail'><div className='todoDetailContent backWhite'>Loading...</div></div>;
   }
   
-  if (errordata) {
-    return <div>Error: {errordata.message}</div>;
+  if (errordata||errorLoadingUser) {
+    return <div  className='todoDetail'><div className='todoDetailContent backWhite'>Error: {errordata.message}</div></div>;
   }
   
   // const data = todoData/*.find(i => i.todo_no === todoNo)*/;
@@ -112,9 +84,9 @@ const TodoDetail = () => {
           <TodoItem todoNo={todoData.todo_no} todoData={todoData} userData={userData}/>
           <div className='cheeringEmojiList'>
             <Button text={<FontAwesomeIcon icon={faPlus} />} className={'registerEmojiBtn'} onClick={() => setRegisterEmojiVisible(!isRegisterEmojiVisible)} />
-            {isRegisterEmojiVisible && <RegisterEmoji />}
-            {emojiData.map((e) => (
-              <CheeringEmoji key={e.cheering_emoji_no} data={e} user_no={e.user_no} />
+            {isRegisterEmojiVisible && <RegisterEmoji userData={userData} todoNo={todoNo} refetchEmoji={refetchEmoji}/>}
+            {cheeringEmojis&&cheeringEmojis.map((e) => (
+              <CheeringEmoji key={e.cheering_emoji_no} data={e} userData={userData}  refetchEmoji={refetchEmoji}/>
             ))}
           </div>
           <div className='cheeringCommentList'>

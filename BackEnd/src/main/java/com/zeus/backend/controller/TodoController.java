@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zeus.backend.domain.Todo;
+import com.zeus.backend.domain.TodoCheeringEmoji;
 import com.zeus.backend.domain.TodoComment;
 import com.zeus.backend.domain.User;
+import com.zeus.backend.service.TodoCheeringEmojiService;
 import com.zeus.backend.service.TodoCommentService;
 import com.zeus.backend.service.TodoService;
 import com.zeus.backend.service.UserServiceImpl;
@@ -47,6 +49,8 @@ public class TodoController {
 
 	@Autowired
 	private TodoCommentService todoCommentService;
+	@Autowired
+	private TodoCheeringEmojiService todoCheeringEmojiService;
 
 	@PostMapping("/register")
 	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
@@ -132,28 +136,15 @@ public class TodoController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+	@PostMapping("/update")
+	public ResponseEntity<Void> updateComment(@RequestBody Todo todo) {
+		System.out.println("====================");
+		System.out.println("start update todo");
+		System.out.println(todo.getTodo_title());
+		todoService.updateTodo(todo);
+		return ResponseEntity.ok().build();
+	}
 
-//	@PostMapping("/updateState")
-//    public ResponseEntity<Object> updateTodoState(@RequestBody Map<String, Object> requestBody) {
-//		
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//            // 성공적인 업데이트 후 JSON 응답 반환
-//            response.put("success", true);
-//            response.put("message", "Todo 상태가 업데이트되었습니다.");
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            response.put("success", false);
-//            response.put("message", "Todo 상태 업데이트 중 오류가 발생했습니다.");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
-
-//	@PutMapping("/{todo_no}")
-//	public void updateTodo(@PathVariable int todo_no, @RequestBody Todo todo) {
-//		todo.setTodo_no(todo_no);
-//		todoService.updateTodo(todo);
-//	}
 
 	@PostMapping("/delete")
 	public ResponseEntity<Map<String, Object>> deleteTodo(@RequestBody Map<String, String> payload) {
@@ -235,6 +226,31 @@ public class TodoController {
 	@PostMapping("/comments/delete")
 	public ResponseEntity<Void> deleteComment(@RequestBody TodoComment comment) {
 		todoCommentService.deleteComment(comment.getTodo_comment_no());
+		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/{todo_no}/cheering-emojis")
+	public ResponseEntity<List<TodoCheeringEmoji>> getEmojiByTodoNo(@PathVariable Long todo_no) {
+		System.out.println("==================");
+		System.out.println("start getEmojiByTodoNo");
+		System.out.println("todo_no: "+todo_no);
+		List<TodoCheeringEmoji> emojis = todoCheeringEmojiService.getEmojiByTodoNo(todo_no);
+		System.out.println("emojis(list):"+emojis);
+		return ResponseEntity.ok(emojis);
+	}
+	
+	@PostMapping("/cheering-emojis")
+	public ResponseEntity<Void> addCheeringEmoji (@RequestBody TodoCheeringEmoji Emoji){
+		System.out.println("==================");
+		System.out.println("start registerCheeringEmoji");
+		todoCheeringEmojiService.addCheeringEmoji(Emoji);
+		return ResponseEntity.ok().build();
+	}
+	@PostMapping("/cheering-emojis/delete")
+	public ResponseEntity<Void> deleteCheeringEmoji (@RequestBody TodoCheeringEmoji Emoji){
+		System.out.println("==================");
+		System.out.println("start deleteCheeringEmoji");
+		todoCheeringEmojiService.deleteCheeringEmoji(Emoji);
 		return ResponseEntity.ok().build();
 	}
 

@@ -63,11 +63,11 @@ const TodoMain = () => {
   
   // 로딩 중, 오류 처리
   if (loadingdata) {
-    return <div>Loading...</div>;
+    return <div className='todoMain'><div className='todoMainContent backWhite'>Loading...</div></div>;
   }
 
   if (errordata) {
-    return <div>Error: {errordata.message}</div>;
+    return <div className='todoMain'><div className='todoMainContent backWhite'>Error: {errordata.message}</div></div>;
   }
 
   return (

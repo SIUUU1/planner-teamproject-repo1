@@ -23,8 +23,7 @@
     <!-- 투두 데이터 업데이트 -->
     <update id="updateTodo">
         UPDATE todolist
-        SET user_no = #{user_no}, todo_title = #{todo_title}, is_done = #{is_done},
-            reg_date = #{reg_date}, type = #{type}
+        SET todo_title = #{todo_title}
         WHERE todo_no = #{todo_no}
     </update>
     
