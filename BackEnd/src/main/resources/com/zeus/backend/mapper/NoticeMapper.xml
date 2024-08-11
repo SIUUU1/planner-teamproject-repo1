@@ -12,7 +12,7 @@
     </insert>
     <!-- no 최댓값 --> 
 	  <select id="maxNo" resultType="Integer">
-	    SELECT max(no) FROM NOTICE
+	    SELECT nvl(max(no), 0)+1 FROM NOTICE
 	  </select>
     <!-- 공지사항 수정 -->
     <update id="modify">

@@ -20,5 +20,6 @@ public interface NoticeService {
 	// 삭제 처리
 	public void delete(int no) throws Exception;
 
-
+	// 조회수 증가
+	public void incrementReadCount(int no) throws Exception;
 }

@@ -1,6 +1,7 @@
 package com.zeus.backend.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zeus.backend.domain.User;
 
@@ -21,7 +22,10 @@ public interface UserMapper {
 	public int countAll() throws Exception;
 
 	// 회원 정보 수정 처리
-	public void modify(User user) throws Exception;
+	public void modify(Map<String, Object> map) throws Exception;
+
+	// 파일이름 찾기
+	public String filename(String user_id) throws Exception;
 
 	// 회원 정보 삭제 처리
 	public void remove(String user_id) throws Exception;

@@ -83,6 +83,7 @@ public class WeatherController {
 		String sky = null, pty = null;
 
 		for (int i = 0; i < weatherItems.length(); i++) {
+			sky="1"; pty="0"; //초기값
 			JSONObject item = weatherItems.getJSONObject(i);
 
 			String category = item.getString("category");
@@ -99,6 +100,14 @@ public class WeatherController {
 					System.out.println("PTY item " + item);
 				}
 			}
+		}
+		
+		// 데이터를 가져오지 못한 경우 초기값
+		if (sky == null) {
+		    sky = "1";
+		}
+		if (pty == null) {
+		    pty = "0";
 		}
 
 		System.out.println("sky " + sky + " pty " + pty);

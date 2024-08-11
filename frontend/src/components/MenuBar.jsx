@@ -1,23 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MenuBar.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faPaintRoller, faUserGroup, faBell, faChartSimple, faCircleInfo, faLock } from "@fortawesome/free-solid-svg-icons";
+import useLoading from "../util/useLoading";
 
 const MenuBar = ({ isOpen, onClose }) => {
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+   //이미지
+   const [selectedImage, setSelectedImage] = useState('/images/cat1.jpg');
+   useEffect(() => {
+    if (userData) {
+      let src='';
+      if(userData.image_url){
+        src=`http://localhost:8080/static/images/profile/${userData.image_url}`;
+        setSelectedImage(src || '/images/cat1.jpg');
+      }
+    }
+  }, [userData]);
 
-  const handleNavigation = (path) => {
-    window.location.href = path;
+  const onMove = (path) => {
+    location.href=path;
     onClose();
   };
-
-  const handleLogout = () => {
-    setIsLoggedOut(true);
-    setTimeout(() => {
-      setIsLoggedOut(false);
-      onClose();
-    }, 3000); // 3초 후에 메시지를 숨김
-  };
+  
+  const onLogout = ()=>{
+    fetch('http://localhost:8080/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
+    .then(res => {
+      console.log(res);
+      alert('로그아웃 성공');
+      location.href='/welcome';
+    })
+    .catch(error => {
+      console.log(error);
+      alert('로그아웃 성공');
+      location.href='/welcome';
+    });
+  }
 
   return (
     <div className={`menuBar ${isOpen ? 'open' : ''}`}>
@@ -26,50 +47,48 @@ const MenuBar = ({ isOpen, onClose }) => {
         <button className="closeButton" onClick={onClose}>×</button>
       </div>
       <div className="profile">
-        <img src="/images/creed.png" alt="Profile" className="avatar" />
-        <span>Marcus.Lim 님</span>
-        <span>환영합니다! :)</span>
+        <img src={selectedImage} className="avatar" />
+        <span>{userData ? `${userData.user_nickname} 님`
+        : (<sapn onClick={()=>onMove('/loginForm')}>로그인</sapn>)}</span>
       </div>
       <div className="menuContent">
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/profile')}>
+          <button className="menuItemLink" onClick={() => onMove('/profile')}>
             <FontAwesomeIcon icon={faUser} /> <span>내 정보</span>
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink active" onClick={() => handleNavigation('/themechange')}>
+          <button className="menuItemLink active" onClick={() => onMove('/themechange')}>
             <FontAwesomeIcon icon={faPaintRoller} /> <span>테마변경</span>
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/friends')}>
+          <button className="menuItemLink" onClick={() => onMove('/friends')}>
             <FontAwesomeIcon icon={faUserGroup} /> <span>친구목록</span>
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/analytics')}>
+          <button className="menuItemLink" onClick={() => onMove('/analytics')}>
             <FontAwesomeIcon icon={faBell} /> <span>알림설정</span>
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/attainmentMain')}>
+          <button className="menuItemLink" onClick={() => onMove('/attainmentMain')}>
             <FontAwesomeIcon icon={faChartSimple} /> <span>학습통계</span>
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => handleNavigation('/qna/create/0')}>
+          <button className="menuItemLink" onClick={() => onMove('/qna/create/0')}>
             <FontAwesomeIcon icon={faCircleInfo} /> <span>고객센터</span>
           </button>
         </div>
       </div>
       <div className="footer">
-        {isLoggedOut ? (
-          <p className="logoutMessage">로그아웃 되었습니다</p>
-        ) : (
-          <button className="menuItemLink" onClick={handleLogout}>
+        {userData &&
+          <button className="menuItemLink" onClick={onLogout}>
             <FontAwesomeIcon icon={faLock} /> <span>로그아웃</span>
           </button>
-        )}
+        }
       </div>
     </div>
   );

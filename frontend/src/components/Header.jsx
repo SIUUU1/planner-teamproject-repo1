@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faBars, faUserGroup, faChartSimple, faRightFromBracket, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
 import React, { useState, useEffect } from 'react';
-import MenuBar from './MenuBar'; // MenuBar 컴포넌트 임포트
+import MenuBar from './MenuBar';
 import useMove from "../util/useMove";
 import useLoading from "../util/useLoading";
+import MessageForm from '../message/MessageForm';
 
 const Header = () => {
   
@@ -17,7 +18,6 @@ const Header = () => {
   const [notifications] = useState([
     { id: 1, date: '7월 12일', category: '보안기능', message: '새로운 환경에서 로그인 되었습니다.' }
   ]);
-
 
   const onMoveLoginform = useMove('/loginForm');
   const onLogout = ()=>{
@@ -56,7 +56,7 @@ const Header = () => {
     if (showNotifications && !event.target.closest('.notificationsContainer') && !event.target.closest('.fa-bell')) {
       setShowNotifications(false);
     }
-    if (showMessageForm && !event.target.closest('.messageFormContainer') && !event.target.closest('.fa-paper-plane')) {
+    if (showMessageForm && !event.target.closest('.messageForm') && !event.target.closest('.fa-paper-plane')) {
       setShowMessageForm(false);
     }
   };
@@ -66,8 +66,8 @@ const Header = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMenuOpen, showNotifications, showMessageForm],{UserData});
- 
+  }, [isMenuOpen, showNotifications, showMessageForm]);
+  
   return (
     <header className="header">
       <div className="headerContent">
@@ -89,6 +89,7 @@ const Header = () => {
         </div>
       </div>
       {isMenuOpen && <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />}
+      {showMessageForm && <MessageForm isOpen={showMessageForm} onClose={()=>{setShowMessageForm(false)}}/>}
     </header>
   );
 };
