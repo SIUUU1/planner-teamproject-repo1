@@ -1,5 +1,6 @@
 package com.zeus.backend.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
@@ -96,11 +96,11 @@ public class UserServiceImpl implements UserService {
 		String user_id = findUserbyToken(request);
 		mapper.remove(user_id);
 	}
-	
+
 	// 아이디로 삭제 처리
 	@Override
 	public void remove(String user_id) throws Exception {
-		mapper.remove(user_id);		
+		mapper.remove(user_id);
 	}
 
 	// 아이디 중복 조회
@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
 			System.out.println("findUserbyToken access 토큰 만료됨");
 			String expiredUser_id = jwtService.getClaimFromExpiredToken(accessToken, "user_id"); // 만료된 토큰에서 유저네임 클레임 추출
 			System.out.println("findUserbyToken access 토큰 만료됨 username : " + expiredUser_id);
-			
+
 		} catch (Exception e) {
 			log.error("FindUserbyToken Error while fetching user by token", e);
 		}
@@ -191,10 +191,25 @@ public class UserServiceImpl implements UserService {
 		return user_id;
 	}
 
-	//파일이름 찾기
+	// 파일이름 찾기
 	@Override
 	public String filename(String user_id) throws Exception {
 		return mapper.filename(user_id);
+	}
+
+	// 검색
+	@Override
+	public List<User> search(String searchkey, String search,String currentUserId) throws Exception {
+		if (searchkey.equals("all")) {
+			search = "%" + search + "%";
+			return mapper.searchByAll(search, currentUserId);
+		} else {
+			Map<String, Object> map = new HashMap<>();
+			map.put("searchkey", searchkey);
+			map.put("search", "%" + search + "%");
+			map.put("currentUserId", currentUserId);
+			return mapper.searchBySomething(map);
+		}
 	}
 
 }

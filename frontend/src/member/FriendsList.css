@@ -117,17 +117,21 @@
 }
 
 .friendsList .searchResult {
-  display: flex;
-  align-items: center;
   margin-top: 20px;
   background-color: #fff;
   padding: 10px;
   border-radius: 5px;
 }
 
+.friendsList .searchResult img {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+
 .friendsList .friendInfo {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   margin-left: 10px;
 }

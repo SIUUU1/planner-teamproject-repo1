@@ -44,4 +44,10 @@ public interface UserMapper {
 
 	// 권한 수정
 	public void modifyAuth(User user) throws Exception;
+
+	// 아이디, 이메일로 검색
+	public List<User> searchBySomething(Map<String, Object> map) throws Exception;
+
+	// 검색
+	public List<User> searchByAll(String search, String currentUserId) throws Exception;
 }

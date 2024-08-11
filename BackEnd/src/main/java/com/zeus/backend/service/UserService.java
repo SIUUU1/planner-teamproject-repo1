@@ -53,4 +53,6 @@ public interface UserService {
 	// 회원 테이블의 데이터 건수 조회
 	public int countAll() throws Exception;
 
+	// 검색
+	public List<User> search(String searchkey, String search, String currentUserId) throws Exception;
 }
