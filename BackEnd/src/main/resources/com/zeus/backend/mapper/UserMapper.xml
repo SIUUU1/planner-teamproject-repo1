@@ -35,7 +35,7 @@
 	</delete>
 	<!-- 권한 수정 -->
 	<update id="modifyAuth">
-		UPDATE users SET role = #{role} WHERE user_no = #{user_no}
+		UPDATE users SET role = #{role} WHERE user_id = #{user_id}
 	</update>
 	<!-- 아이디 중복 조회 -->
 	<select id="checkId" resultType="int">
@@ -59,5 +59,18 @@
 	<!-- 회원 테이블의 데이터 건수 조회 -->
 	<select id="countAll" resultType="int">
 		SELECT count(*) FROM users
+	</select>
+	<!-- 아이디, 이메일로 검색 -->
+	<select id="searchBySomething" resultType="com.zeus.backend.domain.User">
+		SELECT * FROM users where ${searchkey} like #{search} 
+		AND user_id != #{currentUserId} 
+		order by user_no desc
+	</select> 
+	<!-- 검색 -->
+	<select id="searchByAll" resultType="com.zeus.backend.domain.User">
+		SELECT DISTINCT * FROM users 
+		where (user_name like #{search} or user_id like #{search} 
+		or user_email like #{search}) AND user_id != #{currentUserId} 
+		order by user_no desc
 	</select>
 </mapper>

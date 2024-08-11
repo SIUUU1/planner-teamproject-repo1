@@ -58,8 +58,8 @@ const MenuBar = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink active" onClick={() => onMove('/themechange')}>
-            <FontAwesomeIcon icon={faPaintRoller} /> <span>테마변경</span>
+          <button className="menuItemLink active" onClick={() => userData.role==='ROLE_PRO'?onMove('/themechange'):onMove('/payForm')}>
+          <FontAwesomeIcon icon={faPaintRoller} /> <span>테마변경</span>
           </button>
         </div>
         <div className="menuItem">

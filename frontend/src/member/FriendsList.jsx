@@ -1,48 +1,89 @@
-import React, { useState } from 'react';
+import React, { useRef,useEffect,useState } from 'react';
 import './FriendsList.css';
+import useLoading from '../util/useLoading';
+import useSendPost from '../util/useSendPost';
 
 const FriendsList = () => {
-  const [friends, setFriends] = useState(['RedOcean', 'Chris']);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResult, setSearchResult] = useState('');
-  const [profilePicture, setProfilePicture] = useState('/default-profile.png');
-
-  const handleSearch = () => {
-    if (searchTerm.trim() !== '') {
-      // 여기에 실제 친구 검색 로직을 추가해야 합니다.
-      setSearchResult(searchTerm);
-    }
-  };
-
-  const handleAddFriend = () => {
-    if (searchResult && !friends.includes(searchResult)) {
-      setFriends([...friends, searchResult]);
-      setSearchResult('');
-    }
-  };
-
-  const handleDeleteFriend = (friend) => {
-    setFriends(friends.filter((f) => f !== friend));
-  };
-
-  const handleProfilePictureChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('profilePicture', file);
-
-      // 업로드 요청을 서버로 보냅니다.
-      const response = await fetch('/api/upload-profile-picture', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfilePicture(data.url); // 서버에서 반환된 파일 URL을 사용합니다.
-      } else {
-        console.error('Failed to upload profile picture');
+  const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  const [profiles, setProfiles] = useState({
+    user_no: '',
+    user_id: '',
+    password: '',
+    user_name: '',
+    user_nickname: '',
+    image_url: '',
+    user_tel: '',
+    user_email: '',
+  });
+  const { data: friendData, loading: loadingFriend, error: errorfriend, refetch: refetchFriendData } = useLoading('http://localhost:8080/api/user/friend/list', 'json');
+  const [friends, setFriends] = useState([]);
+  //이미지
+  const [selectedImage, setSelectedImage] = useState('/images/cat1.jpg');
+  //검색결과
+  const [searchList, setSearchList] = useState([]);
+  
+   useEffect(() => {
+    if (userData) {
+      setProfiles(userData);
+      let src='';
+      if(userData.image_url){
+        src=`http://localhost:8080/static/images/profile/${userData.image_url}`;
+        setSelectedImage(src || '/images/cat1.jpg');
       }
+    }
+    if(friendData){
+      setFriends(friendData);
+    }
+  }, [userData,friendData]);
+  
+  // 검색
+  const searchkey = useRef();
+  const search =  useRef();
+  const onSearch = () => {
+    let url = 'http://localhost:8080/api/user/friend/search';
+    const form = new FormData();
+    form.append('searchkey', searchkey.current.value);
+    form.append('search', search.current.value);
+    console.log(url);
+    console.log(searchkey.current.value);
+    console.log(search.current.value);
+    fetch(url, { method: 'post', body: form ,credentials: 'include',})
+    .then(response => { return response.json(); })
+    .then(data => { setSearchList(data); });
+  };
+
+  // 친구등록
+  const insertRequest = useSendPost('http://localhost:8080/api/user/friend/insert', {}, 'json');
+  const addFriend = async (e) => {
+    const newFriend = {
+      no: '',
+      user_id: profiles.user_id,
+      friend_id: e.user_id,
+      friend_nickname: e.user_nickname,
+    };
+    if (!friends.some(friend => friend.friend_id === newFriend.friend_id)) {
+      try {
+        await insertRequest.postRequest(newFriend);
+        setFriends([...friends, newFriend]);
+        setSearchList([]);
+        refetchFriendData();
+      } catch (error) {
+        console.error('친구 추가 실패:', error);
+      }
+    }
+  };
+ 
+  // 친구삭제
+  const deleteRequest = useSendPost('http://localhost:8080/api/user/friend/delete', {}, 'json');
+  const onDeleteFriend = async(no) => {
+    setFriends(friends.filter((f) => f.no !== no));
+    try {
+      await deleteRequest.postRequest({no});
+      console.log('친구 삭제 성공');
+      refetchFriendData();
+    } catch (error) {
+      console.log('친구 삭제 실패');
+      console.error("Error deleting Qna:", error);
     }
   };
 
@@ -50,27 +91,18 @@ const FriendsList = () => {
     <div className="friendsList">
       <div className="profileSection">
         <div className="avatarWrapper">
-          <img src={profilePicture} alt="Profile" className="profilePicture" />
-          <label htmlFor="profilePictureUpload" className="profilePictureLabel">
-            변경
-          </label>
-          <input
-            type="file"
-            id="profilePictureUpload"
-            style={{ display: 'none' }}
-            onChange={handleProfilePictureChange}
-          />
+          <img src={selectedImage} className="profilePicture" />
         </div>
         <div className="profileInfo">
-          <h2>Marcus.Lim</h2>
-          <p>bahasmank@gmail.com</p>
+          <h2>{profiles.user_nickname} 님</h2>
+          <p>{profiles.user_email}</p>
         </div>
         <div className="friendsHeader">친구 목록</div>
         <ul className="friendsLists">
           {friends.map((friend, index) => (
             <li key={index} className="friendItem">
-              {friend}
-              <button className="deleteButton" onClick={() => handleDeleteFriend(friend)}>삭제</button>
+              {friend.friend_nickname}
+              <button className="deleteButton" onClick={() => onDeleteFriend(friend.no)}>삭제</button>
             </li>
           ))}
         </ul>
@@ -78,20 +110,26 @@ const FriendsList = () => {
       <div className="searchSection">
         <h2>채팅 친구를 찾아보세요!</h2>
         <p>친구의 아이디를 검색해서 찾을 수 있습니다.</p>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="친구 아이디"
-        />
-        <button onClick={handleSearch}>친구 찾기</button>
-        {searchResult && (
+        <select ref={searchkey}>
+          <option value="all">전체</option>
+          <option value="user_name">이름</option>
+          <option value="user_nickname">닉네임</option>
+          <option value="user_email">이메일</option>
+        </select>&nbsp;
+        <input type="text" ref={search}/>
+        <button onClick={onSearch}>친구 찾기</button>
+        {searchList.length > 0 && (
           <div className="searchResult">
-            <div className="profilePicture" />
-            <div className="friendInfo">
-              <h3>{searchResult}</h3>
-              <button onClick={handleAddFriend}>친구 추가하기</button>
-            </div>
+            {searchList.map((search, index) => (
+              <div key={index} className="friendInfo">
+                {search.image_url ?(<img src={`http://localhost:8080/static/images/profile/${search.image_url}`}/>
+              ):(
+                <img src='/images/cat1.jpg'/>
+              )}
+                <span>{search.user_nickname}</span>
+                <button onClick={() => addFriend(search)}>추가</button>
+              </div>
+            ))}
           </div>
         )}
       </div>
