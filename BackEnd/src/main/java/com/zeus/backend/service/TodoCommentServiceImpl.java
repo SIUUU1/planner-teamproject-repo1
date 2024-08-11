@@ -29,4 +29,11 @@ public class TodoCommentServiceImpl implements TodoCommentService {
     public void deleteComment(Long todo_comment_no) {
         todoCommentMapper.deleteComment(todo_comment_no);
     }
+
+	@Override
+	public void updateComment(TodoComment comment) {
+		todoCommentMapper.updateComment(comment);
+	}
+    
+    
 }

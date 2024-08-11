@@ -8,7 +8,11 @@ import com.zeus.backend.domain.TodoComment;
 
 @Mapper
 public interface TodoCommentMapper {
-    void insertComment(TodoComment comment);
-    List<TodoComment> selectCommentsByTodoNo(Long todo_no);
-    void deleteComment(Long todo_comment_no);
+	void insertComment(TodoComment comment);
+
+	List<TodoComment> selectCommentsByTodoNo(Long todo_no);
+
+	void deleteComment(Long todo_comment_no);
+
+	void updateComment(TodoComment comment);
 }

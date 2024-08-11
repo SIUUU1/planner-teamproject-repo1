@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,30 +44,30 @@ public class TodoController {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
-    private TodoCommentService todoCommentService;
+	private TodoCommentService todoCommentService;
 
 	@PostMapping("/register")
 	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
 		System.out.println("todo_title: " + todo.getTodo_title());
 		System.out.println("reg_date: " + todo.getReg_date());
 		System.out.println("type: " + todo.getType());
-		
+
 		User user = null;
 		try {
 			user = userServiceImpl.read();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    if (user == null) {
-	        return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
-	    }
-	    todo.setUser_no(user.getUser_no());
-	    
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+		todo.setUser_no(user.getUser_no());
+
 		todoService.registerTodo(todo);
 		System.out.println("getUser_no: " + todo.getUser_no());
-		
+
 		return new ResponseEntity<>(HttpStatus.OK); // 200 OK
 	}
 
@@ -80,8 +79,8 @@ public class TodoController {
 	@GetMapping("/{todo_no}")
 	public Todo getTodoByNO(@PathVariable int todo_no) {
 		System.out.println("=============================");
-      System.out.println("start getTodoByNO");
-      System.out.println("todoNo:"+todo_no);
+		System.out.println("start getTodoByNO");
+		System.out.println("todoNo:" + todo_no);
 		return todoService.getTodoByNO(todo_no);
 	}
 //	@PostMapping("/{todo_no}")
@@ -107,33 +106,33 @@ public class TodoController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 //        }
 //    }
-	
+
 	@PostMapping("/updateState")
-    public ResponseEntity<Map<String, Object>> updateTodoState(@RequestBody Map<String, String> payload) {
-        int todoNo = Integer.parseInt(payload.get("todo_no"));
-        String isDone = payload.get("is_done");
+	public ResponseEntity<Map<String, Object>> updateTodoState(@RequestBody Map<String, String> payload) {
+		int todoNo = Integer.parseInt(payload.get("todo_no"));
+		String isDone = payload.get("is_done");
 
-        System.out.println("=============================");
-        System.out.println("start update todoState");
-        System.out.println("todoNo:"+todoNo);
-        System.out.println("isDone:"+isDone);
+		System.out.println("=============================");
+		System.out.println("start update todoState");
+		System.out.println("todoNo:" + todoNo);
+		System.out.println("isDone:" + isDone);
 
-        // 상태 업데이트 처리 로직
-        todoService.updateTodoState(todoNo, isDone);
+		// 상태 업데이트 처리 로직
+		todoService.updateTodoState(todoNo, isDone);
 
-        Map<String, Object> response = new HashMap<>();
-        try {
-            // 성공적인 업데이트 후 JSON 응답 반환
-            response.put("success", true);
-            response.put("message", "Todo 상태가 업데이트되었습니다.");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Todo 상태 업데이트 중 오류가 발생했습니다.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-	
+		Map<String, Object> response = new HashMap<>();
+		try {
+			// 성공적인 업데이트 후 JSON 응답 반환
+			response.put("success", true);
+			response.put("message", "Todo 상태가 업데이트되었습니다.");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "Todo 상태 업데이트 중 오류가 발생했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
+
 //	@PostMapping("/updateState")
 //    public ResponseEntity<Object> updateTodoState(@RequestBody Map<String, Object> requestBody) {
 //		
@@ -159,74 +158,84 @@ public class TodoController {
 	@PostMapping("/delete")
 	public ResponseEntity<Map<String, Object>> deleteTodo(@RequestBody Map<String, String> payload) {
 		int todoNo = Integer.parseInt(payload.get("todo_no"));
-		
+
 		System.out.println("=============================");
-        System.out.println("start deleteTodo");
-        System.out.println("todoNo:"+todoNo);
-        todoService.deleteTodo(todoNo);
-        
-        Map<String, Object> response = new HashMap<>();
-        try {
-            // 성공적인 업데이트 후 JSON 응답 반환
-            response.put("success", true);
-            response.put("message", "Todo가 삭제 되었습니다.");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Todo 삭제 중 오류가 발생했습니다.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+		System.out.println("start deleteTodo");
+		System.out.println("todoNo:" + todoNo);
+		todoService.deleteTodo(todoNo);
+
+		Map<String, Object> response = new HashMap<>();
+		try {
+			// 성공적인 업데이트 후 JSON 응답 반환
+			response.put("success", true);
+			response.put("message", "Todo가 삭제 되었습니다.");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "Todo 삭제 중 오류가 발생했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
 
 	@GetMapping("/search")
 	public ResponseEntity<List<Todo>> getTodosByUserAndDate(
-	    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
 		System.out.println("=============================");
-        System.out.println("start getTodosByUserAndDate");
+		System.out.println("start getTodosByUserAndDate");
 
-	    User user = null;
+		User user = null;
 		try {
 			user = userServiceImpl.read();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    if (user == null) {
-	        return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
-	    }
-	    List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), reg_date);
-	    return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+		List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), reg_date);
+		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
-	
-	@GetMapping("/{todo_no}/comments")
-    public ResponseEntity<List<TodoComment>> getCommentsByTodoNo(@PathVariable Long todo_no) {
-        List<TodoComment> comments = todoCommentService.getCommentsByTodoNo(todo_no);
-        return ResponseEntity.ok(comments);
-    }
 
-    @PostMapping("/{todo_no}/comments")
-    public ResponseEntity<TodoComment> addComment(@PathVariable Long todo_no, @RequestBody TodoComment comment) {
-        comment.setTodo_no(todo_no);
-        
-        User user = null;
+	@GetMapping("/{todo_no}/comments")
+	public ResponseEntity<List<TodoComment>> getCommentsByTodoNo(@PathVariable Long todo_no) {
+		List<TodoComment> comments = todoCommentService.getCommentsByTodoNo(todo_no);
+		return ResponseEntity.ok(comments);
+	}
+
+	@PostMapping("/{todo_no}/comments")
+	public ResponseEntity<TodoComment> addComment(@PathVariable Long todo_no, @RequestBody TodoComment comment) {
+		comment.setTodo_no(todo_no);
+
+		User user = null;
 		try {
 			user = userServiceImpl.read();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    if (user == null) {
-	        return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
-	    }
-	    comment.setUser_id(user.getUser_id());
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+		comment.setUser_id(user.getUser_id());
 		System.out.println("getUser_no: " + comment.getUser_id());
-		
-        TodoComment savedComment = todoCommentService.addComment(comment);
-        return ResponseEntity.ok(savedComment);
-    }
 
-    @DeleteMapping("/comments/{todo_comment_no}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long todo_comment_no) {
-        todoCommentService.deleteComment(todo_comment_no);
-        return ResponseEntity.ok().build();
-    }
+		TodoComment savedComment = todoCommentService.addComment(comment);
+		return ResponseEntity.ok(savedComment);
+	}
+
+	@PostMapping("/comments/update")
+	public ResponseEntity<Void> updateComment(@RequestBody TodoComment comment) {
+		System.out.println("====================");
+		System.out.println("start update comment");
+		System.out.println(comment.getEmoji_item_url());
+		System.out.println(comment.getTodo_comment_text());
+		todoCommentService.updateComment(comment);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/comments/delete")
+	public ResponseEntity<Void> deleteComment(@RequestBody TodoComment comment) {
+		todoCommentService.deleteComment(comment.getTodo_comment_no());
+		return ResponseEntity.ok().build();
+	}
 
 }

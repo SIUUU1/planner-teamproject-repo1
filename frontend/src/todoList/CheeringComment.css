@@ -24,3 +24,15 @@
 .editComment .inputEmoji{
   position: absolute;
 }
+.cheeringCommentText .user_nickname{
+  display: flex;
+  align-items: center
+}
+.cheeringCommentText .user_nickname span{
+  margin: 0;
+}
+
+.btnIcon{
+  display: flex;
+  align-items: center
+}

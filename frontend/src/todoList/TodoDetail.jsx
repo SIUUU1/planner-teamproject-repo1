@@ -120,7 +120,7 @@ const TodoDetail = () => {
           <div className='cheeringCommentList'>
             {comments && comments.length > 0 ? (
                 comments.map((i) => (
-                  <CheeringComment key={i.todo_comment_no} commentData={i} userData={userData}/>
+                  <CheeringComment key={i.todo_comment_no} commentData={i} userData={userData} refetch={refetch}/>
                 ))
               ) : (
                 <p>첫 번째 응원 메시지를 남겨보세요!</p>

@@ -42,5 +42,11 @@
 		DELETE FROM TODO_COMMENT WHERE TODO_COMMENT_NO =
 		#{todo_comment_no}
 	</delete>
+	<delete id="updateComment" parameterType="com.zeus.backend.domain.TodoComment">
+		UPDATE TODO_COMMENT
+		SET EMOJI_ITEM_URL = #{emoji_item_url},
+		todo_comment_text = #{todo_comment_text}
+		WHERE todo_comment_no = #{todo_comment_no}
+	</delete>
 
 </mapper>
