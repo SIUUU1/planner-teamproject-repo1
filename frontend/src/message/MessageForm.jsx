@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MessageForm.css';
 
-const MessageForm = ({ onClose }) => {
+const MessageForm = ({ isOpen, onClose }) => {
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
 
@@ -13,7 +13,7 @@ const MessageForm = ({ onClose }) => {
   };
 
   return (
-    <div className="messageForm">
+    <div className={`messageForm ${isOpen ? 'open' : ''}`}>
       <div className="messageFormHeader">
         <span>쪽지 보내기</span>
         <button onClick={onClose}>닫기</button>

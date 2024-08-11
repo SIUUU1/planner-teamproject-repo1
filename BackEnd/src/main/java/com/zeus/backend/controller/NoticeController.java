@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,7 @@ public class NoticeController {
 		return new ResponseEntity<>(noticeList, HttpStatus.OK);
 	}
 
-	// 공지사항 상세보기
+	// 공지사항 상세보기(수정 시 사용)
 	@GetMapping("/read/{no}")
 	public ResponseEntity<Notice> getNotice(@PathVariable int no) {
 		System.out.println("getNotice no:" + no);
@@ -54,7 +55,21 @@ public class NoticeController {
 		return new ResponseEntity<>(notice, HttpStatus.OK);
 	}
 
+	// 조회수 올리기
+	@GetMapping("/readCount/{no}")
+	public ResponseEntity<?> incrementReadCount(@PathVariable int no) {
+		System.out.println("readCount no:" + no);
+		try {
+			noticeService.incrementReadCount(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail to increment readCount");
+		}
+		return new ResponseEntity<>("success to increment readCount", HttpStatus.OK);
+	}
+
 	// 공지사항 등록
+	@Transactional
 	@PostMapping("/insert")
 	public ResponseEntity<Void> insert(@RequestBody Notice notice) throws Exception {
 		System.out.println("insert notice:" + notice);
@@ -63,6 +78,7 @@ public class NoticeController {
 	}
 
 	// 공지사항 수정
+	@Transactional
 	@PostMapping("/update")
 	public ResponseEntity<Void> update(@RequestBody Notice notice) throws Exception {
 		System.out.println("update notice:" + notice);
@@ -71,6 +87,7 @@ public class NoticeController {
 	}
 
 	// 공지사항 삭제
+	@Transactional
 	@PostMapping("/delete")
 	public ResponseEntity<Void> delete(@RequestBody Map<String, String> payload) throws Exception {
 		int no = Integer.parseInt(payload.get("no"));

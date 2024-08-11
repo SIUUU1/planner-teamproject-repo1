@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import useSendPost from '../util/useSendPost';
+import Button from '../components/Button';
 
 const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
   const initComment = {
@@ -9,14 +10,21 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
     category:'',
     subject: '',
     content: '',
-    ref: '',
-    step: '',
-    depth:'',
+    ref: 1,
+    step: 0,
+    depth:0,
     read_count:'',
     reg_date:'',
   };
 
   const [comment, setComment] = useState({initComment});
+  const [editingCommentId, setEditingCommentId] = useState(null); // 현재 수정 중인 댓글 ID
+  const [editedContent, setEditedContent] = useState(''); // 수정된 댓글 내용
+
+  const handleEditClick = (comment) => {
+    setEditingCommentId(comment.no); 
+    setEditedContent(comment.content);
+  };
 
   useEffect(() => {
     if (selectedNotice && userData) {
@@ -29,9 +37,9 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
         subject: selectedNotice.subject,
         ref: selectedNotice.ref,
         step: comments.length,
-        depth: selectedNotice.depth + 1,
+        depth: selectedNotice.depth,
         read_count: selectedNotice.read_count,
-        reg_date: new Date().toISOString(),  // 현재 시간을 등록일로 설정
+        reg_date: new Date().toISOString(),
       });
     }
   }, [selectedNotice, userData, comments]);
@@ -44,8 +52,15 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
     }));
   };
 
+  const handleEditChange = (e) => {
+    setEditedContent(e.target.value);
+  };
+
   //notice insert
   const insertRequest = useSendPost('http://localhost:8080/api/notice/insert', {}, 'json');
+
+  //notice modify
+  const modifyRequest = useSendPost('http://localhost:8080/api/notice/update', {}, 'json');
   
   //댓글 추가
   const submitComment = async () => {
@@ -56,13 +71,34 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
       ...prevComment,
       content: '', // 댓글 입력 필드 초기화
     }));
-    onEvent(); // 댓글 목록을 갱신하기 위한 리패치 호출
+    onEvent(); // 리패치 호출
   } catch (error) {
     console.error('댓글 추가 실패:', error);
     alert('댓글 추가에 실패했습니다.');
   }
 };
-  
+
+//댓글 수정
+const handleConfirmEdit = async (comment) => {
+  try {
+    const updatedComment = { ...comment, content: editedContent };
+    await modifyRequest.postRequest(updatedComment); // 댓글 업데이트 API 호출
+    alert('댓글이 수정되었습니다.');
+    setEditingCommentId(null); // 수정 완료 후 수정 상태 해제
+    onEvent(); // 댓글 목록을 갱신하기 위한 리패치 호출
+  } catch (error) {
+    console.error('댓글 수정 실패:', error);
+    alert('댓글 수정에 실패했습니다.');
+  }
+};
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
   return(
     <>
     <div className="noticeDetail">
@@ -70,9 +106,23 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
           <p>내용: {selectedNotice.content}</p>
           <div>
           <h2>댓글</h2>
-        {comments.map((comment, index) => (
-          <p key={index}><strong>{comment.user_nickname} ({comment.reg_date}):</strong> {comment.content}</p>
+          {comments.map((comment) => (
+          <div key={comment.no}>
+            {editingCommentId === comment.no ? (
+              <>
+                <strong>{comment.user_nickname}</strong>
+                <input type="text"  value={editedContent}  onChange={handleEditChange} />
+                <Button text={'확인'} onClick={() => handleConfirmEdit(comment)} />
+              </>) : ( <>
+                <p><strong>{comment.user_nickname} : {comment.content}</strong> ({formatDate(comment.reg_date)})</p>
+                {comment.user_id === userData.user_id && (
+                  <Button text={'수정'} onClick={() => handleEditClick(comment)} />
+                )}
+              </>
+            )}
+          </div>
         ))}
+        <br/>
         <input type="text" value={userData.user_nickname} readOnly />
         <textarea value={comment.content} onChange={changeComment} rows="4" ></textarea>
         <button onClick={submitComment}>댓글 추가</button>

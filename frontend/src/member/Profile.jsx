@@ -1,83 +1,187 @@
-import React, { useState } from 'react';
+import React, { useRef,useState, useEffect } from 'react';
 import './Profile.css';
-
-
-const existingNames = ['choco', '초코', 'RedOcean', 'Chris'];
+import useLoading from '../util/useLoading';
+import Button from '../components/Button';
+import useSendPost from '../util/useSendPost';
 
 const Profile = () => {
-  const [profile, setProfile] = useState({
-    이메일: 'choco4study@gmail.com',
-    비밀번호: '****',
-    닉네임: '초코',
-    번호: '01012345678',
-    소개: '관리자입니다.',
+  const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  const [profiles, setProfiles] = useState({
+    user_no: '',
+    user_id: '',
+    password: '',
+    user_name: '',
+    user_nickname: '',
+    image_url: '',
+    user_tel: '',
+    user_email: '',
   });
+  const img = useRef(null);
+  //이미지
+  const [selectedImage, setSelectedImage] = useState(profiles.image_url || '/images/cat1.jpg');
+  const [selectedImageFile, setSelectedImageFile] = useState(null); 
+
+  useEffect(() => {
+    if (userData) {
+      setProfiles(userData);
+      let src='';
+      if(userData.image_url){
+        src=`http://localhost:8080/static/images/profile/${userData.image_url}`;
+        setSelectedImage(src || '/images/cat1.jpg');
+      }
+    }
+  }, [userData]);
 
   const [editField, setEditField] = useState('');
   const [editValue, setEditValue] = useState('');
-  const [isDuplicate, setIsDuplicate] = useState(false);
 
   const handleEditClick = (field) => {
     setEditField(field);
-    setEditValue(profile[field]);
+    setEditValue(profiles[field]);
   };
 
   const handleSaveClick = () => {
-    if (editField === 'name' && existingNames.includes(editValue)) {
-      setIsDuplicate(true);
-    } else {
-      setProfile({
-        ...profile,
-        [editField]: editValue,
-      });
-      setEditField('');
-      setEditValue('');
-      setIsDuplicate(false);
+    // 수정된 닉네임을 상태에 반영한 후에
+    const updatedProfiles = {
+      ...profiles,
+      [editField]: editValue,
+    };
+    setProfiles(updatedProfiles);
+    handleProfileEdit(updatedProfiles);
+    //초기화
+    setEditField('');
+    setEditValue('');
+  };
+
+  //sns 회원가입시 이메일 변경 버튼이 보이지 않는다.
+  const shouldHideEmailChangeButton = () => {
+    const userId = profiles.user_id;
+    return (
+      userId.startsWith('google') ||
+      userId.startsWith('naver') ||
+      userId.startsWith('kakao')
+    );
+  };
+
+  // user delete 
+  const deleteRequest = useSendPost('http://localhost:8080/api/user/delete', {}, 'json');
+  
+  // 회원 탈퇴
+  const onDelete = async () => {
+    if(window.confirm('정말로 탈퇴하시겠습니까?')){
+      const user_id = userData.user_id ;
+      try {
+        await deleteRequest({user_id});
+        alert('탈퇴 성공');
+      } catch (error) {
+        alert('탈퇴 실패');
+        console.error("Error deleting Qna:", error);
+      }
     }
   };
 
+  // 프로필 수정
+  const handleProfileEdit = async (updatedProfiles) => {
+    try {
+      const formData = new FormData();
+      for (const key in updatedProfiles) {
+        formData.append(key, updatedProfiles[key]);
+      }
+      if (img.current.files.length>0) {
+        formData.append('img',img.current.files[0]);
+      }
+      const response = await fetch('http://localhost:8080/api/user/update', {
+        method: 'POST', 
+        encType: 'multipart/form-data',
+        body: formData,
+        credentials: 'include',
+      });
+      console.log('formdata'+formData);
+      if (response.ok) {
+        alert('프로필이 성공적으로 수정되었습니다.');
+        refetchUserData();
+      } else {
+        throw new Error('프로필 수정 실패');
+      }
+    } catch (error) {
+      console.error('프로필 수정 실패:', error);
+      alert('프로필 수정에 실패했습니다.');
+    }
+  };
+
+// 이미지 변경
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedImage(reader.result); 
+    };
+    reader.readAsDataURL(file);
+    setSelectedImageFile(file); 
+    // 이미지 선택 후 즉시 프로필 수정
+    const updatedProfiles = {
+      ...profiles,
+      image_url: file.name, 
+    };
+    setProfiles(updatedProfiles);
+    handleProfileEdit(updatedProfiles);
+  }
+};
+
   return (
     <div className="profile">
-     
       <div className="profileContainer">
         <h1>My Page</h1>
-        <nav className="profileNav">
-          <span>내가 쓴 글</span>
-          <span>내가 공감한 글</span>
-          <span className="active">내 정보 변경</span>
-        </nav>
         <div className="profileContent">
-          
+          <img src={selectedImage} className="profileAvatar" onClick={() => document.getElementById('fileInput').click()} />
+          <input type="file" id="fileInput" style={{ display: 'none' }} onChange={handleImageChange} ref={img} accept="image/*"/>
           <table className="profileTable">
             <tbody>
-              {Object.entries(profile).map(([field, value]) => (
-                <tr key={field}>
-                  <td>{field.toUpperCase()}</td>
-                  <td>
-                    {editField === field ? (
-                      <input
-                        type={field === 'password' ? 'password' : 'text'}
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                      />
-                    ) : (
-                      value
-                    )}
-                    {isDuplicate && field === 'name' && (
-                      <div className="errorMessage">이미 있는 이름입니다.</div>
-                    )}
-                  </td>
-                  <td>
-                    {editField === field ? (
-                      <button onClick={handleSaveClick}>확인</button>
-                    ) : (
-                      <button onClick={() => handleEditClick(field)}>변경</button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>닉네임</td>
+                <td>
+                  {editField === 'user_nickname' ? (
+                    <input type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)} />
+                  ) : (profiles.user_nickname)}
+                </td>
+                <td>
+                  {editField === 'user_nickname' ? (
+                    <button onClick={handleSaveClick}>확인</button>
+                  ) : (
+                    <button onClick={() => handleEditClick('user_nickname')}>변경</button>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>전화번호</td>
+                <td>
+                  {profiles.user_tel}
+                </td>
+              </tr>
+              <tr>
+                <td>이메일</td>
+                <td>
+                  {editField === 'user_email' ? (
+                    <input type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}/>
+                  ) : (profiles.user_email)}
+                </td>
+                <td>
+                  {!shouldHideEmailChangeButton() && (
+                    <>
+                      {editField === 'user_email' ? ( <button onClick={handleSaveClick}>확인</button>
+                      ) : (<button onClick={() => handleEditClick('user_email')}>변경</button>
+                      )}
+                    </>
+                  )}
+                </td>
+              </tr>
             </tbody>
           </table>
+          <div>
+            <Button text={'패스워드 재설정'}/>
+            <Button text={'회원탈퇴'} onClick={onDelete}/>
+          </div>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +53,7 @@ public class FaqController {
 	}
 
 	// 사용자 문의내역 등록
+	@Transactional
 	@PostMapping("/insert")
 	public ResponseEntity<Void> insertFaq(@RequestBody Faq faq) throws Exception {
 		System.out.println("insertFaq" + faq);
@@ -60,6 +62,7 @@ public class FaqController {
 	}
 
 	// 문의내역 수정
+	@Transactional
 	@PostMapping("/update")
 	public ResponseEntity<Void> updateFaq(@RequestBody Faq faq) throws Exception {
 		System.out.println("updateFaq " + faq);
@@ -68,6 +71,7 @@ public class FaqController {
 	}
 
 	// 문의내역 삭제
+	@Transactional
 	@PostMapping("/delete")
 	public ResponseEntity<Void> deleteFaq(@RequestBody Faq faq) throws Exception {
 		System.out.println("deleteFaq " + faq);

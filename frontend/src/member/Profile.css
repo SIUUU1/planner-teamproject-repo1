@@ -37,6 +37,7 @@
   margin: 0 auto;
   width: 50%;
   border-collapse: collapse;
+  text-align: center;
 }
 
 .profileTable td {
@@ -45,8 +46,10 @@
 }
 
 .profileTable input {
-  width: 100%;
+  width: 80%;
   padding: 5px;
+  outline: none;
+  border: none;
 }
 
 .profileTable button {
@@ -58,7 +61,7 @@
   cursor: pointer;
 }
 
-.profileTable button:hover {
+.profile button:hover {
   background-color: #ff1493;
 }
 
@@ -66,4 +69,13 @@
   color: red;
   font-size: 12px;
   margin-top: 5px;
+}
+
+.profile .profileAvatar {
+  width: 120px; 
+  height: 120px;
+  border-radius: 50%;
+  cursor: pointer; /* 클릭 가능한 항목임을 나타냄 */
+  margin-bottom: 20px; /* 아래 마진 */
+  margin-top: 20px;
 }

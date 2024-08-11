@@ -1,6 +1,7 @@
 package com.zeus.backend.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +44,6 @@ public class UserServiceImpl implements UserService {
 	public final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 	// 등록 처리
-	@Transactional
 	@Override
 	public void create(User user) throws Exception {
 		System.out.println("create user" + user);
@@ -85,18 +85,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 수정 처리
-	@Transactional
 	@Override
-	public void modify(User user) throws Exception {
-		mapper.modify(user);
+	public void modify(Map<String, Object> map) throws Exception {
+		mapper.modify(map);
 	}
 
 	// 삭제 처리
-	@Transactional
 	@Override
 	public void remove() throws Exception {
 		String user_id = findUserbyToken(request);
 		mapper.remove(user_id);
+	}
+	
+	// 아이디로 삭제 처리
+	@Override
+	public void remove(String user_id) throws Exception {
+		mapper.remove(user_id);		
 	}
 
 	// 아이디 중복 조회
@@ -112,7 +116,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 이메일 인증후 패스워드 재설정
-	@Transactional
 	@Override
 	public void updatePw(User user) throws Exception {
 		System.out.println("updatePw" + user);
@@ -130,7 +133,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 최초 관리자 생성을 위한 데이터 등록
-	@Transactional
 	@Override
 	public void setupAdmin(User user) throws Exception {
 		System.out.println("setupAdminr" + user);
@@ -144,7 +146,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// 권한 Pro로 수정
-	@Transactional
 	@Override
 	public void modifyAuth(User user) throws Exception {
 		user.setRole("ROLE_PRO");
@@ -188,6 +189,12 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return user_id;
+	}
+
+	//파일이름 찾기
+	@Override
+	public String filename(String user_id) throws Exception {
+		return mapper.filename(user_id);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.zeus.backend.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zeus.backend.domain.User;
 
@@ -15,15 +16,21 @@ public interface UserService {
 
 	// 사용자 아이디로 회원 정보 조회
 	public User findByUserId(String user_id) throws Exception;
-	
+
 	// 회원 정보 조회
 	public User read() throws Exception;
-	
+
 	// 수정 처리
-	public void modify(User user) throws Exception;
+	public void modify(Map<String, Object> map) throws Exception;
+
+	// 파일이름 찾기
+	public String filename(String user_id) throws Exception;
 
 	// 삭제 처리
 	public void remove() throws Exception;
+
+	// 아이디로 삭제 처리
+	public void remove(String user_id) throws Exception;
 
 	// 아이디 중복 조회
 	public int checkId(String user_id) throws Exception;

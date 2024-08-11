@@ -25,9 +25,9 @@
 	</select>
 	<!-- 사용자 수정 -->
 	<update id="modify">
-		UPDATE users SET user_nickname = #{user_nickname},image_url = #{image_url}, 
-		user_tel = #{user_tel}, user_email = #{user_email} 
-		WHERE user_no = #{user_no}
+		UPDATE users SET user_nickname = #{user_nickname}, image_url = #{image_url}, 
+		user_tel = #{user_tel}, user_email = #{user_email}, update_date = sysdate 
+		WHERE user_id = #{user_id}
 	</update>
 	<!-- 사용자 삭제 -->
 	<delete id="remove">
@@ -53,6 +53,9 @@
 	<update id="updatePw">
 		UPDATE users SET password = #{password} WHERE user_no = #{user_no}
 	</update>
+	<select id="filename" resultType="String">
+		select image_url from users where user_id=#{user_id}
+	</select>
 	<!-- 회원 테이블의 데이터 건수 조회 -->
 	<select id="countAll" resultType="int">
 		SELECT count(*) FROM users
