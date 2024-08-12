@@ -1,5 +1,6 @@
 package com.zeus.backend.mapper;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,7 @@ public interface ScheduleMapper {
 
 	// 스케줄 데이터 업데이트
 	void updateSchedule(Schedule schedule);
+	
+	//특정 유저의 특정 일 테이터 조회
+	List<Schedule> getSchedulesByUserAndDate(String user_id, Date reg_date);
 }

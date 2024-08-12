@@ -1,27 +1,34 @@
 package com.zeus.backend.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.Schedule;
+import com.zeus.backend.domain.User;
 import com.zeus.backend.service.ScheduleService;
+import com.zeus.backend.service.UserServiceImpl;
 
 @RestController
-@RequestMapping("/api/schedule")
+@RequestMapping("/api/user/schedule")
 public class ScheduleController {
 	@Autowired
 	private ScheduleService scheduleService;
+
+	@Autowired
+	private UserServiceImpl userServiceImpl;
 
 	// 모든 스케줄 조회
 	@GetMapping
@@ -30,31 +37,96 @@ public class ScheduleController {
 		return new ResponseEntity<>(schedules, HttpStatus.OK);
 	}
 
-	// 특정 사용자에 대한 스케줄 조회
-	@GetMapping("/{user_no}")
-	public ResponseEntity<List<Schedule>> getSchedulesByUser(@PathVariable int user_no) {
-		List<Schedule> schedules = scheduleService.getSchedulesByUser(user_no);
-		return new ResponseEntity<>(schedules, HttpStatus.OK);
+//	// 특정 사용자에 대한 스케줄 조회
+//	@GetMapping("/{user_id}")
+//	public ResponseEntity<List<Schedule>> getSchedulesByUser(@PathVariable int user_id) {
+//		List<Schedule> schedules = scheduleService.getSchedulesByUser(user_id);
+//		return new ResponseEntity<>(schedules, HttpStatus.OK);
+//	}
+	// 특정 사용자에 대한 특정일 스케줄 조회
+//	@GetMapping("/search")
+//	public ResponseEntity<List<Schedule>> getSchedulesByUserAndDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
+//		System.out.println("============================");
+//		System.out.println("start getSchedulesByUserAndDate");
+//		
+//		User user = null;
+//		try {
+//			user = userServiceImpl.read();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if (user == null) {
+//			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+//		}
+//		List<Schedule> schedules = scheduleService.getSchedulesByUserAndDate(user.getUser_id(),reg_date);
+//		return new ResponseEntity<>(schedules, HttpStatus.OK); // 200 OK
+//	}
+	@GetMapping("/search")
+	public ResponseEntity<List<Schedule>> getSchedulesByUserAndDate(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
+		System.out.println("============================");
+		System.out.println("start getSchedulesByUserAndDate");
+		User user = null;
+		try {
+			user = userServiceImpl.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+		System.out.println("user.getUser_id()" + user.getUser_id());
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		System.out.println("reg_date"+sdf);
+		List<Schedule> schedules = scheduleService.getSchedulesByUserAndDate(user.getUser_id(), reg_date);
+		return new ResponseEntity<>(schedules, HttpStatus.OK); // 200 OK
 	}
 
 	// 스케줄 추가
-	@PostMapping
+	@PostMapping("/register")
 	public ResponseEntity<Void> registerSchedule(@RequestBody Schedule schedule) {
+		System.out.println("===========================");
+		System.out.println("start registerSchedule");
+		System.out.println("schedule name:" + schedule.getSchedule_name());
+		System.out.println("schedule reg_date:" + schedule.getReg_date());
+
+		User user = null;
+		try {
+			user = userServiceImpl.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+		schedule.setUser_id(user.getUser_id());
 		scheduleService.registerSchedule(schedule);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	// 스케줄 삭제
-	@DeleteMapping("/delete/{schedule_no}")
-	public ResponseEntity<Void> deleteSchedule(@PathVariable int schedule_no) {
-		scheduleService.deleteSchedule(schedule_no);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PostMapping("/delete")
+	 public ResponseEntity<Void> deleteSchedule(@RequestBody Map<String, Integer> payload) {
+        System.out.println("===========================");
+        System.out.println("start deleteSchedule");
+        System.out.println("payload.get(\"schedule_no\"):"+payload.get("schedule_no"));
+		scheduleService.deleteSchedule(payload.get("schedule_no"));
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// 스케줄 수정
-	@PutMapping
+	@PostMapping("/update")
 	public ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule) {
+		System.out.println("===========================");
+		System.out.println("start updateSchedule");
+		System.out.println(schedule.toString());
 		scheduleService.updateSchedule(schedule);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+//	@PutMapping
+//	public ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule) {
+//		scheduleService.updateSchedule(schedule);
+//		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//	}
 }

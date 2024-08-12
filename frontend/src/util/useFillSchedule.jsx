@@ -5,6 +5,20 @@ const useFillSchedule = (schedulerData) => {
 
   useEffect(() => {
     const dayInMinutes = 1440;
+
+    // schedulerData가 배열이 아니거나 유효하지 않은 경우를 처리
+    if (!Array.isArray(schedulerData) || schedulerData.length === 0) {
+      setSchedule([{
+        schedule_no: -1,
+        schedule_name: '미정 1',
+        value: dayInMinutes,
+        start_time: 0,
+        end_time: dayInMinutes,
+        color: "",
+      }]);
+      return;
+    }
+
     let currentTime = 0;
     let scheduleNoCounter = -1;
     const updatedSchedule = [];
@@ -20,7 +34,6 @@ const useFillSchedule = (schedulerData) => {
           color: "",
         });
       }
-
       updatedSchedule.push(event);
       currentTime = event.end_time;
     });

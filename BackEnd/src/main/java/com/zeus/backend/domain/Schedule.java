@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Schedule {
     private int schedule_no;
-    private int user_no;
+    private String user_id;
     private Date reg_date;
     private int start_time;
     private int end_time;

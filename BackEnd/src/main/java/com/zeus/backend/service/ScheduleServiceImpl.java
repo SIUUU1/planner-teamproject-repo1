@@ -1,5 +1,6 @@
 package com.zeus.backend.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,4 +39,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void updateSchedule(Schedule schedule) {
         scheduleMapper.updateSchedule(schedule);
     }
+
+	@Override
+	public List<Schedule> getSchedulesByUserAndDate(String user_id, Date reg_date) {
+		List<Schedule> schedules=scheduleMapper.getSchedulesByUserAndDate(user_id, reg_date);
+		System.out.println(schedules.toString());
+		return schedules;
+	}
+    
+    
 }

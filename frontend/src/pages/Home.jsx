@@ -2,7 +2,7 @@ import './Home.css';
 import Attainment from '../attainment/Attainment';
 import ToFullList from '../components/ToFullList';
 import TodoItem from '../todoList/TodoItem';
-import SchedulerChart from '../scheduler/SchedulerChart';
+import SchedulerChart from '../schedule/ScheduleChart';
 import useLoading from '../util/useLoading';
 import useFillSchedule from '../util/useFillSchedule';
 import Advice from '../components/Advice';
@@ -138,7 +138,7 @@ const Home = ()=>{
   const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
    // 스케쥴 데이터 로드
-  const { data: SchedulerData, loading: loadingScheduler, error: errorScheduler } = useLoading('http://localhost:8080/api/schedule/1', 'json');
+  const { data: SchedulerData= [], loading: loadingScheduler, error: errorScheduler } = useLoading(`http://localhost:8080/api/user/schedule/search?reg_date=${currentDate}`, 'json');
   const modifiedScheduleData = useFillSchedule(SchedulerData || []);
   
   //명언
@@ -152,6 +152,7 @@ const Home = ()=>{
   // todo 데이터 로드
   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${currentDate}`, 'json');
 
+  const onClickSchedule=useMove('Schedule');
 
 
   useEffect(() => {
@@ -207,8 +208,13 @@ if (errorScheduler) {
             </div>
           )}
         </div>
-        <div className='circleSchedule backWhite'>
-          <SchedulerChart data={modifiedScheduleData}></SchedulerChart>
+        <div className='circleSchedule backWhite' onClick={onClickSchedule}>
+          {modifiedScheduleData.length===1? 
+          <>
+            <ToFullList URL="schedule"></ToFullList>
+            <p className='schedulInfo'>오늘의 스케쥴을 정리해보세요!</p>
+          </>
+          :<SchedulerChart data={modifiedScheduleData}></SchedulerChart>}
           </div>
         </div>
 
