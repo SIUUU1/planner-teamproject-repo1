@@ -18,8 +18,10 @@ import BoardWrite from './board/BoardWrite';
 import BoardDetail from './board/BoardDetail';
 import BoardEdit from './board/BoardEdit';
 import Chat from './openChat/Chat';
+//import Messenger from './messenger/Messenger';
 import QnaCustomerSupport from './qna/QnaCustomerSupport';
 import NoticeBoard from './qna/NoticeBoard';
+import Support from './qna/Support';
 import ThemeChange from './theme/ThemeChange';
 import FriendsList from './member/FriendsList';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -32,7 +34,7 @@ import TodoMain from './todoList/TodoMain';
 import TodoDetail from './todoList/TodoDetail';
 import NotAuthorized from './pages/NotAuthorized';
 import Welcome from './pages/Welcome';
-
+import PaymentForm from './pay/PaymentForm';
 
 function App() {
   
@@ -50,7 +52,7 @@ function App() {
           <Route path="/user" element={<User/>} />
           <Route path='/*' element={<NotFound/>}/>
           <Route path='/as' element={<NotAuthorized/>}/>
-          <Route path='/manager/groupmain' element={<StudyGroupMain/>}/>
+          <Route path='/groupmain' element={<StudyGroupMain/>}/>
           <Route path='/groupnew' element={<StudyGroupNew/>}/>
           <Route path='/groupedit' element={<StudyGroupEdit/>}/>
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
@@ -61,6 +63,7 @@ function App() {
           <Route path="/boarddetail/:id" element={<BoardDetail />} />
           <Route path="/boardedit/:id" element={<BoardEdit />} />
           <Route path="/qna/:mode/:qna_id" element={<QnaCustomerSupport />} />
+          <Route path='/support' element={<Support />} />
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/themechange" element={<ThemeChange />} />
           <Route path="/friends" element={<FriendsList />} />
@@ -68,6 +71,7 @@ function App() {
           <Route path="/schedule" element={<Schedule />} />
           <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
+          <Route path='/payForm' element={<PaymentForm/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>

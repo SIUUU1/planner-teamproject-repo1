@@ -66,6 +66,18 @@ const DetailsPage = () => {
       <p><strong>카테고리:</strong> {post.category}</p>
       <p><strong>등록날짜:</strong> {post.date}</p>
       <p><strong>내용:</strong> {post.content}</p>
+
+      {post.images && post.images.length > 0 && (
+        <div className="attachedFiles">
+          <h2>첨부된 이미지:</h2>
+          {post.images.map((image, index) => (
+            <div key={index} className="attachedImage">
+              <img src={image} alt={`첨부이미지 ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+      )}
+
       <div>
         <h2>댓글</h2>
         {comments.map((comment, index) => (

@@ -1,4 +1,3 @@
-// src/theme/ThemeChange.jsx
 import React, { useState } from 'react';
 import './ThemeChange.css';
 import Footer from '../components/Footer';
@@ -6,72 +5,37 @@ import Attainment from '../attainment/Attainment';
 import ToFullList from '../components/ToFullList';
 
 const themes = [
-  { name: 'Theme 1', color: '#FF6347' }, // Tomato
-  { name: 'Theme 2', color: '#4682B4' }, // SteelBlue
-  { name: 'Theme 3', color: '#FFD700' }, // Gold
-  { name: 'Theme 4', color: '#32CD32' }, // LimeGreen
-  { name: 'Theme 5', color: '#FF4500' }, // OrangeRed
+  { name: 'Theme 1', gradient: 'linear-gradient(135deg, #f79d00, #64f38c)' },
+  { name: 'Theme 2', gradient: 'linear-gradient(135deg, #BE93C5, #7BC6CC)' },
+  { name: 'Theme 3', gradient: 'linear-gradient(135deg, #A1FFCE, #FAFFD1)' },
+  { name: 'Theme 4', gradient: 'linear-gradient(135deg, #ef32d9, #89fffd)' },
+  { name: 'Theme 5', gradient: 'linear-gradient(135deg, #a80077, #66ff00)' },
+  { name: 'Theme 6', gradient: 'linear-gradient(135deg, #2980B9, #2980B9,#FFFFFF )' },
+  { name: 'Theme 7', gradient: 'linear-gradient(135deg, #12c2e9,#c471ed,#F64F59 )' },
+  { name: 'Theme 8', gradient: 'linear-gradient(135deg, #FEAC5E,#C779D0,#4bc0c8 )' },
+  { name: 'Theme 9', gradient: 'linear-gradient(135deg, #5433FF,#20BDFF,#a6Fecb )' },
+  { name: 'Theme 10', gradient: 'linear-gradient(135deg, #C6FFDD,#FBD786,#f7797d )' },  
 ];
-
-const data1 = [
-  {
-    attainmentId: 0,
-    attainmentName: '팀프로젝트하기',
-    attainmentType: 'time',
-    attainmentTarget: 100,
-    attainmentFinish: 10,
-    attainmentRate: 10,
-    hotDogColor: 'hsl(113, 70%, 50%)',
-    star: 10,
-  },
-];
-
-const data2 = [
-  {
-    attainmentId: 0,
-    attainmentName: '팀프로젝트하기',
-    attainmentType: 'time',
-    attainmentTarget: 100,
-    attainmentFinish: 10,
-    attainmentRate: 10,
-    hotDogColor: 'hsl(113, 70%, 50%)',
-    star: 10,
-  },
-];
-
-const modifiedData1 = data1
-  .filter((item) => item.star > 0)
-  .sort((a, b) => b.attainmentRate - a.attainmentRate)
-  .slice(0, 4);
-const modifiedData2 = data2
-  .filter((item) => item.star > 0)
-  .sort((a, b) => b.attainmentRate - a.attainmentRate)
-  .slice(0, 4);
-
-const height1 = modifiedData1.length * 50;
-const height2 = modifiedData2.length * 50;
 
 const ThemeChange = () => {
-  const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
+  const [currentTheme, setCurrentTheme] = useState(themes[0]);
 
-  const handleNext = () => {
-    setCurrentThemeIndex((currentThemeIndex + 1) % themes.length);
+  const selectTheme = (theme) => {
+    setCurrentTheme(theme);
   };
-
-  const handlePrevious = () => {
-    setCurrentThemeIndex((currentThemeIndex - 1 + themes.length) % themes.length);
-  };
-
-  const currentTheme = themes[currentThemeIndex];
 
   return (
-    <div className="theme-change" style={{ backgroundColor: currentTheme.color }}>
-      <div className="theme-info">
-        <h1>{currentTheme.name}</h1>
-        <button onClick={handlePrevious}>Previous</button>
-        <button onClick={handleNext}>Next</button>
+    <div className="theme-change" style={{ background: currentTheme.gradient }}>
+      <div className="theme-selector">
+        {themes.map((theme, index) => (
+          <button
+            key={index}
+            style={{ background: theme.gradient }}
+            onClick={() => selectTheme(theme)}
+            aria-label={`Change theme to ${theme.name}`}
+          />
+        ))}
       </div>
-      {/* Preview of User layout with the current theme */}
       <div className="user">
         <div className="homeMiddle">
           <div className="homeFirstMiddle">
@@ -89,7 +53,6 @@ const ThemeChange = () => {
               </div>
             </div>
           </div>
-
           <div className="homeSecondMiddle">
             <div className="toDoList" style={{ backgroundColor: 'white' }}>
               해야 할 일을 정리해보세요 TodoList 3개만
@@ -98,15 +61,32 @@ const ThemeChange = () => {
               원그래프 일정
             </div>
           </div>
-
           <div className="homeThirdMiddle">
             <div className="progress" style={{ backgroundColor: 'white' }}>
-              <div className="progress1" style={{ height: `${height1}px` }}>
+              <div className="progress1" style={{ height: '50px' }}>
                 <ToFullList URL="attainmentMain"></ToFullList>
-                <Attainment data={modifiedData1} padding={0.05} type={'short'}></Attainment>
+                <Attainment data={[{
+                  attainmentId: 0,
+                  attainmentName: '팀프로젝트하기',
+                  attainmentType: 'time',
+                  attainmentTarget: 100,
+                  attainmentFinish: 10,
+                  attainmentRate: 10,
+                  hotDogColor: 'hsl(113, 70%, 50%)',
+                  star: 10,
+                }]} padding={0.05} type={'short'}></Attainment>
               </div>
-              <div className="progress2" style={{ height: `${height2}px` }}>
-                <Attainment data={modifiedData2} padding={0.05} type={'long'}></Attainment>
+              <div className="progress2" style={{ height: '50px' }}>
+                <Attainment data={[{
+                  attainmentId: 0,
+                  attainmentName: '팀프로젝트하기',
+                  attainmentType: 'time',
+                  attainmentTarget: 100,
+                  attainmentFinish: 10,
+                  attainmentRate: 10,
+                  hotDogColor: 'hsl(113, 70%, 50%)',
+                  star: 10,
+                }]} padding={0.05} type={'long'}></Attainment>
               </div>
             </div>
             <div className="board" style={{ backgroundColor: 'white' }}>
@@ -151,7 +131,6 @@ const ThemeChange = () => {
             </div>
           </div>
         </div>
-       
       </div>
     </div>
   );

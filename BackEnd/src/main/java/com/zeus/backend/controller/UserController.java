@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zeus.backend.domain.Friend;
-import com.zeus.backend.domain.Qna;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.service.FriendService;
 import com.zeus.backend.service.UserService;
@@ -58,10 +56,6 @@ public class UserController {
 			return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
 		}
 	}
-
-	// 이메일 중복 조회
-
-	// 복구 이메일 조회
 
 	// 목록 페이지
 	@GetMapping("/list")
@@ -180,7 +174,7 @@ public class UserController {
 	public ResponseEntity<List<User>> searchFriends(
 			@RequestParam(name = "searchkey", defaultValue = "name") String searchkey,
 			@RequestParam(name = "search", defaultValue = "") String search) {
-		
+
 		System.out.println("searchFriends");
 		System.out.println("searchkey:" + searchkey);
 		System.out.println("search:" + search);
@@ -204,27 +198,22 @@ public class UserController {
 		}
 		return new ResponseEntity<>(userList, HttpStatus.OK);
 	}
-
-	// 최초 관리자를 생성하는 화면을 반환한다.
-	@RequestMapping(value = "/setup", method = RequestMethod.GET)
-	public int setupAdminForm(@RequestParam Map<String, Object> map) throws Exception {
-		// 회원 테이블 데이터 건수를 확인하여 0이면 최초 관리자 등록 페이지를 표시한다.(프론트)
-		// 회원 테이블에 데이터가 존재하면 최초 관리자를 생성할 수 없으므로 실패 alert
-		return userService.countAll();
-	}
-
-	// 회원 테이블에 데이터가 없으면 최초 관리자를 생성한다.
-	@RequestMapping(value = "/setup", method = RequestMethod.POST)
-	public void setupAdmin(@RequestParam Map<String, Object> map) throws Exception {
+	
+	// 회원 테이블에 데이터가 없으면 최초 관리자를 생성한다.(아이디, 비번, 이름만 있으면 된다.)
+	@PostMapping("/setup")
+	public  ResponseEntity<?> setupAdmin(@RequestBody User user) throws Exception {
 		// 회원 테이블 데이터 건수를 확인하여 빈 테이블이면 최초 관리자를 생성한다.
 		if (userService.countAll() == 0) {
-			String inputPassword = (String) map.get("user_password");
-			map.put("user_password", passwordEncoder.encode(inputPassword));
-			// 나머지 값 디폴트로 줘야 함(not null의 경우)
-			// userService.setupAdmin(map);
-			// 성공 alert
+			try {
+				userService.setupAdmin(user);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail to setup admin");
+			}
+			return new ResponseEntity<>("success to setupAdmin",HttpStatus.OK);
+			
 		}
-		// 회원 테이블에 데이터가 존재하면 최초 관리자를 생성할 수 없으므로 실패 alert
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("fail to setup admin because members' count is not 0");
 	}
 
 }

@@ -12,18 +12,18 @@ const BoardList = () => {
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    // Assume posts already have an 'author' field; if not, initialize it here
+    
     const postsWithViewsAndAuthors = storedPosts.map(post => ({
       ...post,
       views: post.views || 0,
-      author: post.author || 'Unknown' // Assuming some default value or fetch from user session
+      author: post.author || 'Unknown' 
     }));
     setPosts(postsWithViewsAndAuthors);
     setDisplayPosts(postsWithViewsAndAuthors);
   }, []);
 
   const handleWrite = () => {
-    // Ensure you have a method to add 'author' when navigating to write a new post
+    
     navigate('/BoardWrite');
   };
 
@@ -35,7 +35,7 @@ const BoardList = () => {
   };
 
   const handleEdit = (id) => {
-    // Pass the author through state or ensure the edit page knows how to fetch it
+   
     navigate(`/BoardEdit/${id}`);
   };
 

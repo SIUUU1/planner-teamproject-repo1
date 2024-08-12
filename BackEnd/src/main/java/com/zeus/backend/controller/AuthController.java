@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.User;
@@ -69,4 +71,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking the id.");
         }
 	}
+	
+	// 복구 이메일 조회
+//		@RequestMapping(value = "/checkRestoreEmail", method = RequestMethod.POST)
+//		public int checkRestoreEmail(@RequestParam("restore_email") String restore_email) throws Exception {
+//			// authentication 테이블에서 복구 이메일이 있는지 확인하여 0이면 '존재하지 않는 이메일 입니다.' msg
+//			// authentication 테이블에서 복구 이메일이 있는지 확인하여 1이면 '복구 이메일로 이메일 보내기, 본인인증 코드 보내기 버튼이 보인다.' msg
+//			// 버튼 클릭 후 본인인증 코드 작성 페이지 보여준다.
+//			return service.checkEmail(restore_email);
+//		}
 }

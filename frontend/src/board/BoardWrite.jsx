@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import './BoardWrite.css';
 
 const Write = () => {
@@ -9,7 +11,7 @@ const Write = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [author, setAuthor] = useState(''); // 상태 추가
+  const [images, setImages] = useState([]);
 
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
@@ -18,7 +20,30 @@ const Write = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const promises = files.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(promises).then(images => {
+      setImages(images);
+    }).catch(error => {
+      console.error("Error reading files:", error);
+    });
+  };
+
   const handleComplete = () => {
+    if (!title || !selectedCategory || !content) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+
     const currentDate = new Date().toLocaleString();
 
     const newPost = {
@@ -26,7 +51,7 @@ const Write = () => {
       category: selectedCategory,
       title,
       content,
-      author, // 글쓴이 정보 추가
+      images,  // Add images to the post
       date: currentDate,
     };
 
@@ -37,23 +62,44 @@ const Write = () => {
     navigate('/boardlist');
   };
 
+  const modules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }, { font: [] }],
+      [{ size: [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['link', 'image', 'video'],
+      ['clean'],
+    ],
+  };
+
   return (
     <div className="boardWrite">
       <h1>글쓰기 게시판</h1>
       <div className="formGroup">
-        <label htmlFor="author">글쓴이:</label> {/* 글쓴이 입력 필드 */}
+        <label htmlFor="title">제목:</label>
         <input
           type="text"
-          id="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="제목을 입력하세요"
         />
       </div>
       <div className="formGroup">
         <label htmlFor="category">카테고리:</label>
-        <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+        <select
+          id="category"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="" disabled>
+            카테고리를 선택하세요
+          </option>
           {categories.map((category, index) => (
-            <option key={index} value={category}>{category}</option>
+            <option key={index} value={category}>
+              {category}
+            </option>
           ))}
         </select>
       </div>
@@ -64,28 +110,29 @@ const Write = () => {
           id="newCategory"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
+          placeholder="새 카테고리 추가"
         />
-        <button onClick={handleAddCategory} className="addCategoryButton">추가</button>
-      </div>
-      <div className="formGroup">
-        <label htmlFor="title">제목:</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <button onClick={handleAddCategory} className="addCategoryButton">
+          추가
+        </button>
       </div>
       <div className="formGroup">
         <label htmlFor="content">내용:</label>
-        <textarea
-          id="content"
+        <ReactQuill
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={setContent}
+          modules={modules}
+          placeholder="내용을 입력하세요..."
         />
       </div>
       <div className="formGroup">
-        <button onClick={handleComplete} className="completeButton">등록</button>
+        <label htmlFor="imageUpload">이미지 업로드:</label>
+        <input type="file" id="imageUpload" multiple accept="image/*" onChange={handleFileChange} />
+      </div>
+      <div className="formGroup">
+        <button onClick={handleComplete} className="completeButton">
+          등록
+        </button>
       </div>
     </div>
   );

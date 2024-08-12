@@ -1,7 +1,9 @@
 package com.zeus.backend.controller;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -28,7 +30,7 @@ public class WeatherController {
 	private String weather_service_key;
 
 	@GetMapping("/api/weather")
-	public ResponseEntity<?> getWeather() throws Exception {
+	public ResponseEntity<?> getWeather() {
 		Date date = new Date();
 		SimpleDateFormat formmat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat formmat2 = new SimpleDateFormat("HHmm");
@@ -38,52 +40,60 @@ public class WeatherController {
 
 		StringBuilder urlBuilder = new StringBuilder(
 				"http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst"); /* URL */
-		urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "="
-				+ URLEncoder.encode(weather_service_key, "UTF-8")); /* Service Key */
-		urlBuilder
-				.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
-		urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
-				+ URLEncoder.encode("1000", "UTF-8")); /* 한 페이지 결과 수 */
-		urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "="
-				+ URLEncoder.encode("JSON", "UTF-8")); /* 요청자료형식(XML/JSON) Default: XML */
-		urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "="
-				+ URLEncoder.encode(currentDate, "UTF-8")); /* ‘21년 6월 28일 발표 */
-		urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "="
-				+ URLEncoder.encode(currentTime, "UTF-8")); /* 06시30분 발표(30분 단위) */
-		urlBuilder.append(
-				"&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode("55", "UTF-8")); /* 예보지점 X 좌표값 */
-		urlBuilder.append(
-				"&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode("127", "UTF-8")); /* 예보지점 Y 좌표값 */
-		URL url = new URL(urlBuilder.toString());
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("GET");
-		conn.setRequestProperty("Content-type", "application/json");
-		System.out.println("Response code: " + conn.getResponseCode());
+		JSONArray weatherItems = null;
+		try {
+			urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "="
+					+ URLEncoder.encode(weather_service_key, "UTF-8"));
+			urlBuilder.append(
+					"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
+			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
+					+ URLEncoder.encode("1000", "UTF-8")); /* 한 페이지 결과 수 */
+			urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "="
+					+ URLEncoder.encode("JSON", "UTF-8")); /* 요청자료형식(XML/JSON) Default: XML */
+			urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "="
+					+ URLEncoder.encode(currentDate, "UTF-8")); /* ‘21년 6월 28일 발표 */
+			urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "="
+					+ URLEncoder.encode(currentTime, "UTF-8")); /* 06시30분 발표(30분 단위) */
+			urlBuilder.append(
+					"&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode("55", "UTF-8")); /* 예보지점 X 좌표값 */
+			urlBuilder.append(
+					"&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode("127", "UTF-8")); /* 예보지점 Y 좌표값 */
+			URL url = new URL(urlBuilder.toString());
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-type", "application/json");
+			System.out.println("Response code: " + conn.getResponseCode());
+			BufferedReader rd = null;
+			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			} else {
+				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			}
 
-		BufferedReader rd = null;
-		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		} else {
-			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+			rd.close();
+			conn.disconnect();
+
+			System.out.println(sb.toString());
+
+			JSONObject jsonResponse = new JSONObject(sb.toString());
+		 	weatherItems = jsonResponse.getJSONObject("response").getJSONObject("body").getJSONObject("items")
+					.getJSONArray("item");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		StringBuilder sb = new StringBuilder();
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-			sb.append(line);
-		}
-		rd.close();
-		conn.disconnect();
-		System.out.println(sb.toString());
-
-		JSONObject jsonResponse = new JSONObject(sb.toString());
-		JSONArray weatherItems = jsonResponse.getJSONObject("response").getJSONObject("body").getJSONObject("items")
-				.getJSONArray("item");
 
 		String sky = null, pty = null;
 
 		for (int i = 0; i < weatherItems.length(); i++) {
-			sky="1"; pty="0"; //초기값
 			JSONObject item = weatherItems.getJSONObject(i);
 
 			String category = item.getString("category");
@@ -101,13 +111,13 @@ public class WeatherController {
 				}
 			}
 		}
-		
+
 		// 데이터를 가져오지 못한 경우 초기값
 		if (sky == null) {
-		    sky = "1";
+			sky = "1";
 		}
 		if (pty == null) {
-		    pty = "0";
+			pty = "0";
 		}
 
 		System.out.println("sky " + sky + " pty " + pty);

@@ -1,67 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+// src/studygroup/StudyGroupMain.jsx
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import './StudyGroupMain.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { StudyGroupContext } from './StudyGroupContext';
 
 // Modal 컴포넌트 정의
 function Modal({ group, onClose }) {
   if (!group) return null; // 그룹이 선택되지 않으면 모달을 표시하지 않음
-  
+
   const handleJoinGroup = () => {
     console.log("그룹에 가입되었습니다!");  // 여기서 그룹 가입 로직을 구현하거나 다른 처리를 가능
     onClose();  // 가입 후 모달을 닫을 수 있음.
   };
+
+  const formatModalContent = (content) => {
+    return content
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map((line, index) => line === '---' ? <hr key={index} /> : <p key={index}>{line}</p>);
+  };
+
   return (
     <div className="modalOverlay">
       <div className="modalContent">
         <button className="closeButton" onClick={onClose}>X</button>
-        
-        <h1>KH 정보교육원</h1>
-        <hr></hr>
-        <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          <b>하루종일 프로젝트만 만들어요. 
-          <br></br>카페인없으면 못버텨요</b>
-          
-          
-          
-          <button className="joinButton" onClick={handleJoinGroup}>그룹 가입</button>
-          <button className="cancelButton" onClick={onClose}>취소</button>
+        <h1>{group.name}</h1>
+        <hr />
+        <div>{group.customModalContent ? formatModalContent(group.customModalContent) : '기본 모달 내용'}</div> {/* Display custom content */}
+        <button className="joinButton" onClick={handleJoinGroup}>그룹 가입</button>
+        <button className="cancelButton" onClick={onClose}>취소</button>
       </div>
     </div>
   );
@@ -96,21 +66,12 @@ function StudyGroupList({ groups, onItemClick }) {
 }
 
 function StudyGroupMain() {
+  const { groups: allGroups = [] } = useContext(StudyGroupContext); // 기본값을 빈 배열로 설정 // Use groups from context
   const [activeFilter, setActiveFilter] = useState(0);
   const [searchQuery, setSearchQuery] = useState(""); // 검색 입력을 추적하기 위한 상태
   const [selectedGroup, setSelectedGroup] = useState(null); // 선택된 그룹을 추적하기 위한 상태
   const filterRefs = [useRef(null), useRef(null), useRef(null)];
   const navigate = useNavigate();
-
-  // 모든 그룹 데이터
-  const allGroups = [
-    { name: "KH정보교육원 1", image: "/images/wakeup.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 2", image: "/images/dog1.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 3", image: "/images/dog3.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 4", image: "/images/wakeup.jpg", tags: ["React", "Node.js", "MongoDB"], capacity: "3/20", attendance: "95%", privacy: "공개" },
-    { name: "KH정보교육원 5", image: "/images/dog1.jpg", tags: ["Python", "Flask", "Django"], capacity: "1/15", attendance: "85%", privacy: "비공개" },
-    { name: "KH정보교육원 6", image: "/images/dog3.jpg", tags: ["Java", "Spring Boot", "Microservices"], capacity: "5/25", attendance: "90%", privacy: "공개" },
-  ];
 
   const [displayedGroups, setDisplayedGroups] = useState(allGroups.slice(0, 3));
 
@@ -130,7 +91,7 @@ function StudyGroupMain() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [displayedGroups]);
+  }, [displayedGroups, allGroups]);
 
   const handleFilterClick = (index) => {
     setActiveFilter(index);

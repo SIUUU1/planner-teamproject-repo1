@@ -146,8 +146,8 @@ const Home = ()=>{
   const { data: adviceData, loading: loadingAdvice, error: errorAdvice } = useLoading('http://localhost:8080/api/advice', 'json');
   
   // 날씨
-  // const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
-  // const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
+  const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
+  const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
   
   // todo 데이터 로드
   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${currentDate}`, 'json');
@@ -158,10 +158,10 @@ const Home = ()=>{
     if (adviceData) {
       setAdvice(adviceData);
     }
-    // if(weatherData){
-    //   setWeather(weatherData);
-    // }
-  }, [adviceData/*,weatherData*/]);
+    if(weatherData){
+      setWeather(weatherData);
+    }
+  }, [adviceData,weatherData]);
 
 
   // 로딩 중, 오류 처리
@@ -181,9 +181,8 @@ if (errorScheduler) {
           <div className='plant backWhite'>식물이미지</div>
           <div className='firstMiddleText'>
              <div className='calendar backWhite'>
-              {/*2024.07.20 13:45:42(sat)
               {<Weather date={weather.date} skyState={weather.sky} ptyState={weather.pty} error={errorWeather} loading={loadingWeather}/>}
-            */}</div> 
+            </div> 
             <div className='saying backWhite' >
               {<Advice message={advice.message} author={advice.author} error={errorAdvice} loading={loadingAdvice}/>}
             </div>
