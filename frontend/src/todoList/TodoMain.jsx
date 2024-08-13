@@ -26,7 +26,7 @@ const TodoMain = () => {
   const onClickSub = async () => {
     const newTodo = {
       todo_title: todoTitle,
-      reg_date: date,
+      todo_date: date,
       type: 'my'
     };
 
@@ -48,15 +48,15 @@ const TodoMain = () => {
   const onClickLeft = useMove(`/todomain/${type}/${previousDay}`);
   const onClickRight = useMove(`/todomain/${type}/${nextDay}`);
   // todo 데이터 로드
-  const { data: todoData, loading: loadingdata, error: errordata, refetch  } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${date}`, 'json');
+  const { data: todoData, loading: loadingdata, error: errordata, refetch  } = useLoading(`http://localhost:8080/api/user/todos/search?todo_date=${date}`, 'json');
   
   
   useEffect(() => {
     if (todoData) {
       if (type === 'my') {
-        setLocalData(todoData.filter(i => i.type === 'my' && i.reg_date === date));
+        setLocalData(todoData.filter(i => i.type === 'my' && i.todo_date === date));
       } else if (type === 'team') {
-        setLocalData(todoData.filter(i => i.type === 'team' && i.reg_date === date));
+        setLocalData(todoData.filter(i => i.type === 'team' && i.todo_date === date));
       }
     }
   }, [todoData, type, date]);

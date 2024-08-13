@@ -150,7 +150,7 @@ const Home = ()=>{
   const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
   
   // todo 데이터 로드
-  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?reg_date=${currentDate}`, 'json');
+  const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?todo_date=${currentDate}`, 'json');
 
   const onClickSchedule=useMove('Schedule');
 

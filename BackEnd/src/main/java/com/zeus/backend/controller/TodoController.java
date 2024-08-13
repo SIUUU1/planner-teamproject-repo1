@@ -55,7 +55,7 @@ public class TodoController {
 	@PostMapping("/register")
 	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
 		System.out.println("todo_title: " + todo.getTodo_title());
-		System.out.println("reg_date: " + todo.getReg_date());
+		System.out.println("todo_date: " + todo.getTodo_date());
 		System.out.println("type: " + todo.getType());
 
 		User user = null;
@@ -170,7 +170,7 @@ public class TodoController {
 
 	@GetMapping("/search")
 	public ResponseEntity<List<Todo>> getTodosByUserAndDate(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date todo_date) {
 		System.out.println("=============================");
 		System.out.println("start getTodosByUserAndDate");
 
@@ -183,7 +183,7 @@ public class TodoController {
 		if (user == null) {
 			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
 		}
-		List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), reg_date);
+		List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), todo_date);
 		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
 

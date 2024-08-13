@@ -3,20 +3,18 @@
 <mapper namespace="com.zeus.backend.mapper.TodoMapper">
  <!-- 투두 데이터 등록 -->
     <insert id="registerTodo">
-        INSERT INTO todolist (todo_no, user_no, todo_title, reg_date, type)
-        VALUES (todolList_sep.nextval, #{user_no}, #{todo_title}, #{reg_date}, #{type})
+        INSERT INTO todolist (todo_no, user_no, todo_title, todo_date, type)
+        VALUES (todolList_sep.nextval, #{user_no}, #{todo_title}, #{todo_date}, #{type})
     </insert>
 
     <!-- 모든 투두 항목 가져오기 -->
     <select id="getAllTodos" resultType="com.zeus.backend.domain.Todo">
-        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
-        FROM todolist
+        SELECT * FROM todolist
     </select>
 
     <!-- 특정 투두 항목 가져오기 (todo_no로 검색) -->
     <select id="getTodoByNO" resultType="com.zeus.backend.domain.Todo">
-        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
-        FROM todolist
+        SELECT * FROM todolist
         WHERE todo_no = #{todo_no}
     </select>
 
@@ -40,8 +38,8 @@
 
     <!-- 특정 사용자와 날짜에 따른 투두 항목 가져오기 -->
     <select id="getTodosByUserAndDate" resultType="com.zeus.backend.domain.Todo">
-        SELECT todo_no, user_no, todo_title, is_done, reg_date, type
+        SELECT *
         FROM todolist
-        WHERE user_no = #{user_no} AND reg_date = #{reg_date}
+        WHERE user_no = #{user_no} AND todo_date = #{todo_date}
     </select>
 </mapper>
