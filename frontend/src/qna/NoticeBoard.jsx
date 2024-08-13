@@ -13,6 +13,7 @@ const NoticeBoard = ({userData=null}) => {
   const [selectedNotice, setSelectedNotice] = useState(null);
   
   const { data: noticeListData, loading: loadingNoticeList, error: errorNoticeList,refetch: refetchNoticeData } = useLoading('http://localhost:8080/api/notice/list', 'json');
+  
   useEffect(() => {
     if (noticeListData) {
       // step이 0인 항목만 필터링

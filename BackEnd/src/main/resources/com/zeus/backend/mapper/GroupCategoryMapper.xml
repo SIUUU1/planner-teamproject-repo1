@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.GroupCategoryMapper">
+	<!-- 그룹카테고리 조회 -->
+	<select id="list" resultType="com.zeus.backend.domain.GroupCategory">
+		SELECT * FROM GroupCategory 
+	</select>
+	<!-- 그룹카테고리 조회 -->
+	<select id="read" resultType="com.zeus.backend.domain.GroupCategory">
+		SELECT * FROM GroupCategory WHERE groupcategory_id = #{groupcategory_id}
+	</select>
+	<!-- 그룹카테고리 삽입 -->
+	<insert id="create">
+		INSERT INTO GroupCategory (groupcategory_id, code, category_name)
+		VALUES (GroupCategory_id_SEQ.NEXTVAL, #{code}, #{category_name})
+	</insert>
+	<!-- 그룹카테고리 업데이트 -->
+	<update id="modify">
+		UPDATE GroupCategory 
+		SET code = #{code}, category_name = #{category_name} 
+		WHERE groupcategory_id = #{groupcategory_id}
+	</update>
+	<!-- 그룹카테고리 삭제 -->
+	<delete id="remove">
+		DELETE FROM GroupCategory WHERE groupcategory_id = #{groupcategory_id}
+	</delete>
+</mapper>

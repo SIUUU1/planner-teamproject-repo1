@@ -2,6 +2,7 @@ import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
 import React, { useState , useEffect} from 'react';
 import useMove from'../util/useMove';
+
 const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null})=>{
   const initQan = {
     qna_id: '',
