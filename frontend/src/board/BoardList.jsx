@@ -1,87 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState, useEffect } from 'react';
 import './BoardList.css';
+import Pagination from '../components/Pagination';
+import useMove from '../util/useMove';
+import useLoading from '../util/useLoading';
+import { useNavigate } from 'react-router-dom';
 
 const BoardList = () => {
-  const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
-  const [displayPosts, setDisplayPosts] = useState([]);
+  const [boards, setBoards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const postsPerPage = 7;
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchList, setSearchList] = useState([]);
+  const [searching, setSearching] = useState(false); // 검색 중 여부를 나타내는 상태
+  const [searchTerm, setSearchTerm] = useState(''); // 실제 검색어를 저장하는 상태
+  const [sortOrder, setSortOrder] = useState('latest');
+  const nav = useNavigate();
+
+  const { data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
 
   useEffect(() => {
-    const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    let filteredBoards = [];
     
-    const postsWithViewsAndAuthors = storedPosts.map(post => ({
-      ...post,
-      views: post.views || 0,
-      author: post.author || 'Unknown' 
-    }));
-    setPosts(postsWithViewsAndAuthors);
-    setDisplayPosts(postsWithViewsAndAuthors);
-  }, []);
+    if (searching) {
+      filteredBoards = searchList.filter(board => board.step === 0);
+    } else if (boardListData) {
+      filteredBoards = boardListData.filter(board => board.step === 0);
+    }
 
+    if (sortOrder === 'latest') {
+      filteredBoards = filteredBoards.sort((a, b) => new Date(b.reg_date) - new Date(a.reg_date));
+    } else if (sortOrder === 'regOrder') {
+      filteredBoards = filteredBoards.sort((a, b) => new Date(a.reg_date) - new Date(b.reg_date));
+    }
+
+    setBoards(filteredBoards);
+    setTotalPages(Math.ceil(filteredBoards.length / itemsPerPage));
+  }, [boardListData, itemsPerPage, sortOrder, searching, searchList]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handleTitleClick = async (no) => {
+    await incrementReadCount(no);
+    nav(`/boarddetail/${no}`);
+  };
+  const handleSortOrderChange =(e)=>{
+    setSortOrder(e.target.value);
+  };
+
+  const incrementReadCount = async (no) => {
+    try {
+      await fetch(`http://localhost:8080/api/board/readCount/${no}`, {
+        method: 'GET',
+      });
+      refetchBoardData();
+    } catch (error) {
+      console.error('Failed to increment read count', error);
+    }
+  };
+
+  const indexOfLastBoard = currentPage * itemsPerPage;
+  const indexOfFirstBoard = indexOfLastBoard - itemsPerPage;
+  const currentBoards = boards.slice(indexOfFirstBoard, indexOfLastBoard);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const category = useRef();
+  const onSearch = () => {
+    let url = 'http://localhost:8080/api/board/search';
+    const form = new FormData();
+    form.append('category', category.current.value);
+    form.append('search', searchTerm);
+
+    setSearching(true);
+
+    fetch(url, { method: 'POST', body: form, credentials: 'include' })
+      .then(response => response.json())
+      .then(data => {
+        let filteredSearch = data.filter(board => board.step === 0);
+        setSearchList(filteredSearch);
+        setCurrentPage(1);
+      })
+      .catch(error => {
+        console.error('Error fetching search results:', error);
+        setSearchList([]);
+      });
+  };
+
+  const moveToWrite = useMove('/boardwrite/0'); 
   const handleWrite = () => {
-    
-    navigate('/BoardWrite');
+    moveToWrite();
   };
-
-  const handleDelete = (id) => {
-    const updatedPosts = posts.filter(post => post.id !== id);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    setPosts(updatedPosts);
-    setDisplayPosts(updatedPosts);
-  };
-
-  const handleEdit = (id) => {
-   
-    navigate(`/BoardEdit/${id}`);
-  };
-
-  const handleViewIncrement = (id) => {
-    const updatedPosts = posts.map(post => {
-      if (post.id === id) {
-        return {...post, views: post.views + 1};
-      }
-      return post;
-    });
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    setPosts(updatedPosts);
-    setDisplayPosts(updatedPosts);
-    navigate(`/boarddetail/${id}`);
-  };
-
-  const handleSearch = () => {
-    if (!searchTerm.trim()) {
-      setDisplayPosts(posts);
-    } else {
-      const filteredPosts = posts.filter(post =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setDisplayPosts(filteredPosts);
-      setCurrentPage(1);
-    }
-  };
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = displayPosts.slice(indexOfFirstPost, indexOfLastPost);
-
-  const totalPages = Math.ceil(displayPosts.length / postsPerPage);
 
   return (
     <div className="boardList">
@@ -90,16 +111,17 @@ const BoardList = () => {
         <button onClick={handleWrite} className="writeButton">글쓰기</button>
       </div>
       <div className="searchBar">
-        <select>
+        <select onChange={handleSortOrderChange} value={sortOrder}>
           <option value="latest">최신순</option>
+          <option value="regOrder">등록순</option>
         </select>
-        <input
-          type="text"
-          placeholder="검색어를 입력해주세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>검색</button>
+        <select ref={category}>
+          <option value="all">전체</option>
+          <option value="english">영어</option>
+          <option value="toeic">토익</option>
+        </select>
+        <input type="text" placeholder="검색어를 입력해주세요" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
+        <button onClick={onSearch}>검색</button>
       </div>
       <table className="boardListTable">
         <thead>
@@ -109,32 +131,30 @@ const BoardList = () => {
             <th>작성자</th>
             <th>조회</th>
             <th>작성일</th>
-            <th>작업</th>
           </tr>
         </thead>
         <tbody>
-          {currentPosts.map((post) => (
-            <tr key={post.id}>
-              <td>{post.category}</td>
-              <td onClick={() => handleViewIncrement(post.id)} className="postTitle">
-                {post.title}
-              </td>
-              <td>{post.author}</td>
-              <td>{post.views}</td>
-              <td>{post.date}</td>
-              <td>
-                <div className="buttonGroup">
-                  <button onClick={() => handleEdit(post.id)} className="editButton">수정</button>
-                  <button onClick={() => handleDelete(post.id)} className="deleteButton">삭제</button>
-                </div>
-              </td>
+          {searching && currentBoards.length === 0 ? (
+            <tr>
+              <td colSpan="5">검색 결과가 없습니다.</td>
             </tr>
-          ))}
+          ) : (
+            currentBoards.map((board, index) => (
+              <tr key={index}>
+                <td>{board.category}</td>
+                <td onClick={() => handleTitleClick(board.no)} className="postTitle">
+                  {board.subject}
+                </td>
+                <td>{board.user_nickname}</td>
+                <td>{board.read_count}</td>
+                <td>{formatDate(board.reg_date)}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
       <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>이전</button>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>다음</button>
+        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
       </div>
     </div>
   );

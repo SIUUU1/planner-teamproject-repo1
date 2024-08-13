@@ -1,17 +1,64 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef,useEffect,useState } from 'react';
+import {useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './BoardWrite.css';
+import useLoading from '../util/useLoading';
+import useMove from '../util/useMove';
 
-const Write = () => {
-  const navigate = useNavigate();
-  const [categories, setCategories] = useState(['Java', 'Html', 'Css', 'Spring boot', 'React']);
+const BoardWrite = () => {
+  const initBoard = {
+    no: 0,
+    user_id: '',
+    user_nickname: '',
+    category:'',
+    subject: '',
+    content: '',
+    filename:'',
+    ref: 1,
+    step: 0,
+    depth:0,
+    read_count:'',
+    reg_date:'',
+  };
+  const img = useRef(null);
+  const {no} = useParams();
+  const [board, setBoard] = useState(initBoard);
+  const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${no}`, 'json');
+  // 사용자 정보
+  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+
+
+  useEffect(() => {
+    if (userData) {
+      setBoard(prevBoard => ({
+        ...prevBoard,
+        user_id: userData.user_id,
+        user_nickname: userData.user_nickname,
+      }));
+    }
+    if (boardData) {
+      setBoard(boardData);
+    }
+  }, [boardData, userData]);
+  
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setBoard((prevData) => ({
+      ...prevData,
+      [name]: value,
+  }));
+  };
+  const handleQuillChange = (value) => {
+    setBoard(prevBoard => ({
+      ...prevBoard,
+      content: value,
+    }));
+  };
+
+  //카테고리  
+  const [categories, setCategories] = useState(['Java', 'Html', 'Css', 'Spring boot', 'React','기타']);
   const [newCategory, setNewCategory] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [images, setImages] = useState([]);
 
   const handleAddCategory = () => {
     if (newCategory && !categories.includes(newCategory)) {
@@ -20,46 +67,73 @@ const Write = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    const promises = files.map(file => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(promises).then(images => {
-      setImages(images);
-    }).catch(error => {
-      console.error("Error reading files:", error);
-    });
-  };
-
-  const handleComplete = () => {
-    if (!title || !selectedCategory || !content) {
+  const move = useMove('/boardlist');
+  //등록
+  const onSubmit = async () => {
+    if (!board.subject || !board.content) {
       alert('모든 필드를 채워주세요.');
       return;
     }
+    try {
+      const formData = new FormData();
+      for (const key in board) {
+        formData.append(key, board[key]);
+      }
+      if (img.current.files.length>0) {
+        formData.append('img',img.current.files[0]);
+      }
+      const response = await fetch('http://localhost:8080/api/board/insert', {
+        method: 'POST', 
+        encType: 'multipart/form-data',
+        body: formData,
+        credentials: 'include',
+      });
+      console.log('formdata'+formData);
+      if (response.ok) {
+        alert('게시판이 성공적으로 등록되었습니다.');
+        refetchBoardData();
+        move();//목록으로
+      } else {
+        throw new Error('게시판 등록 실패');
+      }
+    } catch (error) {
+      console.error('게시판 등록 실패:', error);
+      alert('게시판 등록 실패했습니다.');
+    }
+  };
 
-    const currentDate = new Date().toLocaleString();
-
-    const newPost = {
-      id: Date.now(),
-      category: selectedCategory,
-      title,
-      content,
-      images,  // Add images to the post
-      date: currentDate,
-    };
-
-    const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    storedPosts.push(newPost);
-    localStorage.setItem('posts', JSON.stringify(storedPosts));
-
-    navigate('/boardlist');
+  //수정
+  const onUpdate = async ()=>{
+    if (!board.subject || !board.content) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+    try {
+      const formData = new FormData();
+      for (const key in board) {
+        formData.append(key, board[key]);
+      }
+      if (img.current.files.length>0) {
+        formData.append('img',img.current.files[0]);
+      }
+      const response = await fetch('http://localhost:8080/api/board/update', {
+        method: 'POST', 
+        encType: 'multipart/form-data',
+        body: formData,
+        credentials: 'include',
+      });
+      console.log('formdata'+formData);
+      if (response.ok) {
+        alert('게시판이 성공적으로 수정되었습니다.');
+        refetchBoardData();
+        move();//목록으로
+      } else {
+        throw new Error('게시판 수정 실패');
+      }
+    } catch (error) {
+      console.error('게시판 수정 실패:', error);
+      alert('게시판 수정에 실패했습니다.');
+    }
   };
 
   const modules = {
@@ -77,24 +151,13 @@ const Write = () => {
     <div className="boardWrite">
       <h1>글쓰기 게시판</h1>
       <div className="formGroup">
-        <label htmlFor="title">제목:</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="제목을 입력하세요"
-        />
+        <label htmlFor="subject">제목:</label>
+        <input type="text" name="subject" value={board.subject} onChange={onChange}/>
       </div>
       <div className="formGroup">
         <label htmlFor="category">카테고리:</label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="" disabled>
-            카테고리를 선택하세요
+        <select id="category" name="category" value={board.category} onChange={onChange} >
+          <option value="" disabled> 카테고리를 선택하세요
           </option>
           {categories.map((category, index) => (
             <option key={index} value={category}>
@@ -105,37 +168,26 @@ const Write = () => {
       </div>
       <div className="formGroup">
         <label htmlFor="newCategory">카테고리 추가:</label>
-        <input
-          type="text"
-          id="newCategory"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
-          placeholder="새 카테고리 추가"
-        />
-        <button onClick={handleAddCategory} className="addCategoryButton">
-          추가
-        </button>
+        <input type="text" id="newCategory" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="새 카테고리 추가"/>
+        <button onClick={handleAddCategory} className="addCategoryButton">추가</button>
       </div>
       <div className="formGroup">
         <label htmlFor="content">내용:</label>
-        <ReactQuill
-          value={content}
-          onChange={setContent}
-          modules={modules}
-          placeholder="내용을 입력하세요..."
-        />
+        <ReactQuill value={board.content} name="content" modules={modules} onChange={handleQuillChange}/>
       </div>
       <div className="formGroup">
-        <label htmlFor="imageUpload">이미지 업로드:</label>
-        <input type="file" id="imageUpload" multiple accept="image/*" onChange={handleFileChange} />
+        <label htmlFor="imageUpload">파일 업로드:</label>
+        <input type="file" id="imageUpload" multiple accept="image/*" ref={img}/>
+        {board.filename && <span>{board.filename}</span>}
       </div>
       <div className="formGroup">
-        <button onClick={handleComplete} className="completeButton">
-          등록
-        </button>
+        {no!=0 ?(
+        <button onClick={onUpdate} className="completeButton">수정</button>
+      ):(
+        <button onClick={onSubmit} className="completeButton">등록</button>)}
       </div>
     </div>
   );
 };
 
-export default Write;
+export default BoardWrite;

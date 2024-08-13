@@ -53,6 +53,7 @@
 	<update id="updatePw">
 		UPDATE users SET password = #{password} WHERE user_no = #{user_no}
 	</update>
+	<!-- 파일이름 찾기 -->
 	<select id="filename" resultType="String">
 		select image_url from users where user_id=#{user_id}
 	</select>

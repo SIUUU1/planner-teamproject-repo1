@@ -1,50 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zeus.backend.mapper.BoardMapper">
-	 <!-- 공지사항 추가 -->
-    <insert id="create">
-        INSERT INTO NOTICE (
-            no, user_id, user_name, user_email, user_nickname, image_url,
-            category, subject, content, ref, step, depth, read_count, reg_date
-        )
-        VALUES (
-            NOTICE_id_SEQ.NEXTVAL, #{userId}, #{userName}, #{userEmail}, #{userNickname}, #{imageUrl},
-            #{category}, #{subject}, #{content}, #{ref}, #{step}, #{depth}, #{readCount}, #{regDate}
-        )
-    </insert>
-    <!-- 공지사항 수정 -->
-    <update id="modify">
-        UPDATE NOTICE
-        SET 
-            user_id = #{userId},
-            user_name = #{userName},
-            user_email = #{userEmail},
-            user_nickname = #{userNickname},
-            image_url = #{imageUrl},
-            category = #{category},
-            subject = #{subject},
-            content = #{content},
-            ref = #{ref},
-            step = #{step},
-            depth = #{depth},
-            read_count = #{readCount},
-            reg_date = #{regDate}
-        WHERE no = #{no}
-    </update>
-	<!-- 공지사항 상세 -->
-	<select id="read" resultType="com.zeus.backend.domain.Notice">
-		SELECT * FROM NOTICE WHERE no = #{no}
-	</select>
-	<!-- 목록 조회 -->
-	<select id="list" resultType="com.zeus.backend.domain.Notice">
-		SELECT * FROM NOTICE ORDER BY ref DESC, step ASC;
-	</select>
-	<!-- 공지사항 삭제 -->
-	<delete id="delete"> 
-		DELETE FROM NOTICE WHERE no = #{no}
+	<!-- 게시물 등록 -->
+	<insert id="create">
+		INSERT INTO BOARD
+		(no, user_id, user_nickname, category, subject, content, filename, ref,
+		step, depth)
+		VALUES
+		(BOARD_id_SEQ.NEXTVAL, #{user_id}, #{user_nickname}, #{category}, #{subject}, #{content},
+		#{filename}, #{ref}, #{step}, #{depth})
+	</insert>
+	<!-- no 최댓값 --> 
+	  <select id="maxNo" resultType="Integer">
+	    SELECT nvl(max(no), 0)+1 FROM BOARD
+	  </select>
+	<!-- 게시물 수정 -->
+	<update id="modify">
+		UPDATE BOARD SET 
+		category = #{category}, subject = #{subject}, content = #{content}, 
+		filename = #{filename}, REG_DATE = sysdate 
+		WHERE no = #{no}
+	</update>
+	<!-- 게시물 삭제 -->
+	<delete id="delete">
+		DELETE FROM BOARD WHERE no = #{no}
 	</delete>
+	<!-- 게시물 상세 -->
+	<select id="read" resultType="com.zeus.backend.domain.Board">
+		SELECT * FROM BOARD WHERE no = #{no}
+	</select>
+	<!-- 모든 게시물 조회 -->
+	<select id="list" resultType="com.zeus.backend.domain.Board">
+		SELECT * FROM BOARD
+	</select>
 	<!-- 조회수 증가 -->
 	<update id="incrementReadCount">
-		UPDATE NOTICE SET read_count = read_count + 1 WHERE no = #{no}
+		UPDATE BOARD SET read_count = read_count + 1 WHERE no = #{no}
 	</update>
+	<!-- 파일이름 찾기 --> 
+	<select id="filename" resultType="String">
+		select filename from BOARD where no=#{no}
+	</select>
+	<!-- 댓글 작성 시 수정 -->
+	<update id="modifyReply"> 
+		UPDATE BOARD SET step = step + 1 WHERE ref = #{ref} and step > #{step}
+	</update> 
+	<!-- 검색 -->
+	<select id="search" resultType="com.zeus.backend.domain.Board">
+		SELECT DISTINCT * FROM BOARD 
+		where subject like #{search} or content like #{search}
+		order by reg_date desc
+	</select>
+	<!-- 검색 --> 
+	<select id="searchByCategory" resultType="com.zeus.backend.domain.Board">
+		SELECT DISTINCT * FROM BOARD 
+		where (subject like #{search} or content like #{search})
+		and  category = #{category}
+		order by reg_date desc
+	</select>
 </mapper>

@@ -13,7 +13,7 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
     ref: 1,
     step: 0,
     depth:0,
-    read_count:'',
+    read_count:0,
     reg_date:'',
   };
 
@@ -36,9 +36,9 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
         category: selectedNotice.category,
         subject: selectedNotice.subject,
         ref: selectedNotice.ref,
-        step: comments.length,
+        //step: comments.length,
+        step: selectedNotice.step,
         depth: selectedNotice.depth,
-        read_count: selectedNotice.read_count,
         reg_date: new Date().toISOString(),
       });
     }

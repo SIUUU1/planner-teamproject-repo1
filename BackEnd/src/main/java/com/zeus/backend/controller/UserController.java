@@ -108,7 +108,6 @@ public class UserController {
 			throws NumberFormatException, Exception {
 		String user_id = payload.get("user_id");
 		System.out.println("delete notice:" + user_id);
-		userService.remove(user_id);
 
 		String image_url = userService.filename(user_id);
 		if (image_url != null && !image_url.equals("-")) {
@@ -172,7 +171,7 @@ public class UserController {
 	// 친구검색
 	@PostMapping("/friend/search")
 	public ResponseEntity<List<User>> searchFriends(
-			@RequestParam(name = "searchkey", defaultValue = "name") String searchkey,
+			@RequestParam(name = "searchkey", defaultValue = "user_nickname") String searchkey,
 			@RequestParam(name = "search", defaultValue = "") String search) {
 
 		System.out.println("searchFriends");
