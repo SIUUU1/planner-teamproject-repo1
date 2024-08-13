@@ -1,20 +1,26 @@
-.attainmentContent {
-  width: 70%;
-  border: 0.8px solid rgb(197, 197, 197);
-  border-radius: 10px;
-  margin: 50px auto;
+.attainmentItemContent{
+  display: flex;
+  align-items: start;
+  justify-content: center;
 }
-.todoDate{
-  width: 90%;
+.attainmentTitle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.attainmentTitle h1{
+  margin-right: 10px;
+  margin-left: 30px;
+}
+.attainmentDetails{
+  text-align: center;
   margin: 0 auto;
 }
-
-.attainmentList{
-  width: 80%;
-  margin: 0 auto;
-  padding: 0; 
+.attainmentProgressContainer{
+  width: 30%;
+  margin: 0 auto 30px auto;
 }
-.registerDiv{
+.attainmentEdit{
   position: fixed;
   top: 0;
   left: 0;
@@ -26,7 +32,7 @@
   align-items: center;
   z-index: 1000;
 }
-.registerContent{
+.attainmentEditContent{
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -35,7 +41,7 @@
   flex-direction: column;
   gap: 1rem;
 }
-.registerDiv .input-field,.registerDiv .select-field {
+.attainmentEdit .input-field,.attainmentEdit .select-field {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -43,7 +49,7 @@
   font-size: 1rem;
 }
 
-.registerDiv .cancelBtn,.registerDiv .submitBtn{
+.attainmentEdit .cancelBtn,.attainmentEdit .submitBtn{
   background-color: #7898be;
   color: white;
   border: none;
@@ -54,6 +60,6 @@
   transition: background-color 0.3s;
 }
 
-.registerDiv .cancelBtn:hover,.registerDiv .submitBtn:hover{
+.attainmentEdit .cancelBtn:hover,.attainmentEdit .submitBtn:hover{
   background-color: #5e7897;
 }

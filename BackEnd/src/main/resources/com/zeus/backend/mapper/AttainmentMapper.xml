@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.AttainmentMapper">
+
+	<!-- 모든 Attainment 조회 -->
+	<select id="getAllAttainments"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+	</select>
+
+	<!-- 특정 no로 Attainment 조회 -->
+	<select id="getAttainmentByIdNo" parameterType="Long"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment WHERE attainment_no = #{no}
+	</select>
+
+	<!-- 새로운 Attainment 생성 -->
+	<insert id="createAttainment"
+		parameterType="com.zeus.backend.domain.Attainment">
+		INSERT INTO attainment (attainment_no,user_id,
+		attainment_name, attainment_type,
+		attainment_duration,
+		attainment_target,
+		attainment_finish, attainment_rate, star,
+		start_date, end_date)
+		VALUES (attainment_seq.nextval, #{user_id},
+		#{attainment_name}, #{attainment_type},
+		#{attainment_duration},
+		#{attainment_target},
+		#{attainment_finish}, #{attainment_rate},
+		#{star}, #{start_date}, #{end_date})
+	</insert>
+
+	<!-- Attainment 업데이트 -->
+	<update id="updateAttainment"
+		parameterType="com.zeus.backend.domain.Attainment">
+		UPDATE attainment
+		SET
+		attainment_name = #{attainment_name},
+		attainment_type = #{attainment_type},
+		attainment_duration = #{attainment_duration},
+		attainment_target =
+		#{attainment_target},
+		attainment_finish = #{attainment_finish},
+		attainment_rate = #{attainment_finish}/#{attainment_target}*100,
+		star = #{star},
+		start_date =
+		#{start_date},
+		<!-- 조건에 따라 end_date를 null로 설정 -->
+		<if test="attainment_duration == 'short_term'">
+			end_date = null
+		</if>
+		<if test="attainment_duration != 'short_term'">
+			end_date = #{end_date}
+		</if>
+		WHERE
+		attainment_no = #{attainment_no}
+	</update>
+
+
+	<!-- Attainment 삭제 -->
+	<delete id="deleteAttainment" parameterType="Long">
+		DELETE FROM
+		attainment WHERE attainment_no = #{id}
+	</delete>
+
+	<!-- 특정 user_id와 reg_date로 Attainment 조회 -->
+	<select id="getAttainmentsByUserIdAndRegDate"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+		WHERE user_id = #{user_id}
+		AND
+		reg_date = #{reg_date}
+	</select>
+
+	<!-- user_id가 일치하고, short_term & start_date가 일치하는 데이터를 조회 -->
+	<select id="getShortTermAttainments"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+		WHERE user_id = #{user_id}
+		AND
+		attainment_duration = 'short_term'
+		AND TRUNC(start_date) =
+		TRUNC(#{select_date})
+	</select>
+
+	<!-- user_id가 일치하고, long_term & select_date 조건을 만족하는 데이터를 조회 -->
+	<select id="getLongTermAttainments"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+		WHERE user_id = #{user_id}
+		AND
+		attainment_duration = 'long_term'
+		AND TRUNC(start_date) &lt;=
+		TRUNC(#{select_date})
+		AND TRUNC(end_date) &gt;=TRUNC(#{select_date})
+	</select>
+
+</mapper>
