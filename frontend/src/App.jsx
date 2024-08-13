@@ -57,7 +57,7 @@ function App() {
           <Route path='/groupedit' element={<StudyGroupEdit/>}/>
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/> */}
           <Route path='/attainmentMain' element={<AttainmentMain/>}/>
-          <Route path='/attainmentDetail/:type/:id' element={<AttainmentDetail/>}/>
+          <Route path='/attainmentDetail/:no' element={<AttainmentDetail/>}/>
           {/* <Route path="/boardlist" element={<BoardList />} />
           <Route path="/boardwrite" element={<BoardWrite />} />
           <Route path="/boarddetail/:id" element={<BoardDetail />} />
