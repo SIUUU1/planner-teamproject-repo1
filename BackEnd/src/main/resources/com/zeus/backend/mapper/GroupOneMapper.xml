@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.GroupOneMapper">
+	<!-- 그룹원 등록 -->
+    <insert id="create">
+        INSERT INTO GroupOne (groupone_id, group_id, user_id,
+        ) VALUES ( #{groupone_id}, #{group_id}, #{user_id},)
+    </insert>
+    <!-- 모든 그룹원 조회 --> 
+    <select id="list" resultType="com.zeus.backend.domain.GroupOne">
+        SELECT * FROM GroupOne
+    </select>
+    <!-- 특정 그룹원을 ID로 조회-->
+    <select id="selectById" resultType="com.zeus.backend.domain.GroupOne">
+        SELECT * FROM GroupOne WHERE groupone_id = #{groupone_id}
+    </select>
+    <!-- 특정 그룹에 속한 모든 그룹원을 조회 -->
+    <select id="selectByGroupId" resultType="com.zeus.backend.domain.GroupOne">
+        SELECT * FROM GroupOne WHERE group_id = #{group_id}
+    </select>
+     <!-- 특정 그룹에 속한 모든 그룹원 수 조회 -->  
+    <select id="countByGroupId" resultType="int">
+        SELECT count(*) FROM GroupOne WHERE group_id = #{group_id}
+    </select>
+    <!-- 그룹원 정보를 수정 -->
+    <update id="modify">
+        UPDATE GroupOne
+        SET group_id = #{group_id}, user_id = #{user_id}, enable = #{enable} 
+        WHERE groupone_id = #{groupone_id}
+    </update>
+    <!-- 그룹원 삭제 -->
+    <delete id="delete">
+        DELETE FROM GroupOne WHERE groupone_id = #{groupone_id}
+    </delete>
+    <!-- 특정 그룹에 속한 모든 그룹원 삭제 -->
+    <delete id="deleteByGroupId">
+        DELETE FROM GroupOne WHERE group_id = #{group_id}
+    </delete>
+</mapper>

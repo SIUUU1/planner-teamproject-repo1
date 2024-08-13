@@ -48,14 +48,16 @@
 	<!-- 검색 -->
 	<select id="search" resultType="com.zeus.backend.domain.Board">
 		SELECT DISTINCT * FROM BOARD 
-		where subject like #{search} or content like #{search}
+		where LOWER(subject) LIKE LOWER(#{search}) 
+        OR LOWER(content) LIKE LOWER(#{search}) 
 		order by reg_date desc
 	</select>
 	<!-- 검색 --> 
 	<select id="searchByCategory" resultType="com.zeus.backend.domain.Board">
 		SELECT DISTINCT * FROM BOARD 
-		where (subject like #{search} or content like #{search})
-		and  category = #{category}
+		where (LOWER(subject) LIKE LOWER(#{search}) 
+        OR LOWER(content) LIKE LOWER(#{search})) 
+        AND LOWER(category) = LOWER(#{category}) 
 		order by reg_date desc
 	</select>
 </mapper>

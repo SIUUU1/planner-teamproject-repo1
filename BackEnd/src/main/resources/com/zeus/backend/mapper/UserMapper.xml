@@ -63,15 +63,17 @@
 	</select>
 	<!-- 아이디, 이메일로 검색 -->
 	<select id="searchBySomething" resultType="com.zeus.backend.domain.User">
-		SELECT * FROM users where ${searchkey} like #{search} 
+		SELECT * FROM users  WHERE LOWER(${searchkey}) LIKE LOWER(#{search}) 
 		AND user_id != #{currentUserId} 
 		order by user_no desc
 	</select> 
 	<!-- 검색 -->
 	<select id="searchByAll" resultType="com.zeus.backend.domain.User">
 		SELECT DISTINCT * FROM users 
-		where (user_name like #{search} or user_id like #{search} 
-		or user_email like #{search}) AND user_id != #{currentUserId} 
+		where (LOWER(user_name) LIKE LOWER(#{search}) 
+        OR LOWER(user_id) LIKE LOWER(#{search}) 
+        OR LOWER(user_email) LIKE LOWER(#{search})) 
+		AND user_id != #{currentUserId} 
 		order by user_no desc
 	</select>
 </mapper>

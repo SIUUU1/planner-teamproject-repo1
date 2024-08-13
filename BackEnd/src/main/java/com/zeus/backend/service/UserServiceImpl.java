@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void setupAdmin(User user) throws Exception {
 		System.out.println("setupAdminr" + user);
-
+		
 		// 비밀번호 암호화 처리 후 등록
 		String rawPassword = user.getPassword();
 		user.setPassword(bCryptPasswordEncoder.encode(rawPassword));

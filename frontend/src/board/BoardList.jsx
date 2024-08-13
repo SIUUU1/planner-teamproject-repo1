@@ -17,14 +17,16 @@ const BoardList = () => {
   const nav = useNavigate();
 
   const { data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
+// 유저 정보
+const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
   useEffect(() => {
     let filteredBoards = [];
     
-    if (searching) {
-      filteredBoards = searchList.filter(board => board.step === 0);
+    if (searching && userData) {
+      filteredBoards = searchList.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
     } else if (boardListData) {
-      filteredBoards = boardListData.filter(board => board.step === 0);
+      filteredBoards = boardListData.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
     }
 
     if (sortOrder === 'latest') {
@@ -35,7 +37,7 @@ const BoardList = () => {
 
     setBoards(filteredBoards);
     setTotalPages(Math.ceil(filteredBoards.length / itemsPerPage));
-  }, [boardListData, itemsPerPage, sortOrder, searching, searchList]);
+  }, [boardListData, itemsPerPage, sortOrder, searching, searchList,userData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -50,6 +52,7 @@ const BoardList = () => {
     await incrementReadCount(no);
     nav(`/boarddetail/${no}`);
   };
+  
   const handleSortOrderChange =(e)=>{
     setSortOrder(e.target.value);
   };

@@ -11,3 +11,10 @@
   margin: 0 auto;
   text-align: center;
 }
+.studyGroupEditor .groupImage {
+  width: 120px; 
+  height: 120px;
+  border-radius: 50%;
+  cursor: pointer; /* 클릭 가능한 항목임을 나타냄 */
+  margin: 10px 0;
+}

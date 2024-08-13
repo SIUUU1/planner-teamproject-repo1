@@ -8,6 +8,7 @@ import QnaVocie from './QnaVoice';
 import Faq from './Faq';
 import MyQnaList from './MyQnaList';
 import { useParams } from 'react-router-dom';
+
 const QnaCustomerSupport = () => {
   const { mode, qna_id } = useParams();
   
