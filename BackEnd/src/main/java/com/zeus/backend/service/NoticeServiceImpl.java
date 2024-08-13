@@ -63,7 +63,6 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public void modify(Notice notice) throws Exception {
-		notice.setRead_count(notice.getRead_count()-1);
 		mapper.modify(notice);
 	}
 
