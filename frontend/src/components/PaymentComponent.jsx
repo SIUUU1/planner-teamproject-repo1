@@ -37,7 +37,6 @@ const PaymentComponent = ({type, item_id, price}) => {
 
   // 결제 처리 Api
   const Payment = (e) => {
-
     const { IMP } = window;
     if (!IMP) {
       console.error("IMP 객체를 찾을 수 없습니다.");
@@ -90,7 +89,7 @@ const PaymentComponent = ({type, item_id, price}) => {
   };
 
   return(
-     <><Button text={`${price}원 결제하기`} onClick={Payment} className={'payBtn'}/></>
+     <div className="paymentComponent"><Button text={`${price}원 결제하기`} onClick={Payment} className={'payBtn'}/></div>
   );
 };
 

@@ -37,12 +37,12 @@ function Login() {
     <div className="login">
       <div className="loginBox">
         <div className="left">
-          <div className="topLink">
+          {/* <div className="topLink">
             <a href="/">
               <img src="https://i.imgur.com/0G2U2u9.png" alt="back" className='backImg'/>
               Return home
             </a>
-          </div>
+          </div> */}
           <div className="contact">
             <form>
               <input type="text" ref={user_id} placeholder="Id" />

@@ -14,7 +14,7 @@
   height: 250px;
 }
 
-.plant {
+.plant,.avatar {
   border: 1px solid black;
   height: 100%;
   width: 250px;
@@ -60,6 +60,11 @@
 .progress1, .progress2{
   height: 50%;
   width: 100%;
+  display: inline-block;
+  padding: 0 5px;
+}
+.progressInfo{
+  margin: 50px 30px;
 }
 .board {
   height: 100%;
@@ -71,16 +76,8 @@
 }
 .studyGroup {
   height: 100%;
-  width: 65%;
+  width: 100%;
   border: 1px solid black;
-}
-.openChat {
-  height: 100%;
-  width: 34%;
-  border: 1px solid black;
-}
-.backWhite{
-  background-color: white;
 }
 .todoListP{
   margin-left: 35px;

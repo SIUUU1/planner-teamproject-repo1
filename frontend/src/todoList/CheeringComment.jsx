@@ -50,11 +50,14 @@ const CheeringComment = ({ commentData, userData, refetch }) => {
       refetch();
     }
   };
+  const cancleClick=()=>{
+    setIsEditing(false);
+  }
 
   return (
-    <div className="cheeringComment">
+    <div className="cheeringComment backWhite">
       <div className="cheeringCommentText">
-        <ProfileLink user_nickname={commentData.user_nickname} user_no={commentData.user_no} />
+        <ProfileLink user_nickname={commentData.user_nickname} user_id={commentData.user_id} />
         <input
           className='comment'
           value={commentText}
@@ -68,6 +71,7 @@ const CheeringComment = ({ commentData, userData, refetch }) => {
               <div className='editComment'>
                 <Button text={<FontAwesomeIcon icon={faFaceSmile} />} className={'inputEmojiBtn'} onClick={() => setEditEmojiVisible(!isEditEmojiVisible)} />
                 <Button className='updateBtn' onClick={updateClick} text={'수정'}></Button>
+                <Button className='updateBtn' onClick={cancleClick} text={'취소'}></Button>
                 {isEditEmojiVisible&&<InputEmoji isInputEmojiVisible={isEditEmojiVisible} setEmoji_url={setLocalEmojiUrl} emoji__url={localEmojiUrl}></InputEmoji>}
               </div>
               </>

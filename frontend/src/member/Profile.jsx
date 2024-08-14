@@ -3,6 +3,7 @@ import './Profile.css';
 import useLoading from '../util/useLoading';
 import Button from '../components/Button';
 import useSendPost from '../util/useSendPost';
+import useMove from '../util/useMove';
 
 const Profile = () => {
   const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
@@ -65,17 +66,19 @@ const Profile = () => {
 
   // user delete 
   const deleteRequest = useSendPost('http://localhost:8080/api/user/delete', {}, 'json');
-  
+  const moveWelcom= useMove('../welcome')
   // 회원 탈퇴
   const onDelete = async () => {
     if(window.confirm('정말로 탈퇴하시겠습니까?')){
       const user_id = userData.user_id ;
+      console.log("delete"+user_id);
       try {
-        await deleteRequest({user_id});
+        await deleteRequest.postRequest({user_id});
         alert('탈퇴 성공');
+        moveWelcom();
       } catch (error) {
         alert('탈퇴 실패');
-        console.error("Error deleting Qna:", error);
+        console.error("Error deleting User:", error);
       }
     }
   };

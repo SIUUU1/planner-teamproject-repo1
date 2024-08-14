@@ -8,11 +8,11 @@ import MessageForm from '../message/MessageForm';
 import { useNavigate } from 'react-router-dom';
 
 const images = [
-  '/images/dog1.jpg',
-  '/images/dog2.jpg',
-  '/images/dog3.jpg',
-  '/images/dog4.jpg',
-  '/images/dog5.jpg'
+  '/images/welcome0.jpg',
+  '/images/welcome1.jpg',
+  '/images/welcome2.jpg',
+  '/images/welcome3.jpg',
+  '/images/welcome4.jpg'
 ];
 
 const Welcome = () => {

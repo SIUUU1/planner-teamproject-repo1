@@ -2,6 +2,7 @@ import React, { useRef,useEffect,useState } from 'react';
 import './FriendsList.css';
 import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
+import ProfileLink from '../components/ProfileLink';
 
 const FriendsList = () => {
   const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
@@ -39,18 +40,41 @@ const FriendsList = () => {
   // 검색
   const searchkey = useRef();
   const search =  useRef();
+  const { data, loading, error, postRequest } = useSendPost(
+    'http://localhost:8080/api/user/friend/search',
+    null,
+    'json',
+    true // FormData를 사용하므로 isFormData를 true로 설정
+  );
+  useEffect(() => {
+    if (data) {
+      setSearchList(data);
+    }
+  }, [data]);
+
   const onSearch = () => {
-    let url = 'http://localhost:8080/api/user/friend/search';
     const form = new FormData();
     form.append('searchkey', searchkey.current.value);
     form.append('search', search.current.value);
-    console.log(url);
-    console.log(searchkey.current.value);
-    console.log(search.current.value);
-    fetch(url, { method: 'post', body: form ,credentials: 'include',})
-    .then(response => { return response.json(); })
-    .then(data => { setSearchList(data); });
+    
+    console.log('URL:', 'http://localhost:8080/api/user/friend/search');
+    console.log('searchkey:', searchkey.current.value);
+    console.log('search:', search.current.value);
+
+    postRequest(form);
   };
+  // const onSearch = () => {
+  //   let url = 'http://localhost:8080/api/user/friend/search';
+  //   const form = new FormData();
+  //   form.append('searchkey', searchkey.current.value);
+  //   form.append('search', search.current.value);
+  //   console.log(url);
+  //   console.log(searchkey.current.value);
+  //   console.log(search.current.value);
+  //   fetch(url, { method: 'post', body: form ,credentials: 'include',})
+  //   .then(response => { return response.json(); })
+  //   .then(data => { setSearchList(data); });
+  // };
 
   // 친구등록
   const insertRequest = useSendPost('http://localhost:8080/api/user/friend/insert', {}, 'json');
@@ -98,26 +122,29 @@ const FriendsList = () => {
           <p>{profiles.user_email}</p>
         </div>
         <div className="friendsHeader">친구 목록</div>
-        <ul className="friendsLists">
-          {friends.map((friend, index) => (
-            <li key={index} className="friendItem">
-              {friend.friend_nickname}
+        <div className="friendsLists backWhite">
+          {friends.map((friend) => (
+            <div key={friend.user_id} className="friendItem">
+              <ProfileLink user_id={friend.friend_id} user_nickname={friend.friend_nickname}></ProfileLink>
+              {/* {friend.friend_nickname} */}
               <button className="deleteButton" onClick={() => onDeleteFriend(friend.no)}>삭제</button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
-      <div className="searchSection">
+      <div className="searchSection backWhite">
         <h2>채팅 친구를 찾아보세요!</h2>
         <p>친구의 아이디를 검색해서 찾을 수 있습니다.</p>
-        <select ref={searchkey}>
-          <option value="all">전체</option>
-          <option value="user_name">이름</option>
-          <option value="user_nickname">닉네임</option>
-          <option value="user_email">이메일</option>
-        </select>&nbsp;
-        <input type="text" ref={search}/>
-        <button onClick={onSearch}>친구 찾기</button>
+        <div className="searchSectiondetail" >
+          <select ref={searchkey}>
+            <option value="all">전체</option>
+            <option value="user_name">이름</option>
+            <option value="user_nickname">닉네임</option>
+            <option value="user_email">이메일</option>
+          </select>&nbsp;
+          <input type="text" ref={search}/>
+          <button onClick={onSearch}>친구 찾기</button>
+        </div>
         {searchList.length > 0 && (
           <div className="searchResult">
             {searchList.map((search, index) => (
@@ -126,7 +153,8 @@ const FriendsList = () => {
               ):(
                 <img src='/images/cat1.jpg'/>
               )}
-                <span>{search.user_nickname}</span>
+                {/* <span>{search.user_nickname}</span> */}
+                <ProfileLink user_no={search.user_no} user_nickname={search.user_nickname}></ProfileLink>
                 <button onClick={() => addFriend(search)}>추가</button>
               </div>
             ))}

@@ -13,8 +13,8 @@ const CheerLeader = ({data, userData, isCreater,refetchEmoji }) => {
     }
   }
   return (
-    <div className="cheerLeader">
-      <ProfileLink user_no={userData.user_no} user_nickname={userData.user_nickname}></ProfileLink>
+    <div className="cheerLeader backWhite">
+      <ProfileLink user_id={userData.user_id} user_nickname={userData.user_nickname}></ProfileLink>
       {isCreater&& <Button text={<FontAwesomeIcon icon={faTrashCan} className={'trashCanBtn'}/>} onClick={onClickDel} />}
     </div>
   );
