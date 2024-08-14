@@ -12,6 +12,7 @@
 }
 .cheeringEmojiList{
   display: flex;
+  flex-wrap: wrap;
 }
 .cheeringCommentList{
   margin-top: 40px;

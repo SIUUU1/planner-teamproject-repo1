@@ -48,8 +48,8 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<Todo> getTodosByUserAndDate(int user_no, Date reg_date) {
-        return todoMapper.getTodosByUserAndDate(user_no, reg_date);
+    public List<Todo> getTodosByUserAndDate(int user_no, Date todo_date) {
+        return todoMapper.getTodosByUserAndDate(user_no, todo_date);
     }
 
 	

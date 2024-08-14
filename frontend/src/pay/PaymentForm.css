@@ -1,0 +1,15 @@
+.paymentForm{
+   min-height: 700px;
+}
+.paymentContent{
+  width: 60%;
+  margin: 20px auto 40px auto;
+  padding: 20px 40px;
+  text-align: center;
+  line-height: 150%;
+  min-height: 300px;
+}
+.paymentComponent{
+  margin: 0 auto;
+
+}

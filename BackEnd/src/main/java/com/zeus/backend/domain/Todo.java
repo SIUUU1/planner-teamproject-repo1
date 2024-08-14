@@ -14,6 +14,7 @@ public class Todo {
     private int user_no;
     private String todo_title;
     private String is_done;
+    private LocalDate todo_date;
     private LocalDate reg_date;
     private String type;
 }

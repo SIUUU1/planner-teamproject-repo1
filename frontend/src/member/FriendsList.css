@@ -1,13 +1,13 @@
 .friendsList {
   display: flex;
-  background-color: #ffe4e1;
+  /* background-color: #ffe4e1; */
   height: 100vh;
 }
 
 .friendsList .profileSection {
   width: 250px;
   padding: 20px;
-  background-color: #ffc0cb;
+  /* background-color: #ffc0cb; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,7 +20,7 @@
 .friendsList .profilePicture {
   width: 100px;
   height: 100px;
-  background-color: #ddd;
+  /* background-color: #ddd; */
   border-radius: 50%;
   margin-bottom: 10px;
   object-fit: cover;
@@ -41,7 +41,10 @@
 
 .friendsList .profileInfo {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+}
+.friendsList .profileInfo h2{
+  line-height: 0%;
 }
 
 .friendsList .friendsHeader {
@@ -51,32 +54,36 @@
 
 .friendsLists {    /* 친구목록 */
   list-style-type: none;
-  padding: 0;
+  padding: 10px 10px;
   width: 80%;
   color: black;
- 
+  flex-grow: 1;
+  border: 0.6px solid black;
+  border-radius: 5px;
 }
 
 .friendsList .friendItem {
   padding: 10px;
   background-color: #fff;
-  margin-bottom: 10px;
   border-radius: 5px;
   text-align: center;
-  position: relative;
+  /* position: relative; */
+  display: flex;
+  justify-content: space-between;
+  height: 25px;
 }
 
-.friendsList .deleteButton {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.friendsList .friendItem .deleteButton {
+  display: none;
+}
+.friendsList .friendItem:hover > .deleteButton{
+  display: block;
   background-color: red;
   color: white;
   border: none;
   border-radius: 3px;
   padding: 5px 10px;
-  cursor: pointer;
+  cursor: pointer;  
 }
 
 .friendsList .deleteButton:hover {
@@ -85,22 +92,28 @@
 
 .friendsList .searchSection {
   flex-grow: 1;
-  padding: 20px;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.friendsList .searchSection h2 .p {
+.friendsList .searchSection h2{
   margin-bottom: 10px;
 }
-
+.searchSectiondetail{
+  margin-top: 30px;
+}
+.searchSectiondetail select{
+  height: 34px;
+  border-radius: 3px;
+}
 .friendsList .searchSection input {
   padding: 10px;
   width: 200px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .friendsList .searchSection button {
@@ -108,7 +121,7 @@
   background-color: #87cefa;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
 }
 
@@ -141,10 +154,18 @@
   background-color: #32cd32;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
 }
 
 .friendsList .friendInfo button:hover {
   background-color: #228b22;
+}
+.friendsList .friendInfo .user_nickname{
+  margin: 0 15px 0 10px;
+  font-size: 18px;
+}
+.friendItem .user_nickname{
+  text-align: left;
+  margin-left: 10px;
 }
