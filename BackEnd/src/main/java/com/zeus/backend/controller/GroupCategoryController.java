@@ -14,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.GroupCategory;
-import com.zeus.backend.domain.Qna;
-import com.zeus.backend.domain.User;
 import com.zeus.backend.service.GroupCategoryService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/groupCategory")
+@RequestMapping("/api/category")
 public class GroupCategoryController {
 
 	@Autowired
@@ -35,6 +33,7 @@ public class GroupCategoryController {
 		List<GroupCategory> categoryList = null;
 		try {
 			categoryList = categoryService.list();
+			System.out.println("getCategoryList :"+categoryList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(categoryList);

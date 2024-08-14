@@ -72,6 +72,7 @@
 		SELECT DISTINCT * FROM users 
 		where (LOWER(user_name) LIKE LOWER(#{search}) 
         OR LOWER(user_id) LIKE LOWER(#{search}) 
+        OR LOWER(user_nickname) LIKE LOWER(#{search}) 
         OR LOWER(user_email) LIKE LOWER(#{search})) 
 		AND user_id != #{currentUserId} 
 		order by user_no desc

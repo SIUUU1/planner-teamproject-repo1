@@ -15,6 +15,12 @@ public interface GroupOneMapper {
 	// 특정 그룹에 속한 모든 그룹원을 조회
 	public List<GroupOne> selectByGroupId(int group_id) throws Exception;
 	
+	// 특정 그룹 허용된 모든 그룹원 조회
+	public List<GroupOne> selectAllAccept(int group_id) throws Exception;
+
+	// 특정 그룹 허용되지 않은 모든 그룹원 조회
+	public List<GroupOne> selectAllNotAccept(int group_id) throws Exception;
+
 	// 특정 그룹에 속한 모든 그룹원 수 조회
 	public int countByGroupId(int group_id) throws Exception;
 
@@ -23,6 +29,9 @@ public interface GroupOneMapper {
 
 	// 수정 처리
 	public void modify(Map<String, Object> map) throws Exception;
+
+	// 그룹원 허용
+	public void accept(Map<String, Object> map) throws Exception;
 
 	// 삭제 처리
 	public void delete(int groupone_id) throws Exception;

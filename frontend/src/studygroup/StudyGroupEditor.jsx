@@ -1,41 +1,76 @@
-// src/studygroup/StudyGroupEditor.jsx
-import React, { useState, useContext } from 'react';
+import React, { useRef,useState, useEffect } from 'react';
 import './StudyGroupEditor.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import Button from '../components/Button';
-import { StudyGroupContext } from './StudyGroupContext';
+import useLoading from '../util/useLoading';
+import useSendPost from '../util/useSendPost';
 
 const StudyGroupEditor = () => {
-  const { addGroup } = useContext(StudyGroupContext);
-  const nav = useNavigate();
-  const [groupData, setGroupData] = useState({
-    groupName: '',
+  const initGroup = {
+    group_id: 0,
     category: '',
-    groupGoal: '',
-    groupContent: '',
-    customModalContent: '', // New field for custom modal content
-    image: null
-  });
+    leader_id: '',
+    group_name:'',
+    groupone_count: 1,
+    group_detail: '',
+    group_notice:'',
+    group_goal: '',
+    image_url: '',
+    apply_count:0,
+    reg_date:'',
+  };
+  const {id} = useParams();
+  //그룹정보
+  const { data: groupData, loading: loadingGroup, error: errorGroup, refetch: refetchGroupData } = useLoading(`http://localhost:8080/api/group/read/${id}`, 'json');
+  const { data: categoryData, loading: loadingCategory, error: errorCategory} = useLoading(`http://localhost:8080/api/category/list`, 'json');
+  const [group, setGroup] = useState(initGroup);
+  const [category, setCategory] = useState([]);
+  const nav = useNavigate();
+  
+  const img = useRef(null);
+  //이미지
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImageFile, setSelectedImageFile] = useState(null); 
 
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // 사용자 정보
+  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setGroupData(prev => ({ ...prev, image: files[0] }));
-    } else {
-      setGroupData(prev => ({ ...prev, [name]: value }));
+
+  useEffect(() => {
+    if (groupData) {
+      setGroup(groupData);
+      let src='';
+      if(groupData.image_url){
+        src=`http://localhost:8080/static/images/group/${groupData.image_url}`;
+        setSelectedImage(src || '/images/cat1.jpg');
+      }
     }
+    if(categoryData){
+      setCategory(categoryData);
+    }
+    if (userData && id === '0') {
+      setGroup((prevData) => ({
+        ...prevData,
+        leader_id: userData.user_id,
+      }));
+    }
+  }, [groupData,categoryData,userData]);
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setGroup((prevData) => ({
+      ...prevData,
+      [name]: value,
+  }));
   };
 
-  const validateInput = () => {
-    if (!groupData.groupName || !groupData.category || !groupData.groupGoal || !groupData.groupContent || !groupData.image) {
-      setError('모든 필드를 채워주세요.');
-      return false;
-    }
-    return true;
-  };
+  // const validateInput = () => {
+  //   if (!groupData.groupName || !groupData.category || !groupData.groupGoal || !groupData.groupContent || !groupData.image) {
+  //     setError('모든 필드를 채워주세요.');
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const formatModalContent = (content) => {
     return content
@@ -45,84 +80,187 @@ const StudyGroupEditor = () => {
       .map((line, index) => (line === '---' ? <hr key={index} /> : <p key={index}>{line}</p>));
   };
 
-  const handleSubmit = () => {
-    if (!validateInput()) {
-      return;
+  // const handleSubmit = () => {
+  //   if (!validateInput()) {
+  //     return;
+  //   }
+
+  //   setIsSubmitting(true);
+  //   const newGroup = {
+  //     name: groupData.groupName,
+  //     image: URL.createObjectURL(groupData.image),
+  //     tags: [groupData.category],
+  //     capacity: '0/20',
+  //     attendance: '0%',
+  //     privacy: '공개', // Default privacy
+  //     customModalContent: groupData.customModalContent // Include custom modal content
+  //   };
+
+  //   //addGroup(newGroup);
+  //   nav('/manager/groupmain', { replace: true });
+
+  //   setTimeout(() => {
+  //     setIsSubmitting(false);
+  //     setError('');
+     
+  //   }, 2000);
+  // };
+
+// 그룹 등록
+const onSubmit = async () => {
+  if (!group.category || !group.group_name || !group.group_goal) {
+    alert('모든 필드를 채워주세요.');
+    return;
+  }
+  try {
+    const formData = new FormData();
+    for (const key in group) {
+      formData.append(key, group[key]);
     }
+    if (img.current.files.length>0) {
+      formData.append('img',img.current.files[0]);
+    }
+    const response = await fetch('http://localhost:8080/api/group/insert', {
+      method: 'POST', 
+      encType: 'multipart/form-data',
+      body: formData,
+      credentials: 'include',
+    });
+    console.log('formdata'+formData);
+    if (response.ok) {
+      alert('그룹이 성공적으로 등록되었습니다.');
+      //리패치
+      //목록으로
+      nav('/groupmain');
+    } else {
+      throw new Error('그룹 등록 실패');
+    }
+  } catch (error) {
+    console.error('그룹 등록 실패:', error);
+    alert('그룹 등록 실패했습니다.');
+  }
+};
 
-    setIsSubmitting(true);
-    const newGroup = {
-      name: groupData.groupName,
-      image: URL.createObjectURL(groupData.image),
-      tags: [groupData.category],
-      capacity: '0/20',
-      attendance: '0%',
-      privacy: '공개', // Default privacy
-      customModalContent: groupData.customModalContent // Include custom modal content
-    };
-
-    addGroup(newGroup);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setError('');
-      nav('/manager/groupmain', { replace: true });
-    }, 2000);
+  //그룹 수정
+  const onEdit = async () => {
+    try {
+      const formData = new FormData();
+      for (const key in group) {
+        formData.append(key, group[key]);
+      }
+      if (img.current.files.length>0) {
+        formData.append('img',img.current.files[0]);
+      }
+      const response = await fetch('http://localhost:8080/api/group/update', {
+        method: 'POST', 
+        encType: 'multipart/form-data',
+        body: formData,
+        credentials: 'include',
+      });
+      console.log('formdata'+formData);
+      if (response.ok) {
+        alert('그룹이 성공적으로 수정되었습니다.');
+        nav('/groupmain');
+        //리패치
+      } else {
+        throw new Error('그룹 수정 실패');
+      }
+    } catch (error) {
+      console.error('그룹 수정 실패:', error);
+      alert('그룹 수정에 실패했습니다.');
+    }
   };
 
-  const allGroups = [
-    { name: "KH정보교육원 1", image: "/images/wakeup.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 2", image: "/images/dog1.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 3", image: "/images/dog3.jpg", tags: ["HTML", "CSS", "Spring"], capacity: "2/20", attendance: "100%", privacy: "비공개" },
-    { name: "KH정보교육원 4", image: "/images/wakeup.jpg", tags: ["React", "Node.js", "MongoDB"], capacity: "3/20", attendance: "95%", privacy: "공개" },
-    { name: "KH정보교육원 5", image: "/images/dog1.jpg", tags: ["Python", "Flask", "Django"], capacity: "1/15", attendance: "85%", privacy: "비공개" },
-    { name: "KH정보교육원 6", image: "/images/dog3.jpg", tags: ["Java", "Spring Boot", "Microservices"], capacity: "5/25", attendance: "90%", privacy: "공개" }
-  ];
+  // 이미지 변경
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedImage(reader.result); 
+    };
+    reader.readAsDataURL(file);
+    setSelectedImageFile(file); 
+    // 이미지 선택 후 즉시 프로필 수정
+    const updatedGroups = {
+      ...group,
+      image_url: file.name, 
+    };
+    setGroup(updatedGroups);
+    // onEdit(updatedGroups);
+  }
+};
 
-  // Extract unique tags for category options
-  const categoryOptions = Array.from(new Set(allGroups.flatMap(group => group.tags)));
+// 그룹 삭제
+const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/group/delete', {}, 'json');
 
+const onDelete =async ()=>{
+  try {
+    const group_id = id;
+    await deleteRequest({group_id});
+    console.log("group_id"+group_id)
+    alert('그룹이 삭제되었습니다.');
+    nav('/groupmain');
+    //리패치
+  } catch (error) {
+    console.error('그룹 삭제 실패:', error);
+    alert('그룹 삭제에 실패했습니다.');
+  }
+};
+  if(loadingUser||loadingGroup||loadingCategory){
+  return(<div>loading...</div>);
+  }
   return (
     <div className='studyGroupEditor'>
+      <h3>그룹 만들기</h3>
       <table>
         <tbody>
           <tr>
             <td>그룹이미지</td>
-            <td><input type="file" id="groupImage" name="image" onChange={handleInputChange} /></td>
+            <td>
+              <img src={selectedImage} className="groupImage" onClick={() => document.getElementById('fileInput').click()}/>
+              <input type="file" id="fileInput" style={{ display: 'none' }} onChange={handleImageChange} ref={img} accept="image/*"/>
+            </td>
           </tr>
           <tr>
             <td>그룹명</td>
-            <td><input type="text" id="groupName" name="groupName" placeholder='그룹명을 적어주세요.' onChange={handleInputChange} /></td>
+            <td><input type="text" name="group_name" placeholder='그룹명을 적어주세요.' value={group.group_name} onChange={onChange} /></td>
           </tr>
           <tr>
             <td>카테고리</td>
             <td>
-              <select name="category" id="category" onChange={handleInputChange}>
-                <option value="">카테고리를 선택해주세요.</option>
-                {categoryOptions.map(tag => (
-                  <option key={tag} value={tag}>{tag}</option>
+              <select name="category" value={group.category} onChange={onChange}>
+                <option value="">카테고리를 선택하세요.</option>
+                {category.map((cate, index) => (
+                  <option key={index} value={cate.code}>{cate.category_name}</option>
                 ))}
               </select>
             </td>
           </tr>
           <tr>
             <td>그룹목표</td>
-            <td><input type="text" id="groupGoal" name="groupGoal" placeholder='그룹목표를 적어주세요.' onChange={handleInputChange} /></td>
+            <td><input type="text" name="group_goal" placeholder='그룹목표를 적어주세요.' value={group.group_goal} onChange={onChange} /></td>
           </tr>
           <tr>
             <td>그룹 설명</td>
-            <td><textarea name="groupContent" id="groupContent" cols="30" rows="10" placeholder='어떤 그룹인지 설명해주세요.' onChange={handleInputChange}></textarea></td>
+            <td><textarea name="group_detail" cols="30" rows="10" placeholder='어떤 그룹인지 설명해주세요.' value={group.group_detail} onChange={onChange}></textarea></td>
           </tr>
           <tr>
-            <td>모달 내용</td>
-            <td><textarea name="customModalContent" id="customModalContent" cols="30" rows="5" placeholder='모달에 표시될 내용을 적어주세요.' onChange={handleInputChange}></textarea></td>
+            <td>간단 소개글</td>
+            <td><textarea name="group_notice" cols="30" rows="5" placeholder='#weplan #기상 #함께해요' value={group.group_notice} onChange={onChange}></textarea></td>
           </tr>
         </tbody>
       </table>
-      {error && <div className="error">{error}</div>}
       <section className='buttonSection'>
         <Button text={'취소'} onClick={() => nav(-1)} />
-        <Button text={'완료'} onClick={handleSubmit} disabled={isSubmitting} />
+        {groupData && groupData.leader_id===userData.user_id?(
+          <>
+        <Button text={'수정'} onClick={onEdit}/>
+        <Button text={'삭제'} onClick={onDelete}/>
+        </>
+        ):(
+          <Button text={'완료'} onClick={onSubmit}/>
+        )}
       </section>
     </div>
   );

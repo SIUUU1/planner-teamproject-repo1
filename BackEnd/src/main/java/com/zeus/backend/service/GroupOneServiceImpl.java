@@ -11,7 +11,7 @@ import com.zeus.backend.mapper.GroupOneMapper;
 
 @Service
 public class GroupOneServiceImpl implements GroupOneService {
-	
+
 	@Autowired
 	private GroupOneMapper mapper;
 
@@ -53,6 +53,21 @@ public class GroupOneServiceImpl implements GroupOneService {
 	@Override
 	public int countByGroupId(int group_id) throws Exception {
 		return mapper.countByGroupId(group_id);
+	}
+
+	@Override
+	public List<GroupOne> selectAllAccept(int group_id) throws Exception {
+		return mapper.selectAllAccept(group_id);
+	}
+
+	@Override
+	public List<GroupOne> selectAllNotAccept(int group_id) throws Exception {
+		return mapper.selectAllNotAccept(group_id);
+	}
+
+	@Override
+	public void accept(Map<String, Object> map) throws Exception {
+		mapper.accept(map);
 	}
 
 }

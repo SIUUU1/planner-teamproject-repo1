@@ -66,4 +66,14 @@ public class GroupServiceImpl implements GroupService {
 		return mapper.listByApply();
 	}
 
+	@Override
+	public List<Group> myApplyList(String user_id) throws Exception {
+		return mapper.myApplyList(user_id);
+	}
+
+	@Override
+	public void incrementGroupOneCount(int group_id) throws Exception {
+		mapper.incrementGroupOneCount(group_id);
+	}
+
 }

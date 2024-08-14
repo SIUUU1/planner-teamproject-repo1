@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.zeus.backend.domain.Friend;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.service.FriendService;
+import com.zeus.backend.service.UserOauthService;
 import com.zeus.backend.service.UserService;
 
 import jakarta.servlet.ServletContext;
@@ -32,6 +33,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserOauthService userOauthService;
 
 	@Autowired
 	private FriendService friendService;
@@ -107,7 +111,7 @@ public class UserController {
 	public ResponseEntity<?> delete(@RequestBody Map<String, String> payload, HttpServletRequest request)
 			throws NumberFormatException, Exception {
 		String user_id = payload.get("user_id");
-		System.out.println("delete notice:" + user_id);
+		System.out.println("delete user:" + user_id);
 
 		String image_url = userService.filename(user_id);
 		if (image_url != null && !image_url.equals("-")) {
@@ -120,6 +124,8 @@ public class UserController {
 		}
 		try {
 			userService.remove(user_id);
+			//리프레시 토큰 삭제
+			userOauthService.deleteUserOauth(user_id);
 			return ResponseEntity.ok("User remove successfully");
 		} catch (Exception e) {
 			log.error("Error removing user", e);

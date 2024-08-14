@@ -3,34 +3,36 @@
 <mapper namespace="com.zeus.backend.mapper.GroupMapper">
 	<!-- 등록 처리 -->
     <insert id="create">
-        INSERT INTO Groups (group_id, category, leader_id, group_name, group_detail, group_notice, group_goal, image_url,
+        INSERT INTO Groups (group_id, category, leader_id, group_name, group_detail, group_notice, group_goal, image_url
         ) VALUES (Groups_id_SEQ.NEXTVAL, #{category}, #{leader_id}, #{group_name}, #{group_detail},  #{group_notice}, 
-        #{group_goal}, #{image_url},)
+        #{group_goal}, #{image_url})
     </insert> 
     <!-- 상세 보기 -->
     <select id="read" resultType="com.zeus.backend.domain.Group">
-        SELECT g.*, (SELECT COUNT(*) FROM GroupOne go WHERE go.group_id = g.group_id) 
-     	AS groupone_count FROM Groups g WHERE g.group_id = #{group_id}
+        SELECT * FROM Groups WHERE group_id = #{group_id}
     </select>
     <!-- 모든 그룹 조회 -->
     <select id="list" resultType="com.zeus.backend.domain.Group">
-        SELECT g.*,(SELECT COUNT(*) FROM GroupOne go WHERE go.group_id = g.group_id) 
-        AS groupone_count FROM Groups g
+        SELECT * FROM Groups order by reg_date desc
     </select>
     <!-- 내 그룹 조회 --> 
     <select id="myList" resultType="com.zeus.backend.domain.Group">
-       SELECT g.*, (SELECT COUNT(*) FROM GroupOne go_sub WHERE go_sub.Group_id = g.Group_id) 
-       AS groupone_count FROM Groups g 
-	   INNER JOIN GroupOne go ON g.Group_id = go.Group_id 
-	   WHERE go.user_id = #{user_id} 
+	     SELECT g.* FROM Groups g 
+		 JOIN GroupOne go ON g.group_id = go.group_id 
+		 WHERE go.user_id = #{user_id} AND go.enable = '1' 
+		 ORDER BY g.reg_date DESC 
+    </select>
+     <!-- 내가 지원한 그룹 조회 --> 
+    <select id="myApplyList" resultType="com.zeus.backend.domain.Group">
+       SELECT g.* FROM Groups g 
+	   INNER JOIN GroupOne go ON g.group_id = go.group_id 
+	   WHERE go.user_id = #{user_id} AND go.enable = '0'
+	   order by g.reg_date desc
     </select>
      <!--  인기 그룹 3개 조회(지원자 수 기준)  -->  
      <select id="listByApply" resultType="com.zeus.backend.domain.Group">
         <![CDATA[
-        SELECT g.*, (SELECT COUNT(*) FROM GroupOne go WHERE go.Group_id = g.Group_id) 
-     	AS groupone_count 
-     	FROM (SELECT * FROM Groups ORDER BY apply_count DESC) g 
-		WHERE ROWNUM <= 3 
+        SELECT * FROM (SELECT * FROM Groups ORDER BY apply_count DESC) WHERE ROWNUM <= 3
         ]]>
     </select>
     <!-- 그룹 정보 수정 -->
@@ -50,15 +52,18 @@
 	</select>
 	<!-- 검색 -->
 	<select id="search" resultType="com.zeus.backend.domain.Group">
-		SELECT g.*, (SELECT COUNT(*) FROM GroupOne go WHERE go.Group_id = g.Group_id) 
-     	AS groupone_count FROM Groups g 
-		where LOWER(g.category) LIKE LOWER(#{search}) 
-        OR LOWER(g.group_name) LIKE LOWER(#{search}) 
-        OR LOWER(g.group_goal) LIKE LOWER(#{search}) 
+		SELECT * FROM Groups 
+		where LOWER(category) LIKE LOWER(#{search}) 
+        OR LOWER(group_name) LIKE LOWER(#{search}) 
+        OR LOWER(group_goal) LIKE LOWER(#{search}) 
 		order by reg_date desc
 	</select>
+	<!-- 그룹원 수 늘리기 -->
+	<update id="incrementGroupOneCount"> 
+		UPDATE Groups SET groupone_count = groupone_count + 1 WHERE group_id = #{group_id}
+	</update>
 	<!-- 지원수 늘리기 -->
 	<update id="incrementApplyCount"> 
-		UPDATE BOARD SET apply_count = apply_count + 1 WHERE group_id = #{group_id}
+		UPDATE Groups SET apply_count = apply_count + 1 WHERE group_id = #{group_id}
 	</update>
 </mapper>

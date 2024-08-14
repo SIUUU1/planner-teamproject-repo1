@@ -40,7 +40,8 @@ public class WeatherController {
 
 		StringBuilder urlBuilder = new StringBuilder(
 				"http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst"); /* URL */
-		JSONArray weatherItems = null;
+		String sky = null, pty = null;
+		
 		try {
 			urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "="
 					+ URLEncoder.encode(weather_service_key, "UTF-8"));
@@ -81,35 +82,33 @@ public class WeatherController {
 			System.out.println(sb.toString());
 
 			JSONObject jsonResponse = new JSONObject(sb.toString());
-		 	weatherItems = jsonResponse.getJSONObject("response").getJSONObject("body").getJSONObject("items")
+			JSONArray weatherItems = jsonResponse.getJSONObject("response").getJSONObject("body").getJSONObject("items")
 					.getJSONArray("item");
+		 	
+		 	for (int i = 0; i < weatherItems.length(); i++) {
+				JSONObject item = weatherItems.getJSONObject(i);
+
+				String category = item.getString("category");
+				String fcstValue = item.getString("fcstValue");
+
+				if ("SKY".equals(category)) {
+					if (StringUtils.isBlank(sky)) {
+						sky = fcstValue;
+						System.out.println("SKY item " + item);
+					}
+				} else if ("PTY".equals(category)) {
+					if (StringUtils.isBlank(pty)) {
+						pty = fcstValue;
+						System.out.println("PTY item " + item);
+					}
+				}
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		String sky = null, pty = null;
-
-		for (int i = 0; i < weatherItems.length(); i++) {
-			JSONObject item = weatherItems.getJSONObject(i);
-
-			String category = item.getString("category");
-			String fcstValue = item.getString("fcstValue");
-
-			if ("SKY".equals(category)) {
-				if (StringUtils.isBlank(sky)) {
-					sky = fcstValue;
-					System.out.println("SKY item " + item);
-				}
-			} else if ("PTY".equals(category)) {
-				if (StringUtils.isBlank(pty)) {
-					pty = fcstValue;
-					System.out.println("PTY item " + item);
-				}
-			}
 		}
 
 		// 데이터를 가져오지 못한 경우 초기값

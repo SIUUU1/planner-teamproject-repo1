@@ -18,6 +18,9 @@ public interface GroupService {
 	// 내 그룹 조회
 	public List<Group> myList(String user_id) throws Exception;
 
+	// 내가 지원한 그룹 조회
+	public List<Group> myApplyList(String user_id) throws Exception;
+
 	// 상세 보기
 	public Group read(int group_id) throws Exception;
 
@@ -32,6 +35,9 @@ public interface GroupService {
 
 	// 검색
 	public List<Group> search(String search) throws Exception;
+
+	// 그룹원 수 늘리기
+	public void incrementGroupOneCount(int group_id) throws Exception;
 
 	// 지원수 늘리기
 	public void incrementApplyCount(int group_id) throws Exception;

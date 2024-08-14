@@ -17,7 +17,7 @@ import BoardDetail from './board/BoardDetail';
 import Chat from './openChat/Chat';
 import QnaCustomerSupport from './qna/QnaCustomerSupport';
 import NoticeBoard from './qna/NoticeBoard';
-import Support from './qna/Support';
+// import Support from './qna/Support';
 import ThemeChange from './theme/ThemeChange';
 import FriendsList from './member/FriendsList';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -51,12 +51,10 @@ function App() {
           <Route path='/as' element={<NotAuthorized/>}/>
           <Route path='/groupmain' element={<StudyGroupMain/>}/>
           <Route path='/groupedit/:id' element={<StudyGroupEditor/>}/>
-          {/* <Route path='/groupedit' element={<StudyGroupEdit/>}/>  */}
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
           <Route path='/attainmentMain' element={<AttainmentMain/>}/>
           <Route path='/attainmentDetail/:no' element={<AttainmentDetail/>}/>
           <Route path="/boardlist" element={<BoardList />} />
-          <Route path='/attainmentDetail/:type/:id' element={<AttainmentDetail/>}/>
           <Route path="/boardlist" element={<BoardList />} />
           <Route path="/boardwrite" element={<BoardWrite />} />
           <Route path="/boarddetail/:id" element={<BoardDetail />} />
@@ -64,7 +62,7 @@ function App() {
           <Route path="/boardwrite/:no" element={<BoardWrite />} />
           <Route path="/boarddetail/:id" element={<BoardDetail />} />
           <Route path="/qna/:mode/:qna_id" element={<QnaCustomerSupport />} />
-          <Route path='/support' element={<Support />} />
+          {/* <Route path='/support' element={<Support />} /> */}
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/themechange" element={<ThemeChange />} />
           <Route path="/friends" element={<FriendsList />} />

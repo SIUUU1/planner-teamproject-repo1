@@ -12,7 +12,7 @@ const GroupItem =({ group, onClick })=>{
         <div className="groupTags">{group.group_goal}</div>
         <div className="groupTags">{group.group_notice}</div>
         <div className="groupStats">
-          <p>인원수: {group.groupone_count}</p>
+          <p>{group.groupone_count} 명</p>
         </div>
       </div>
     </div>
