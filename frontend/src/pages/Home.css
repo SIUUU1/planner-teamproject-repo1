@@ -71,6 +71,10 @@
   width: 60%;
   border: 1px solid black;
 }
+.board1 {
+  margin: 30px auto;
+  padding: 0 30px;
+}
 .homeForthMiddle{
   height: 300px;
 }
@@ -78,6 +82,13 @@
   height: 100%;
   width: 100%;
   border: 1px solid black;
+}
+.studyGroup1 {
+  margin: 30px auto;
+  padding: 0 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .todoListP{
   margin-left: 35px;

@@ -3,8 +3,8 @@
 <mapper namespace="com.zeus.backend.mapper.GroupOneMapper">
 	<!-- 그룹원 등록 -->
     <insert id="create">
-        INSERT INTO GroupOne (groupone_id, group_id, user_id
-        ) VALUES ( #{groupone_id}, #{group_id}, #{user_id})
+        INSERT INTO GroupOne (groupone_id, group_id, user_id, user_nickname
+        ) VALUES ( GroupOne_id_SEQ.NEXTVAL, #{group_id}, #{user_id},#{user_nickname})
     </insert>
     <!-- 모든 그룹원 조회 --> 
     <select id="list" resultType="com.zeus.backend.domain.GroupOne">
@@ -16,7 +16,7 @@
     </select>
     <!-- 특정 그룹에 속한 모든 그룹원을 조회 -->
     <select id="selectByGroupId" resultType="com.zeus.backend.domain.GroupOne">
-        SELECT * FROM GroupOne WHERE group_id = #{group_id} ORDER BY enable
+        SELECT * FROM GroupOne WHERE group_id = #{group_id} ORDER BY enable DESC, reg_date ASC
     </select>
     <!-- 특정 그룹 허용된 모든 그룹원 조회 -->
     <select id="selectAllAccept" resultType="com.zeus.backend.domain.GroupOne">
@@ -43,7 +43,7 @@
     </update>
     <!-- 그룹원 삭제 -->
     <delete id="delete">
-        DELETE FROM GroupOne WHERE groupone_id = #{groupone_id}
+        DELETE FROM GroupOne WHERE user_id = #{user_id}
     </delete>
     <!-- 특정 그룹에 속한 모든 그룹원 삭제 -->
     <delete id="deleteByGroupId">
