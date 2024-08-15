@@ -25,7 +25,7 @@ const { data: userData, loading: loadingUser, error: errorUser, refetch: refetch
     
     if (searching && userData) {
       filteredBoards = searchList.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
-    } else if (boardListData) {
+    } else if (boardListData && userData) {
       filteredBoards = boardListData.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
     }
 
@@ -106,13 +106,15 @@ const { data: userData, loading: loadingUser, error: errorUser, refetch: refetch
   const handleWrite = () => {
     moveToWrite();
   };
-
+if(loadingUser){
+  return(<div>loading...</div>);
+}
   return (
-    <div className="boardList">
+    <div className="boardList backWhite">
       <h1>게시판</h1>
-      <div className="boardListHeader">
-        <button onClick={handleWrite} className="writeButton">글쓰기</button>
-      </div>
+      {/* <div className="boardListHeader">
+        
+      </div> */}
       <div className="searchBar">
         <select onChange={handleSortOrderChange} value={sortOrder}>
           <option value="latest">최신순</option>
@@ -125,6 +127,7 @@ const { data: userData, loading: loadingUser, error: errorUser, refetch: refetch
         </select>
         <input type="text" placeholder="검색어를 입력해주세요" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
         <button onClick={onSearch}>검색</button>
+        <button onClick={handleWrite} className="writeButton">글쓰기</button>
       </div>
       <table className="boardListTable">
         <thead>
@@ -144,13 +147,13 @@ const { data: userData, loading: loadingUser, error: errorUser, refetch: refetch
           ) : (
             currentBoards.map((board, index) => (
               <tr key={index}>
-                <td>{board.category}</td>
+                <td style={{ width: '80px' }}>{board.category}</td>
                 <td onClick={() => handleTitleClick(board.no)} className="postTitle">
                   {board.subject}
                 </td>
-                <td>{board.user_nickname}</td>
-                <td>{board.read_count}</td>
-                <td>{formatDate(board.reg_date)}</td>
+                <td style={{ width: '80px' }}>{board.user_nickname}</td>
+                <td style={{ width: '50px' }}>{board.read_count}</td>
+                <td style={{ width: '120px' }}>{formatDate(board.reg_date)}</td>
               </tr>
             ))
           )}

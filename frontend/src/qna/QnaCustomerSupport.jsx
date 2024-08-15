@@ -46,7 +46,7 @@ const QnaCustomerSupport = () => {
 //     return <div>Error: {errorQnaList.message}</div>;
 // }
   return (
-    <div className="qnaCustomerSupport">
+    <div className="qnaCustomerSupport backWhite">
       <h1 className="mainTitle">고객센터</h1>
       <h2 className="subTitle">
         <span className="subTitleItem" onClick={() => setSelectedTab('notice')}>공지사항</span> | 
@@ -55,15 +55,8 @@ const QnaCustomerSupport = () => {
         <span className="subTitleItem" onClick={() => setSelectedTab('myqna')}>내 문의내역</span>
       </h2>
       <div className="contentBox">
-        <p>
-          고객의 소중한 의견에 귀 기울이겠습니다.
-        </p>
-        <p>...</p>
-        <p>...</p>
-        <p>...</p>
-        <p>
-          위플랜에 보내주신 관심은 더욱 좋은 서비스로 보답하겠습니다.
-        </p>
+        <p>고객의 소중한 의견에 귀 기울이겠습니다.</p>
+        <p>위플랜에 보내주신 관심은 더욱 좋은 서비스로 보답하겠습니다.</p>
       </div>
       {selectedTab === 'notice' && <NoticeBoard userData={userData}/>}
       {selectedTab === 'faq' && <Faq faqs={faqListData || []} />}

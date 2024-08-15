@@ -1,50 +1,91 @@
-/* src/pages/BoardDetail.css */
-.boardDetail {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-.boardDetail h1 {
-  margin-bottom: 20px;
-}
+ .boardContent h1{
+  line-height: 0;
+  margin: 10px 0 5px 0;
+ }
+ .boardInfo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+ }
+ .boardContent{
+  margin: 30px auto 50px auto;
+  padding: 10px 60px;
+  width: 50%;
+  min-height: 650px;
+  border-radius: 8px;
+ }
 
+.toFullList{
+  margin: 0;
+} 
 .boardDetail p {
   margin-bottom: 10px;
 }
+.boardContentText{
+  border-top: 1px solid rgb(237, 237, 237);
+  padding-top: 10px;
+}
+.attachedFiles{
+  display: flex;
+}
+.attachedFiles span{
+  flex-grow: 1;
+}
 
-.boardDetail .backButton {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+.boardComment{
+  border: 1.5px solid rgb(245, 245, 245);
+  padding: 0px 30px 20px 30px;
+  margin: 20px 0;
   border-radius: 5px;
 }
-
-.boardDetail .backButton:hover {
-  background-color: #45a049;
+.boardCommentItem{
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
 }
+.boardCommentItem p{
+  margin: 0;
+}
+.boardCommentItem .boardCommentContent{
+  flex-grow: 1;
+}
+.boardDetail h1 {
+  margin-bottom: 20px;
+  line-height: 70%;
+}
+.boardContentText{
+  min-height: 200px;
+}
+
 textarea {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
 }
 
-.boardDetail .button {
-  margin: 10px 0;
-  padding: 8px 16px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+.boardComment .button, .commentRegister .button,.boardInfo .buttonGroup button{
+  margin: 0 0 0 8px;
+  padding: 5px 13px;
+  border: 1px solid #bcbcbc;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
-.boardDetail .button:hover {
-  background-color: #45a049;
+.boardComment .button:hover,.commentRegister .button:hover,.boardInfo .buttonGroup button:hover {
+  background-color: #7d8896;
+  color: white;
+}
+.commentRegisterBtn{
+  width: 90px;
+  height: 40px;
+}
+.commentRegister{
+  display: flex;
+  align-items: center;
+}
+.commentRegister p{
+  margin-right: 10px;
 }

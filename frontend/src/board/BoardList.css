@@ -1,8 +1,9 @@
 .boardList {
-  margin: 0 auto;
-  padding: 20px;
-  width: 80%;
-  background-color: white;
+  margin: 30px auto 50px auto;
+  padding: 5px 40px;
+  width: 65%;
+  min-height: 650px;
+  border-radius: 8px;
 }
 
 .boardList h1 {
@@ -12,40 +13,43 @@
   text-align: center;
 }
 
-.boardListHeader,
 .boardList .searchBar {
   display: flex;
-  justify-content: flex-end;
   margin-bottom: 20px;
 }
 
-.boardList .writeButton {
+/* .boardList .writeButton {
   background-color: #b399ff;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 4px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-}
+  font-size: 0.9rem;
+  width: 77px;
+} */
 
-.boardList .writeButton:hover {
+/* .boardList .writeButton:hover {
   background-color: #7c4dff;
-}
+} */
 
 .boardList .searchBar select,
 .boardList .searchBar input,
 .boardList .searchBar button {
-  margin-right: 10px;
+  /* margin-right: 10px; */
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
+.boardList .searchBar select{
+  margin-right: 7px;
+}
 .boardList .searchBar button {
   background-color: #424242;
   color: white;
   cursor: pointer;
+  width: 90px;
+  margin-left: 5px;
 }
 
 .boardList .searchBar button:hover {
@@ -76,7 +80,7 @@
 
 .boardList .postTitle {
   cursor: pointer;
-  color: #7c4dff;
+  flex-grow: 1;
 }
 
 .boardList .postTitle:hover {
@@ -95,17 +99,17 @@
   font-size: 0.8rem; /* Adjust font size */
 }
 
-.boardList .editButton:hover {
+/* .boardList .editButton:hover {
   background-color: #5e35b1;
-}
+} */
 
-.boardList .deleteButton {
+/* .boardList .deleteButton {
   background-color: red;
 }
 
 .boardList .deleteButton:hover {
   background-color: darkred;
-}
+} */
 
 .boardList .buttonGroup {
   display: flex;
@@ -121,7 +125,7 @@
 }
 
 .boardList .pagination button {
-  background-color: #f0f0f5;
+  /* background-color: #f0f0f5; */
   color: #333;
   border: 1px solid #ddd;
   padding: 5px 10px;
@@ -130,11 +134,11 @@
 }
 
 .boardList .pagination button.active {
-  background-color: #b399ff;
+  background-color: #c6c9d8;
   color: white;
 }
 
 .boardList .pagination button:disabled {
-  background-color: #ddd;
+  /* background-color: #ddd; */
   cursor: not-allowed;
 }

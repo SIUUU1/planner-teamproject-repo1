@@ -24,25 +24,24 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
     return (
         <div className="pagination">
             <button onClick={() => onPageChange(1)} disabled={currentPage === 1}>
-                First
+                &lt;&lt;
             </button>
             <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
-                Prev
+                &lt;
             </button>
             {getPageNumbers().map((page) => (
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={page === currentPage ? 'active' : ''}
-                >
+                    className={page === currentPage ? 'active' : ''}>
                     {page}
                 </button>
             ))}
             <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                Next
+                &gt;
             </button>
             <button onClick={() => onPageChange(totalPages)} disabled={currentPage === totalPages}>
-                Last
+                &gt;&gt;
             </button>
         </div>
     );

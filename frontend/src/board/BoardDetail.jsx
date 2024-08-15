@@ -4,6 +4,8 @@ import './BoardDetail.css';
 import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
 import Button from '../components/Button';
+import ProfileLink from '../components/ProfileLink'
+import Toback from '../components/ToBack'
 
 const BoardDetail = () => {
   const { id } = useParams();
@@ -24,7 +26,6 @@ const BoardDetail = () => {
     reg_date:'',
   };
   
-  //본 게시글
   const [board, setBoard] = useState({
     no: 0,
     user_id: '',
@@ -41,15 +42,13 @@ const BoardDetail = () => {
   });
 
   const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${id}`, 'json');
-  //게시글 전체 (댓글 불러오기)
-  const {data: boardListData, loading: loadingBoardListt, error: errorBoardList,refetch: refetchBoardListData } = useLoading('http://localhost:8080/api/board/list', 'json');
-  // 유저 정보
+  const {data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardListData } = useLoading('http://localhost:8080/api/board/list', 'json');
   const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState({initComment});
-  const [editingCommentId, setEditingCommentId] = useState(null); // 현재 수정 중인 댓글 ID
-  const [editedContent, setEditedContent] = useState(''); // 수정된 댓글 내용
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedContent, setEditedContent] = useState('');
   
   useEffect(() => {
     if (boardData) {
@@ -59,7 +58,7 @@ const BoardDetail = () => {
       const filteredComments = boardListData.filter(e => e.step !== 0 && e.ref === boardData?.ref);
       setComments(filteredComments);
     }
-    if (userData&&boardData) {
+    if (userData && boardData) {
       setComment(prevComment => ({
         ...prevComment,
         no: boardData.no,
@@ -73,28 +72,23 @@ const BoardDetail = () => {
         reg_date: new Date().toISOString(),
       }));
     }
-  }, [boardData,userData,boardListData]);
+  }, [boardData, userData, boardListData]);
 
   const handleEditClick = (comment) => {
     setEditingCommentId(comment.no); 
     setEditedContent(comment.content);
   };
 
-  const handleBack = () => {
-    navigate('/boardlist');
-  };
-
-  const onEdit =()=>{
+  const onEdit = () => {
     navigate(`/boardwrite/${board.no}`);
   }
-  // board delete
+
   const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/board/delete', {}, 'json');
 
-  const onDelete =async ()=>{
+  const onDelete = async () => {
     try {
       const no = id;
       await deleteRequest({no});
-      console.log("no"+no)
       alert('게시판이 삭제되었습니다.');
       navigate('/boardlist');
       refetchBoardListData();
@@ -104,31 +98,22 @@ const BoardDetail = () => {
     }
   };
 
-  //board comment insert
-  //댓글 추가
+  const { postRequest: submitCommentRequest } = useSendPost('http://localhost:8080/api/board/insert/comment', {}, 'json', true);
+
   const submitComment = async () => {
-  try {
-    const formData = new FormData();
-    for (const key in comment) {
-      formData.append(key, comment[key]);
-    }
-    const response = await fetch('http://localhost:8080/api/board/insert/comment', {
-        method: 'POST', 
-        body: formData,
-        credentials: 'include',
-      });
-      console.log('formdata'+formData);
-      if (response.ok) {
-        alert('댓글이 추가되었습니다.');
-        refetchBoardListData();
-      } else {
-        throw new Error('댓글 추가 실패');
+    try {
+      const formData = new FormData();
+      for (const key in comment) {
+        formData.append(key, comment[key]);
       }
+      await submitCommentRequest(formData);
+      alert('댓글이 추가되었습니다.');
+      refetchBoardListData();
     } catch (error) {
       console.error('댓글 추가 실패:', error);
       alert('댓글 추가에 실패했습니다.');
     }
-};
+  };
 
   const changeComment = (e) => {
     setComment((prevComment) => ({
@@ -141,10 +126,8 @@ const BoardDetail = () => {
     setEditedContent(e.target.value);
   };
   
-  //board comment modify
-  //const { postRequest: modifyRequest } = useSendPost('http://localhost:8080/api/board/update/comment', {}, 'map');
+  const { postRequest: modifyCommentRequest } = useSendPost('http://localhost:8080/api/board/update/comment', {}, 'json', true);
   
-  //댓글 수정
   const handleConfirmEdit = async (comment) => {
     try {
       const updatedComment = { ...comment, content: editedContent };
@@ -152,42 +135,40 @@ const BoardDetail = () => {
       for (const key in updatedComment) {
         formData.append(key, updatedComment[key]);
       }
-      const response = await fetch('http://localhost:8080/api/board/update/comment', {
-          method: 'POST', 
-          body: formData,
-          credentials: 'include',
-        });
-        console.log('formdata'+formData);
-        if (response.ok) {
-          alert('댓글이 수정되었습니다.');
-          setEditingCommentId(null);
-          refetchBoardListData();
-        } else {
-          throw new Error('댓글 수정 실패');
-        }
-      } catch (error) {
-        console.error('댓글 수정 실패:', error);
-        alert('댓글 수정에 실패했습니다.');
-      }
+      await modifyCommentRequest(formData);
+      alert('댓글이 수정되었습니다.');
+      setEditingCommentId(null);
+      refetchBoardListData();
+    } catch (error) {
+      console.error('댓글 수정 실패:', error);
+      alert('댓글 수정에 실패했습니다.');
+    }
   };
 
- // 파일 다운로드
-  const handleFileDownload = async(filename) => {
-       await fetch(`http://localhost:8080/api/board/download/${filename}`, {
-          method: 'GET', 
-          credentials: 'include',
-        })
-        .then((res)=>{
-          if (res.ok) {
-            alert('파일 다운로드');
-          } else {
-            throw new Error('파일 다운로드 실패');
-          }
-        })
-        .then((error)=>{
-          console.error('파일 다운로드 실패:', error);
-          alert('파일 다운로드 실패했습니다.');
-        });
+  const handleFileDownload = async (filename) => {
+    try {
+      const encodedFilename = encodeURIComponent(filename);
+      const response = await fetch(`http://localhost:8080/api/board/download/${encodedFilename}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('File download failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error('File download failed:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
   };
 
   const formatDate = (dateString) => {
@@ -199,51 +180,57 @@ const BoardDetail = () => {
   };
 
   if(loadingUser || loadingBoardData){
-    return<div>loading</div>;
+    return <div>loading</div>;
   }
+
   return (
     <div className="boardDetail">
-      <h1>제목: {board.title}</h1>
-      <p><strong>카테고리:</strong> {board.subject}</p>
-      <p><strong>등록날짜:</strong> {board.reg_date}</p>
-      <div>
-        <strong>내용:</strong>
-        <div dangerouslySetInnerHTML={{ __html: board.content }} />
-      </div>
-        <div className="attachedFiles">
-          <h2>첨부 파일 </h2>
-      {board.filename && board.filename.length > 0 ? (
-      <a href="#" onClick={() => handleFileDownload(board.filename)}>{board.filename}</a>
-          ):(<span>첨부파일이 없습니다.</span>)}
-        </div>
-      <div className="buttonGroup">
-          <button onClick={onEdit} className="editButton">수정</button>
-          <button onClick={onDelete} className="deleteButton">삭제</button>
-      </div>
-
-      <div>
-        <h2>댓글</h2>
-        {comments.map((com) => (
-          <div key={com.no}>
-            {editingCommentId === com.no ? (
-              <>
-                <strong>{com.user_nickname}</strong>
-                <input type="text"  value={editedContent}  onChange={handleEditChange} />
-                <Button text={'확인'} onClick={() => handleConfirmEdit(com)} />
-              </>) : ( <>
-                <p><strong>{com.user_nickname} : {com.content}</strong> ({formatDate(comment.reg_date)})</p>
-                {com.user_id === userData.user_id && (
-                  <Button text={'수정'} onClick={() => handleEditClick(com)} />
-                )}
-              </>
-            )}
+      <div className='boardContent backWhite'>
+        <Toback URL={'/boardlist'} />
+        <h1>{board.subject}</h1>
+        <div className='boardInfo'>
+          <p>{formatDate(board.reg_date)} &middot; {board.category}</p>
+          <div className="buttonGroup">
+            <Button onClick={onEdit} className={"editButton"} text={'수정'}/>
+            <Button onClick={onDelete} className={"deleteButton"} text={'삭제'}/>
           </div>
-        ))}
-        <input type="text" value={userData.user_nickname} readOnly />
-        <textarea value={comment.content} onChange={changeComment}  rows="4"></textarea>
-        <button onClick={submitComment}>댓글 추가</button>
+        </div>
+        <div className='boardContentText'>
+          <div dangerouslySetInnerHTML={{ __html: board.content }} />
+        </div>
+        <div className="attachedFiles">
+          {board.filename && board.filename.length > 0 ? (
+            <span onClick={() => handleFileDownload(board.filename)}>{board.filename}</span>
+          ) : (<span>첨부파일이 없습니다.</span>)}
+        </div>
+
+        <div className='boardComment'>
+          {comments.map((com) => (
+            <div key={com.no}>
+              {editingCommentId === com.no ? (
+                <div className='boardCommentItem'>
+                  <ProfileLink user_id={com.user_id} user_nickname={com.user_nickname}></ProfileLink>
+                  <input type="text"  value={editedContent}  onChange={handleEditChange} />
+                  <Button text={'확인'} onClick={() => handleConfirmEdit(com)} />
+                </div>
+              ) : ( 
+                <div className='boardCommentItem'>
+                  <ProfileLink user_id={com.user_id} user_nickname={com.user_nickname}></ProfileLink>
+                  <p className='boardCommentContent'>: {com.content}</p> <p>({formatDate(comment.reg_date)})</p>
+                  {com.user_id === userData.user_id && (
+                    <Button text={'수정'} onClick={() => handleEditClick(com)} />
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className='commentRegister'>
+            <p>{userData.user_nickname} </p>
+            <textarea value={comment.content} onChange={changeComment}  rows="4"></textarea>
+            <Button onClick={submitComment} text={'댓글 추가'} className={'commentRegisterBtn'}/>
+          </div>
+        </div>
       </div>
-      <button onClick={handleBack} className="backButton">돌아가기</button>
     </div>
   );
 };

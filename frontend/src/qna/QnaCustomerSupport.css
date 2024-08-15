@@ -1,11 +1,10 @@
-/* src/pages/QnaCustomerSupport.css */
 .qnaCustomerSupport {
-  padding: 20px;
+  padding: 20px 50px;
   font-family: Arial, sans-serif;
-  width: 60%; /* 내용이 중앙에 정렬되도록 너비 설정 */
-  margin: 0 auto; /* 중앙 정렬을 위한 자동 마진 */
+  width: 50%; /* 내용이 중앙에 정렬되도록 너비 설정 */
+  margin: 20px auto 70px auto;
+  min-height: 650px;
 }
-
 .qnaCustomerSupport .mainTitle {
   font-size: 32px;
   text-align: center;
@@ -16,6 +15,8 @@
   font-size: 18px;
   text-align: center;
   margin-bottom: 20px;
+  padding-bottom: 16px;
+  
 }
 
 .qnaCustomerSupport .subTitleItem {
@@ -24,12 +25,12 @@
 }
 
 .qnaCustomerSupport .contentBox {
-  background-color: #064D48;
-  color: white;
+  line-height: 170%;
   padding: 20px;
-  border-radius: 10px;
   margin-bottom: 20px;
   text-align: center;
+  border-top: 1.5px solid rgb(240, 240, 240);
+  border-bottom: 1.5px solid rgb(240, 240, 240);
 }
 
 .qnaCustomerSupport .faqSection {

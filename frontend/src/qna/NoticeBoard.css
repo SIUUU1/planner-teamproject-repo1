@@ -1,8 +1,7 @@
 /* src/pages/NoticeBoard.css */
 .noticeBoard {
-  padding: 20px;
   font-family: Arial, sans-serif;
-  width: 60%; /* 내용이 중앙에 정렬되도록 너비 설정 */
+  width: 100%; /* 내용이 중앙에 정렬되도록 너비 설정 */
   margin: 0 auto; /* 중앙 정렬을 위한 자동 마진 */
 }
 
@@ -10,6 +9,9 @@
   font-size: 32px;
   text-align: center;
   margin-bottom: 20px;
+}
+.noticeDetailContent{
+  min-height: 300px;
 }
 
 .noticeBoardTable {
@@ -34,7 +36,9 @@
   flex: 1;
   text-align: center;
 }
-
+.noticeBoardTitle{
+  flex-grow: 1;
+}
 .noticeTitle {
   cursor: pointer;
   color: blue;
@@ -58,6 +62,8 @@
 .noticeDetail {
   text-align: left;
   margin-top: 20px;
+  width: 100%;
+  padding-right: 20px;
 }
 
 .noticeDetail h2 {
@@ -71,18 +77,18 @@
 }
 
 .noticeDetail button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+  background-color: white;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
   margin-top: 20px;
+  border: 1px solid #bcbcbc;
 }
 
 .noticeDetail button:hover {
-  background-color: #45a049;
+  background-color: #7d8896;
+  color: white;
 }
 
 .noticeBoard .pagination {
@@ -92,8 +98,8 @@
 }
 
 .noticeBoard .pagination button {
-  background-color: #4CAF50;
-  color: white;
+  /* background-color: #4CAF50;
+  color: white; */
   border: none;
   padding: 10px 20px;
   font-size: 16px;
@@ -109,4 +115,32 @@
 
 .noticeBoard .pagination span {
   font-size: 16px;
+}
+.noticeCommentList{
+  border: 1.5px solid rgb(245, 245, 245);
+  padding: 0px 30px 20px 30px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+.noticeAddComment{
+  display: flex;
+  align-items: center;
+  height: 80px;
+  /* padding-right: 20px; */
+}
+.noticeAddComment button{
+  width: 90px;
+}
+.noticeCommentTextarea,.noticeCommentContent{
+  flex-grow: 1;
+  margin: 0 20px 0 10px;
+}
+.noticeCommentItem{
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+.noticeCommentItem button{
+  margin: 0 0 0 20px;
+  width: 78px;
 }

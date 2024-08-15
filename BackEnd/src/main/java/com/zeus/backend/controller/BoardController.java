@@ -1,6 +1,7 @@
 package com.zeus.backend.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import com.zeus.backend.domain.Board;
 import com.zeus.backend.service.BoardService;
@@ -238,17 +240,17 @@ public class BoardController {
 		System.out.println("filename" + filename);
 		try {
 			// 파일을 클래스패스 내에서 찾음
-			File file = ResourceUtils.getFile("classpath:static/images/board/" + filename);
+			File file = ResourceUtils.getFile("src/main/webapp/static/images/board/" + filename);
 			Path filePath = file.toPath().normalize();
 			Resource resource = new UrlResource(filePath.toUri());
 
 			if (!resource.exists()) {
+				System.out.println("File not found: " + filename);
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 			}
-
 			// 캐시 무효화를 위해 Cache-Control 헤더 추가
 			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + UriUtils.encode(resource.getFilename(), "UTF-8") + "\"");
 			headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
 			headers.add(HttpHeaders.PRAGMA, "no-cache");
 			headers.add(HttpHeaders.EXPIRES, "0");
@@ -256,8 +258,13 @@ public class BoardController {
 			return ResponseEntity.ok().headers(headers).body(resource);
 
 		} catch (MalformedURLException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		} catch (Exception e) {
+			 System.out.println("MalformedURLException: " + e.getMessage());
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		    } catch (FileNotFoundException e) {
+		        System.out.println("FileNotFoundException: " + e.getMessage());
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		    } catch (Exception e) {
+		        System.out.println("Exception: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}

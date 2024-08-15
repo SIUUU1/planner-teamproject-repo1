@@ -148,8 +148,8 @@ const BoardWrite = () => {
   };
 
   return (
-    <div className="boardWrite">
-      <h1>글쓰기 게시판</h1>
+    <div className="boardWrite backWhite">
+      <h1>게시판 글쓰기</h1>
       <div className="formGroup">
         <label htmlFor="subject">제목:</label>
         <input type="text" name="subject" value={board.subject} onChange={onChange}/>
@@ -166,8 +166,8 @@ const BoardWrite = () => {
           ))}
         </select>
       </div>
-      <div className="formGroup">
-        <label htmlFor="newCategory">카테고리 추가:</label>
+      <div className="formGroup newCategory">
+        {/* <label htmlFor="newCategory">카테고리 추가:</label> */}
         <input type="text" id="newCategory" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="새 카테고리 추가"/>
         <button onClick={handleAddCategory} className="addCategoryButton">추가</button>
       </div>
@@ -180,7 +180,7 @@ const BoardWrite = () => {
         <input type="file" id="imageUpload" multiple accept="image/*" ref={img}/>
         {board.filename && <span>{board.filename}</span>}
       </div>
-      <div className="formGroup">
+      <div className="formGroup btnSub">
         {no!=0 ?(
         <button onClick={onUpdate} className="completeButton">수정</button>
       ):(

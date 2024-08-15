@@ -1,4 +1,3 @@
-// src/pages/NoticeBoard.jsx
 import React, { useState, useEffect } from 'react';
 import './NoticeBoard.css';
 import Pagination from '../components/Pagination';
@@ -103,14 +102,14 @@ const formatDate = (dateString) => {
         <>
         <div className="noticeBoardRow">
                 <div className="noticeBoardCell">번호</div>
-                <div className="noticeBoardCell">
+                <div className="noticeBoardCell noticeBoardTitle">
                     제목
                 </div>
                 <div className="noticeBoardCell">작성자</div>
                 <div className="noticeBoardCell">조회수</div>
                 <div className="noticeBoardCell">작성일</div>
               </div>
-            {currentNotices.map((notice, index) => (
+            {(currentNotices)?currentNotices.map((notice, index) => (
               <>
               <div className="noticeBoardRow" key={notice.no}>
                 <div className="noticeBoardCell">{indexOfFirstNotice + index + 1}</div>
@@ -122,7 +121,7 @@ const formatDate = (dateString) => {
                 <div className="noticeBoardCell">{formatDate(notice.reg_date)}</div>
               </div>
               </>
-            ))}
+            )):<p>등록된 공지사항이 없습니다.</p>/*이부분 수정 필요*/}
           {!selectedNotice&&<Pagination totalPages={totalPages} 
         currentPage={currentPage} 
         onPageChange={handlePageChange} />}

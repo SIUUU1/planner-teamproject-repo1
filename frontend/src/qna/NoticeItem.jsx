@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import useSendPost from '../util/useSendPost';
 import Button from '../components/Button';
+import ProfileLink from '../components/ProfileLink';
 
 const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
   const initComment = {
@@ -101,34 +102,39 @@ const formatDate = (dateString) => {
 };
   return(
     <>
-    <div className="noticeDetail">
-          <h2>제목 : {selectedNotice.subject}</h2>
-          <p>내용: {selectedNotice.content}</p>
-          <div>
-          <h2>댓글</h2>
+      <div className="noticeDetail">
+        <h2>{selectedNotice.subject}</h2>
+        <p className='noticeDetailContent'>{selectedNotice.content}</p>
+        <div className='noticeCommentList'>
+          {/* <h2>댓글</h2> */}
           {comments.map((comment) => (
-          <div key={comment.no}>
-            {editingCommentId === comment.no ? (
-              <>
-                <strong>{comment.user_nickname}</strong>
-                <input type="text"  value={editedContent}  onChange={handleEditChange} />
-                <Button text={'확인'} onClick={() => handleConfirmEdit(comment)} />
-              </>) : ( <>
-                <p><strong>{comment.user_nickname} : {comment.content}</strong> ({formatDate(comment.reg_date)})</p>
-                {comment.user_id === userData.user_id && (
-                  <Button text={'수정'} onClick={() => handleEditClick(comment)} />
-                )}
-              </>
-            )}
+            <div key={comment.no}>
+              {editingCommentId === comment.no ? (
+                <div className='noticeCommentItem'>
+                  <ProfileLink user_id={comment.user_id} user_nickname={comment.user_nickname}></ProfileLink>
+                  <input type="text"  value={editedContent}  onChange={handleEditChange} />
+                  <Button text={'확인'} onClick={() => handleConfirmEdit(comment)} />
+                </div>
+                ) : ( 
+                <div className='noticeCommentItem'>
+                  <ProfileLink user_id={comment.user_id} user_nickname={comment.user_nickname}></ProfileLink>
+                  <p className='noticeCommentContent'>: {comment.content}</p> <p>({formatDate(comment.reg_date)})</p>
+                  {comment.user_id === userData.user_id && (
+                    <Button text={'수정'} onClick={() => handleEditClick(comment)} />
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+          <br/>
+          <div className='noticeAddComment'>
+            <p>{userData.user_nickname}:</p>
+            <textarea className='noticeCommentTextarea' value={comment.content} onChange={changeComment} rows="4" ></textarea>
+            <button onClick={submitComment}>등록</button>
           </div>
-        ))}
-        <br/>
-        <input type="text" value={userData.user_nickname} readOnly />
-        <textarea value={comment.content} onChange={changeComment} rows="4" ></textarea>
-        <button onClick={submitComment}>댓글 추가</button>
+        </div>
         <button onClick={backToList}>목록으로</button>
-          </div>
-    </div>
+     </div>
     </>
   );
 };
