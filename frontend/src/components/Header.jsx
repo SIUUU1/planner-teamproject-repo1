@@ -79,7 +79,7 @@ const Header = () => {
               {/* 로그인 성공 시: 로그아웃 기능, 아니면 : 로그인 기능 */}
               <div className='headerSecondChild'><Button text={<FontAwesomeIcon icon={faRightFromBracket} />} onClick={UserData?(() => onLogout()):(() => onMoveLoginform())} /></div>
               <div className='headerThirdChild'><Button text={<FontAwesomeIcon icon={faUserGroup} onClick={()=>{location.href='/friends'}} />} /></div>
-              <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple} />} /></div>
+              <div className='headerForthChild'><Button text={<FontAwesomeIcon icon={faChartSimple} onClick={()=>{location.href='/attainmentMain'}}/>} /></div>
             </div>
           </div>
           <div className='rightHeader'>

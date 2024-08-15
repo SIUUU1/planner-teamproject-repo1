@@ -252,14 +252,15 @@ public class GroupController {
 
 	// 그룹 검색
 	@PostMapping("/search")
-	public ResponseEntity<List<Group>> searchBoard(@RequestParam(name = "search", defaultValue = "") String search) {
+	public ResponseEntity<List<Group>> searchBoard(@RequestBody Map<String, Object> payload) {
+		log.info("searchBoard map.toString()=" + payload.toString());
 
 		System.out.println("search group");
-		System.out.println("search:" + search);
+		System.out.println("search:" + payload.get("search"));
 		List<Group> groupList = null;
 
 		try {
-			groupList = groupService.search(search);
+			groupList = groupService.search(String.valueOf(payload.get("search")));
 			log.info("groupList" + groupList.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -284,7 +285,7 @@ public class GroupController {
 		return new ResponseEntity<>(groupOneList, HttpStatus.OK);
 	}
 
-	// 그룹 지원하기
+	// 그룹에 지원하기
 	@Transactional
 	@PostMapping("/groupone/insert")
 	public ResponseEntity<?> insertGroupOne(@RequestBody Map<String, Object> map) throws Exception {
@@ -302,8 +303,8 @@ public class GroupController {
 		}
 	}
 
-	// 그룹 가입 허락하기
-	@GetMapping("/groupone/accept")
+	// 그룹원 가입 허락하기
+	@PostMapping("/groupone/accept")
 	public ResponseEntity<?> acceptGroupOne(@RequestBody Map<String, Object> map) {
 		System.out.println("acceptGroupOne");
 
@@ -315,4 +316,19 @@ public class GroupController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error accepting Groupone");
 		}
 	}
+
+	// 그룹원 탈퇴 및 거절
+	@PostMapping("/groupone/delete")
+	public ResponseEntity<?> deleteGroupOne(@RequestBody Map<String, Object> map) {
+		System.out.println("deleteGroupOne");
+
+		try {
+			groupOneService.delete(String.valueOf(map.get("user_id")));
+			return ResponseEntity.ok("Groupone delete successfully");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting Groupone");
+		}
+	}
+
 }

@@ -1,0 +1,8 @@
+.boardItem {
+  margin: 20px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 18px;
+  gap: 10px;
+}

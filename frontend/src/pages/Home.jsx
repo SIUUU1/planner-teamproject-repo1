@@ -10,9 +10,9 @@ import Weather from '../components/Weather';
 import { useState,useEffect } from 'react';
 import dayjs from 'dayjs';
 import useMove from '../util/useMove';
-
-
-
+import GroupList from '../components/GroupList';
+import Modal from '../studygroup/Modal';
+import BoardItem from '../components/BoardItem';
 
 const currentDate = dayjs().format('YYYY-MM-DD');
 
@@ -32,7 +32,19 @@ const Home = ()=>{
   // 날씨
   const [weather , setWeather]= useState({date:'', sky:'', pty:'',});
   const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
-  
+
+  // 게시판
+  const { data: boardListData=[], loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
+  const filteredBoard = userData && boardListData && boardListData.length > 0 ? boardListData
+    .filter(board => board.user_id === userData.user_id)
+    .filter(board => board.step === 0)
+    .slice(0, 5) : [];
+
+  // 그룹
+  const { data: myGroupListData = [], loading: loadingMyGroupList, error: errorMyGroupList, refetch: refetchMyGroupList } = useLoading('http://localhost:8080/api/group/list/my', 'json');
+  const filteredGroup = myGroupListData && myGroupListData.length > 0 ? myGroupListData.slice(0, 5) : [];
+  const [selectedGroup, setSelectedGroup] = useState(null); 
+
   // todo 데이터 로드
   const { data: todoData, loading: loadingdata, error: errordata } = useLoading(`http://localhost:8080/api/user/todos/search?todo_date=${currentDate}`, 'json');
   
@@ -44,7 +56,7 @@ const Home = ()=>{
     .filter(item => item.star > 0)
     .sort((a, b) => b.star - a.star)
     .slice(0, 4):null; 
-    const modifiedLongData = longData?longData
+  const modifiedLongData = longData?longData
     .filter(item => item.star > 0) 
     .sort((a, b) => b.star - a.star)
     .slice(0, 4):null; 
@@ -53,6 +65,8 @@ const Home = ()=>{
   const heightLong = (modifiedLongData&&modifiedLongData.length!==0)?modifiedLongData.length * 50:50;
 
   const onClickSchedule=useMove('Schedule');
+  const onClickBoard=useMove('/boardlist');
+  const onClickGroup=useMove('/groupmain');
 
 
   useEffect(() => {
@@ -140,13 +154,35 @@ if (errorScheduler) {
               <div className='progressInfo'><p>장기적인 목표를 세워 보세요!</p></div>}
             </div>
           </div>
-          <div className='board backWhite'>게시판</div>
+          
+          <div className='board backWhite'>
+          <ToFullList URL={`/boardlist`}/>
+            <div className='board1'>
+          {filteredBoard&&filteredBoard.length!==0?(
+              filteredBoard.map((board, index) => (<BoardItem key={index} board={board}/>))
+          ):(
+            <div className='progressInfo'>게시글을 작성해보세요!</div>
+          )}
+           </div>
+          </div>
         </div>
         
         <div className='homeForthMiddle'>
-          <div className='studyGroup backWhite'>내 스터디 그룹</div>
+          <div className='studyGroup backWhite'>
+          <ToFullList URL={`/groupmain`}/>
+          <div className='studyGroup1'>
+          {filteredGroup&&filteredGroup.length!==0?(
+              filteredGroup.map((group, index) => (<GroupList key={index} group={group} onClick={() => setSelectedGroup(group)}/>))
+          ):(
+            <div className='progressInfo'>내 목표에 맞는 그룹에 가입해보세요!</div>
+          )}
+          </div>
+          </div>
         </div>
       </div>
+
+       {/* 모달 표시 */}
+       {selectedGroup && <Modal group={selectedGroup} onClose={() => setSelectedGroup(null)} />}
     </div>
   );
 };

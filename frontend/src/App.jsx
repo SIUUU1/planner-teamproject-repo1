@@ -32,6 +32,7 @@ import NotAuthorized from './pages/NotAuthorized';
 import Welcome from './pages/Welcome';
 import PaymentForm from './pay/PaymentForm';
 import StudyGroupEditor from './studygroup/StudyGroupEditor';
+import GroupOne from './studygroup/GroupOne';
 
 function App() {
   
@@ -71,6 +72,7 @@ function App() {
           <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
           <Route path='/payForm' element={<PaymentForm/>}/>
+          <Route path='/groupone/:id' element={<GroupOne/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>
