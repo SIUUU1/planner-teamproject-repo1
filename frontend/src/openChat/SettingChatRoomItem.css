@@ -1,0 +1,17 @@
+.settingChatRoomItemHeader{
+  display: flex;
+}
+.settingChatRoomItemHeader h1{
+  margin-left: 20px;
+}
+.settingChatRoomItemInput input{
+  width: 93%;
+}
+.settingChatRoomItemBtn{
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+.settingChatRoomItemBtn button{
+  margin-left: 10px;
+}

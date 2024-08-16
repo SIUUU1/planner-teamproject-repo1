@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import { useState } from "react";
 import SettingChatRoom from "./SettingChatRoom";
 import useSendPost from '../util/useSendPost';
+import './SettingChatRoomItem.css';
 const SettingChatRoomItem=({room})=>{
   const [toList,setToList]=useState(false);
   const [roomName, setRoomName] = useState(room.room_name);
@@ -42,21 +43,28 @@ const SettingChatRoomItem=({room})=>{
   }
   return(
     <div className="SettingChatRoomItem">
-      <Button text={<FontAwesomeIcon icon={faSquareCaretLeft} />} onClick={() => { setToList(true) }} />
-      <input 
-        type="text" 
-        onChange={(e) => setRoomName(e.target.value)} 
-        value={roomName}
-        placeholder="Room Name" 
-      />
-      <input 
-        type="text" 
-        onChange={(e) => setRoomInfo(e.target.value)} 
-        value={roomInfo}
-        placeholder="Room Info" 
-      />
-      <button onClick={handlUpdateRoom}>수정</button>
-      <button onClick={handlDeleteRoom}>삭제</button>
+      <div className="settingChatRoomItemHeader">
+        <Button text={<FontAwesomeIcon icon={faSquareCaretLeft} />} onClick={() => { setToList(true) }} />
+        <h1>채팅방 설정</h1>
+      </div>
+      <div className="settingChatRoomItemInput">
+        <input 
+          type="text" 
+          onChange={(e) => setRoomName(e.target.value)} 
+          value={roomName}
+          placeholder="Room Name" 
+        />
+        <input 
+          type="text" 
+          onChange={(e) => setRoomInfo(e.target.value)} 
+          value={roomInfo}
+          placeholder="Room Info" 
+        />
+      </div>
+      <div className="settingChatRoomItemBtn">
+        <button onClick={handlDeleteRoom}>삭제</button>
+        <button onClick={handlUpdateRoom}>수정</button>
+      </div>
     </div>
   )
 }

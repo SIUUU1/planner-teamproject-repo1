@@ -36,7 +36,7 @@ const CreateRoom = () => {
       />
       <button onClick={handleCreateRoom}>Create Room</button>
       {roomUrl && <p>정상적으로 방이 생성되었습니다!</p>}
-      {roomUrl && <p>Room URL: {roomUrl}</p>}
+      {/* {roomUrl && <p>Room URL: {roomUrl}</p>} */}
     </div>
   );
 };

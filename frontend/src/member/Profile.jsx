@@ -134,8 +134,8 @@ const handleImageChange = (e) => {
 
   return (
     <div className="profile">
-      <div className="profileContainer">
-        <h1>My Page</h1>
+      <div className="profileContainer backWhite">
+        <h1>MY PAGE</h1>
         <div className="profileContent">
           <img src={selectedImage} className="profileAvatar" onClick={() => document.getElementById('fileInput').click()} />
           <input type="file" id="fileInput" style={{ display: 'none' }} onChange={handleImageChange} ref={img} accept="image/*"/>

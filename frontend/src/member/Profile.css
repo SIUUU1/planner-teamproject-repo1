@@ -1,15 +1,13 @@
-.profile {
-  padding-top: 60px; /* 헤더 높이만큼 패딩 추가 */
-}
-
 .profileContainer {
+  width: 70%;
   padding: 20px;
   font-family: Arial, sans-serif;
+  margin: 30px auto 110px;
+  border-radius: 10px;
 }
 
 .profileContainer h1 {
   text-align: center;
-  color: #ff69b4;
   margin-bottom: 20px;
 }
 

@@ -104,8 +104,10 @@ const OpenChat = ({ room }) => {
 
   return (
     <div className="chatContainer">
-      <Button text={<FontAwesomeIcon icon={faSquareCaretLeft} />} onClick={() => { setToChatRoom(true) }} />
-      <h1>{room.room_name}</h1>
+      <div className='chatHeader'>
+        <Button text={<FontAwesomeIcon icon={faSquareCaretLeft} />} onClick={() => { setToChatRoom(true) }} />
+        <h1>{room.room_name}</h1>
+      </div>
       <div className="chatWindow">
         {messages.map((msg, index) => (
           <div key={index} className="chatMessage">

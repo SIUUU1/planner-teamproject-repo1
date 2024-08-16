@@ -1,7 +1,7 @@
 .qnaCustomerSupport {
-  padding: 20px 50px;
+  padding: 20px 60px;
   font-family: Arial, sans-serif;
-  width: 50%; /* 내용이 중앙에 정렬되도록 너비 설정 */
+  width: 70%; /* 내용이 중앙에 정렬되도록 너비 설정 */
   margin: 20px auto 70px auto;
   min-height: 650px;
 }

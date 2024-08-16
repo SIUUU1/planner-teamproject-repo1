@@ -4,6 +4,12 @@
   height: 100%; /* Take up full height of the parent container */
   width: 100%;
 }
+.chatHeader{
+  display: flex;
+}
+.chatHeader h1{
+  margin-left: 20px;
+}
 
 .chatWindow {
   flex: 1;
