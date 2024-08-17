@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.ThemeMapper">
+<select id="getAllThemes" resultType="com.zeus.backend.domain.Theme">
+        SELECT * FROM themes
+    </select>
+
+    <select id="getThemeByNo" parameterType="long" resultType="com.zeus.backend.domain.Theme">
+        SELECT * FROM themes WHERE theme_no = #{theme_no}
+    </select>
+
+    <insert id="saveTheme" parameterType="com.zeus.backend.domain.Theme">
+        INSERT INTO themes (theme_name, theme_main, theme_dark, theme_right, theme_btn_dark, theme_btn_right)
+        VALUES (#{theme_name}, #{theme_main}, #{theme_dark}, #{theme_right}, #{theme_btn_dark}, #{theme_btn_right})
+    </insert>
+
+    <update id="updateTheme" parameterType="com.zeus.backend.domain.Theme">
+        UPDATE themes
+        SET theme_name = #{theme_name},
+            theme_main = #{theme_main},
+            theme_dark = #{theme_dark},
+            theme_right = #{theme_right},
+            theme_btn_dark = #{theme_btn_dark},
+            theme_btn_right = #{theme_btn_right}
+        WHERE theme_no = #{theme_no}
+    </update>
+
+    <delete id="deleteTheme" parameterType="long">
+        DELETE FROM themes WHERE theme_no = #{theme_no}
+    </delete>
+
+</mapper>
