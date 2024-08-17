@@ -5,16 +5,17 @@ import Attainment from '../attainment/Attainment';
 import ToFullList from '../components/ToFullList';
 
 const themes = [
-  { name: 'Theme 1', gradient: 'linear-gradient(135deg, #f79d00, #64f38c)' },
-  { name: 'Theme 2', gradient: 'linear-gradient(135deg, #BE93C5, #7BC6CC)' },
-  { name: 'Theme 3', gradient: 'linear-gradient(135deg, #A1FFCE, #FAFFD1)' },
-  { name: 'Theme 4', gradient: 'linear-gradient(135deg, #ef32d9, #89fffd)' },
-  { name: 'Theme 5', gradient: 'linear-gradient(135deg, #a80077, #66ff00)' },
-  { name: 'Theme 6', gradient: 'linear-gradient(135deg, #2980B9, #2980B9,#FFFFFF )' },
-  { name: 'Theme 7', gradient: 'linear-gradient(135deg, #12c2e9,#c471ed,#F64F59 )' },
-  { name: 'Theme 8', gradient: 'linear-gradient(135deg, #FEAC5E,#C779D0,#4bc0c8 )' },
-  { name: 'Theme 9', gradient: 'linear-gradient(135deg, #5433FF,#20BDFF,#a6Fecb )' },
-  { name: 'Theme 10', gradient: 'linear-gradient(135deg, #C6FFDD,#FBD786,#f7797d )' },  
+  { name: 'Theme 1', theme_main: 'linear-gradient(135deg, #f79d00, #64f38c)' },
+  { name: 'Theme 2', theme_main: 'linear-gradient(135deg, #BE93C5, #7BC6CC)' },
+  { name: 'Theme 3', theme_main: 'linear-gradient(135deg, #A1FFCE, #FAFFD1)' },
+  { name: 'Theme 4', theme_main: 'linear-gradient(135deg, #ef32d9, #89fffd)' },
+  { name: 'Theme 5', theme_main: 'linear-gradient(135deg, #a80077, #66ff00)' },
+  { name: 'Theme 6', theme_main: 'linear-gradient(135deg, #2980B9, #2980B9,#FFFFFF )' },
+  { name: 'Theme 7', theme_main: 'linear-gradient(135deg, #12c2e9,#c471ed,#F64F59 )' },
+  { name: 'Theme 8', theme_main: 'linear-gradient(135deg, #FEAC5E,#C779D0,#4bc0c8 )' },
+  { name: 'Theme 9', theme_main: 'linear-gradient(135deg, #5433FF,#20BDFF,#a6Fecb )' },
+  { name: 'Theme 10', theme_main: 'linear-gradient(135deg, #C6FFDD,#FBD786,#f7797d )' },  
+  { name: 'Theme 10', theme_main: 'linear-gradient(135deg, #C6FFDD,#FBD786,#f7797d )' },  
 ];
 
 const ThemeChange = () => {
@@ -25,12 +26,12 @@ const ThemeChange = () => {
   };
 
   return (
-    <div className="theme-change" style={{ background: currentTheme.gradient }}>
+    <div className="theme-change" style={{ background: currentTheme.theme_main }}>
       <div className="theme-selector">
         {themes.map((theme, index) => (
           <button
             key={index}
-            style={{ background: theme.gradient }}
+            style={{ background: theme.theme_main }}
             onClick={() => selectTheme(theme)}
             aria-label={`Change theme to ${theme.name}`}
           />
