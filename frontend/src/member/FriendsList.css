@@ -147,6 +147,7 @@
   justify-content: space-between;
   align-items: center;
   margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 .friendsList .friendInfo button {
