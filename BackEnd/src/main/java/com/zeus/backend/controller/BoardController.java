@@ -145,6 +145,29 @@ public class BoardController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updateComment Board");
 		}
 	}
+	// 게시판 댓글삭제
+	@Transactional
+	@PostMapping("/delete/comment")
+	public ResponseEntity<?> deleteComment(@RequestBody Map<String, Object> payload, HttpServletRequest request)
+			throws Exception {
+		log.info("deleteComment payload.toString()=" + payload.toString());
+		String noString = String.valueOf(payload.get("no"));
+		int no;
+		try {
+			no = Integer.parseInt(noString);
+		} catch (NumberFormatException e) {
+			log.error("Invalid 'no' format: " + noString, e);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid 'no' format.");
+		}
+		
+		try {
+			boardService.delete(no);
+			return ResponseEntity.ok("board comment remove successfully");
+		} catch (Exception e) {
+			log.error("Error removing board", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing board comment");
+		}
+	}
 
 	// 게시판 수정
 	@Transactional

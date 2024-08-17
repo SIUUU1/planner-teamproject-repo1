@@ -33,6 +33,9 @@
 .attachedFiles span{
   flex-grow: 1;
 }
+.attachedFiles .file{
+  cursor: pointer;
+}
 
 .boardComment{
   border: 1.5px solid rgb(245, 245, 245);

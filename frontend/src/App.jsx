@@ -33,6 +33,7 @@ import Welcome from './pages/Welcome';
 import PaymentForm from './pay/PaymentForm';
 import StudyGroupEditor from './studygroup/StudyGroupEditor';
 import GroupOne from './studygroup/GroupOne';
+import PasswordReset from './member/PasswordReset';
 
 function App() {
   
@@ -73,6 +74,7 @@ function App() {
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
           <Route path='/payForm' element={<PaymentForm/>}/>
           <Route path='/groupone/:id' element={<GroupOne/>}/>
+          <Route path='/passReset' element={<PasswordReset/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>

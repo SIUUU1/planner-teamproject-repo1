@@ -82,7 +82,7 @@ const BoardDetail = () => {
   const onEdit = () => {
     navigate(`/boardwrite/${board.no}`);
   }
-
+  //게시판 삭제
   const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/board/delete', {}, 'json');
 
   const onDelete = async () => {
@@ -98,6 +98,7 @@ const BoardDetail = () => {
     }
   };
 
+  // 댓글 생성
   const { postRequest: submitCommentRequest } = useSendPost('http://localhost:8080/api/board/insert/comment', {}, 'json', true);
 
   const submitComment = async () => {
@@ -126,6 +127,7 @@ const BoardDetail = () => {
     setEditedContent(e.target.value);
   };
   
+  // 댓글 수정
   const { postRequest: modifyCommentRequest } = useSendPost('http://localhost:8080/api/board/update/comment', {}, 'json', true);
   
   const handleConfirmEdit = async (comment) => {
@@ -145,6 +147,25 @@ const BoardDetail = () => {
     }
   };
 
+  //댓글 삭제
+  const { postRequest: deleteCommentRequest } = useSendPost('http://localhost:8080/api/board/delete/comment', {}, 'json');
+
+  const DeleteComment = async (comment) => {
+    try {
+      if (!comment.no) {
+        alert('삭제할 댓글 번호가 없습니다.');
+        return;
+    }
+      await deleteCommentRequest({no : comment.no});
+      alert('댓글이 삭제되었습니다.');
+      refetchBoardListData();
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+      alert('댓글 삭제에 실패했습니다.');
+    }
+  };
+
+  // 파일 다운로드
   const handleFileDownload = async (filename) => {
     try {
       const encodedFilename = encodeURIComponent(filename);
@@ -200,7 +221,7 @@ const BoardDetail = () => {
         </div>
         <div className="attachedFiles">
           {board.filename && board.filename.length > 0 ? (
-            <span onClick={() => handleFileDownload(board.filename)}>{board.filename}</span>
+            <span className='file' onClick={() => handleFileDownload(board.filename)}>{board.filename}</span>
           ) : (<span>첨부파일이 없습니다.</span>)}
         </div>
 
@@ -218,7 +239,10 @@ const BoardDetail = () => {
                   <ProfileLink user_id={com.user_id} user_nickname={com.user_nickname}></ProfileLink>
                   <p className='boardCommentContent'>: {com.content}</p> <p>({formatDate(comment.reg_date)})</p>
                   {com.user_id === userData.user_id && (
+                    <>
                     <Button text={'수정'} onClick={() => handleEditClick(com)} />
+                    <Button text={'삭제'} onClick={() => DeleteComment(com)} />
+                    </>
                   )}
                 </div>
               )}

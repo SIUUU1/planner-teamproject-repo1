@@ -33,6 +33,8 @@ function Login() {
     });
   };
 
+  
+
   return (
     <div className="login">
       <div className="loginBox">
@@ -48,6 +50,7 @@ function Login() {
               <input type="text" ref={user_id} placeholder="Id" />
               <input type="password" ref={password} placeholder="Password" />
               <button className="submit" type="button" onClick={login}>로그인</button>
+              <button className="submit" type="button" onClick={login}>아이디 / 패스워드 찾기</button>
               <Link to="/joinForm" className="signupButton">회원가입</Link>
             </form>
             <div className='snsLogin'>
