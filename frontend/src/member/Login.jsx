@@ -10,6 +10,14 @@ function Login() {
   const onMove = useMove('/');
 
   const login = ()=>{
+    if (!user_id.current.value) {
+      alert('아이디를 입력하세요.');
+      return;
+    }
+    if (!password.current.value ) {
+      alert('패스워드를 입력하세요.');
+      return;
+    }
     const data = {
       user_id : user_id.current.value,
       password: password.current.value,
@@ -33,7 +41,8 @@ function Login() {
     });
   };
 
-  
+// 아이디비밀번호 찾기 페이지 이동
+const movePassReset= useMove('/passReset/id')
 
   return (
     <div className="login">
@@ -50,7 +59,7 @@ function Login() {
               <input type="text" ref={user_id} placeholder="Id" />
               <input type="password" ref={password} placeholder="Password" />
               <button className="submit" type="button" onClick={login}>로그인</button>
-              <button className="submit" type="button" onClick={login}>아이디 / 패스워드 찾기</button>
+              <button className="submit" type="button" onClick={movePassReset}>아이디 / 패스워드 찾기</button>
               <Link to="/joinForm" className="signupButton">회원가입</Link>
             </form>
             <div className='snsLogin'>

@@ -42,16 +42,16 @@
 		SELECT count(*) FROM users WHERE user_id = #{user_id}
 	</select>
 	<!-- 복구 이메일 존재 여부 조회 -->
-	<select id="checkRestoreEmail" resultType="int">
-		SELECT count(*) FROM users WHERE restore_email = #{restore_email}
+	<select id="checkRestoreEmail" resultType="String">
+		SELECT user_id FROM users WHERE user_email = #{user_email} and user_name = #{user_name}
 	</select>
 	<!-- 복구 이메일로 아이디 조회 -->
 	<select id="findIdByEmail" resultType="String">
-		SELECT user_id FROM users WHERE restore_email = #{restore_email}
+		SELECT user_id FROM users WHERE user_email = #{user_email}
 	</select>
 	<!-- 이메일 인증후 패스워드 재설정 -->
 	<update id="updatePw">
-		UPDATE users SET password = #{password} WHERE user_no = #{user_no}
+		UPDATE users SET password = #{password} WHERE user_id = #{user_id}
 	</update>
 	<!-- 파일이름 찾기 -->
 	<select id="filename" resultType="String">

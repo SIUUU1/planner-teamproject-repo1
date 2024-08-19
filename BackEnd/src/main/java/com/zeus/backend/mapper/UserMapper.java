@@ -34,7 +34,7 @@ public interface UserMapper {
 	public int checkId(String user_id) throws Exception;
 
 	// 복구 이메일 조회
-	public int checkRestoreEmail(String restore_email) throws Exception;
+	public String checkRestoreEmail(Map<String, Object> map) throws Exception;
 
 	// 복구 이메일 인증후 패스워드 재설정
 	public void updatePw(User user) throws Exception;

@@ -62,6 +62,12 @@
 .profile button:hover {
   background-color: #ff1493;
 }
+.profile .profileBtn{
+  margin-top: 20px;
+}
+.profile .profileBtn button {
+  margin-right: 5px;
+}
 
 .profile .errorMmessage {
   color: red;
