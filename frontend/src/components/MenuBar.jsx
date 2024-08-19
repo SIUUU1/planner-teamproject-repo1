@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './MenuBar.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faPaintRoller, faUserGroup, faBell, faChartSimple, faCircleInfo, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faPaintRoller, faUserGroup, faBell, faChartSimple, faCircleInfo, faLock,faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import useLoading from "../util/useLoading";
 
 const MenuBar = ({ isOpen, onClose }) => {
@@ -65,6 +65,11 @@ const MenuBar = ({ isOpen, onClose }) => {
         <div className="menuItem">
           <button className="menuItemLink" onClick={() => onMove('/friends')}>
             <FontAwesomeIcon icon={faUserGroup} /> <span>친구목록</span>
+          </button>
+        </div>
+        <div className="menuItem">
+          <button className="menuItemLink" onClick={() => onMove('/msglist')}>
+            <FontAwesomeIcon icon={faPaperPlane} /> <span>쪽지보기</span>
           </button>
         </div>
         <div className="menuItem">

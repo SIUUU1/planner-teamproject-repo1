@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './BoardDetail.css';
 import useSendPost from '../util/useSendPost';
@@ -49,6 +49,8 @@ const BoardDetail = () => {
   const [comment, setComment] = useState({initComment});
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedContent, setEditedContent] = useState('');
+
+  const [replyingCommentId, setReplyingCommentId] = useState(null); // 대댓글 입력 상태
   
   useEffect(() => {
     if (boardData) {
@@ -121,6 +123,42 @@ const BoardDetail = () => {
       ...prevComment,
       content: e.target.value,
     }));
+  };
+
+  //대댓글
+  const handleReplyClick = (comment) => {
+    setReplyingCommentId(replyingCommentId === comment.no ? null : comment.no);
+  };
+
+  const replyContent =useRef();
+
+  const submitReply = async (parentComment) => {
+    if(!replyContent.current.value){
+      alert('댓글을 작성하세요.');
+      return;
+    }
+    try {
+      const replyComment = {
+        ...comment,
+        subject: parentComment.subject,
+        content: replyContent.current.value,
+        ref: parentComment.ref,
+        step: parentComment.step,
+        depth: parentComment.depth,
+      };
+      const formData = new FormData();
+      for (const key in replyComment) {
+        formData.append(key, replyComment[key]);
+      }
+      await submitCommentRequest(formData);
+      setReplyingCommentId(null);
+      //초기화
+      replyContent.current.value='';
+      refetchBoardListData();
+    } catch(error){
+      console.error('대댓글 추가 실패:', error);
+      alert('대댓글 추가에 실패했습니다.');
+    }
   };
 
   const handleEditChange = (e) => {
@@ -238,11 +276,19 @@ const BoardDetail = () => {
                 <div className='boardCommentItem'>
                   <ProfileLink user_id={com.user_id} user_nickname={com.user_nickname}></ProfileLink>
                   <p className='boardCommentContent'>: {com.content}</p> <p>({formatDate(comment.reg_date)})</p>
+                  <Button text={'댓글'} onClick={() => handleReplyClick(com)} />
                   {com.user_id === userData.user_id && (
                     <>
                     <Button text={'수정'} onClick={() => handleEditClick(com)} />
                     <Button text={'삭제'} onClick={() => DeleteComment(com)} />
                     </>
+                  )}
+                
+                   {replyingCommentId === com.no && (
+                    <div className="replyInput">
+                      <textarea ref={replyContent} rows="4"></textarea>
+                      <Button onClick={() => submitReply(com)} text={'추가'} className={'replyButton'} />
+                    </div>
                   )}
                 </div>
               )}
