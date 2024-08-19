@@ -7,6 +7,7 @@ import MenuBar from './MenuBar';
 import useMove from "../util/useMove";
 import useLoading from "../util/useLoading";
 import MessageForm from '../message/MessageForm';
+import NotificationList from "../notification/NotificationList";
 
 const Header = () => {
   
@@ -53,7 +54,7 @@ const Header = () => {
     if (isMenuOpen && !event.target.closest('.menuBar') && !event.target.closest('.fa-bars')) {
       setIsMenuOpen(false);
     }
-    if (showNotifications && !event.target.closest('.notificationsContainer') && !event.target.closest('.fa-bell')) {
+    if (showNotifications && !event.target.closest('.notificationList') && !event.target.closest('.fa-bell')) {
       setShowNotifications(false);
     }
     if (showMessageForm && !event.target.closest('.messageForm') && !event.target.closest('.fa-paper-plane')) {
@@ -90,6 +91,7 @@ const Header = () => {
       </div>
       {isMenuOpen && <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />}
       {showMessageForm && <MessageForm isOpen={showMessageForm} onClose={()=>{setShowMessageForm(false)}}/>}
+      {showNotifications && <NotificationList isOpen={showNotifications} onClose={()=>{setShowNotifications(false)}}/>}
     </header>
   );
 };

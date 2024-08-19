@@ -34,6 +34,7 @@ import PaymentForm from './pay/PaymentForm';
 import StudyGroupEditor from './studygroup/StudyGroupEditor';
 import GroupOne from './studygroup/GroupOne';
 import PasswordReset from './member/PasswordReset';
+import MessageList from './message/MessageList';
 
 function App() {
   
@@ -75,6 +76,7 @@ function App() {
           <Route path='/payForm' element={<PaymentForm/>}/>
           <Route path='/groupone/:id' element={<GroupOne/>}/>
           <Route path='/passReset/:type' element={<PasswordReset/>}/>
+          <Route path='/msglist' element={<MessageList/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>

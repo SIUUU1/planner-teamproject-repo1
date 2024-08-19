@@ -54,3 +54,44 @@
 .messageFormBody button:hover {
   background-color: #45a049;
 }
+
+.messageFormBody .customSelectContainer {
+  position: relative;
+  width: 100%;
+}
+
+.messageFormBody .customSelectHeader {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: white;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.messageFormBody .customSelectList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  border: 1px solid #ccc;
+  background-color: white;
+  overflow-y: auto;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.messageFormBody .customSelectList.hidden {
+  display: none;
+}
+
+.messageFormBody .customSelectListItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.messageFormBody .customSelectListItem:hover {
+  background-color: #f0f0f0;
+}
