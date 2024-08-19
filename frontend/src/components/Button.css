@@ -6,12 +6,20 @@
   padding: 10px 5px;
   font-size: 18px;
   white-space: nowrap;
-  }
-  .button_POSITIVE {
+  color: var(--text-color);
+}
+
+.button_POSITIVE {
   background-color: rgb(100, 201, 100);
   color: white;
-  }
-  .button_NEGATIVE {
+}
+
+.button_NEGATIVE {
   background-color: rgb(253, 86, 95);
   color: white;
-  }
+}
+
+.button:hover {
+  color: var(--hover-color);
+  /* 호버 시 텍스트 색상 변경 */
+}
