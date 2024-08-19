@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserService {
 
 	// 복구 이메일 조회
 	@Override
-	public int checkRestoreEmail(String restore_email) throws Exception {
-		return mapper.checkRestoreEmail(restore_email);
+	public String checkRestoreEmail(Map<String, Object> map) throws Exception {
+		return mapper.checkRestoreEmail(map);
 	}
 
 	// 이메일 인증후 패스워드 재설정
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void setupAdmin(User user) throws Exception {
 		System.out.println("setupAdminr" + user);
-		
+
 		// 비밀번호 암호화 처리 후 등록
 		String rawPassword = user.getPassword();
 		user.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
 	// 검색
 	@Override
-	public List<User> search(String searchkey, String search,String currentUserId) throws Exception {
+	public List<User> search(String searchkey, String search, String currentUserId) throws Exception {
 		if (searchkey.equals("all")) {
 			search = "%" + search + "%";
 			return mapper.searchByAll(search, currentUserId);

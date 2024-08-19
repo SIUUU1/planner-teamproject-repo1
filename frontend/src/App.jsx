@@ -74,7 +74,7 @@ function App() {
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
           <Route path='/payForm' element={<PaymentForm/>}/>
           <Route path='/groupone/:id' element={<GroupOne/>}/>
-          <Route path='/passReset' element={<PasswordReset/>}/>
+          <Route path='/passReset/:type' element={<PasswordReset/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>

@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,9 +39,6 @@ public class UserController {
 	@Autowired
 	private FriendService friendService;
 
-	// 스프링 시큐리티의 비밀번호 암호처리기
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
 	// 사용자 정보 가져오기
 	@GetMapping("/userInfo")
@@ -60,7 +56,7 @@ public class UserController {
 			return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
 		}
 	}
-
+	
 	// 목록 페이지
 	@GetMapping("/list")
 	public ResponseEntity<List<User>> getUserList() {

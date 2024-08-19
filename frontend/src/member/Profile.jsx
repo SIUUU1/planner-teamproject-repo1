@@ -66,7 +66,7 @@ const Profile = () => {
 
   // user delete 
   const deleteRequest = useSendPost('http://localhost:8080/api/user/delete', {}, 'json');
-  const moveWelcom= useMove('../welcome')
+  const moveWelcome= useMove('../welcome')
   // 회원 탈퇴
   const onDelete = async () => {
     if(window.confirm('정말로 탈퇴하시겠습니까?')){
@@ -75,7 +75,7 @@ const Profile = () => {
       try {
         await deleteRequest.postRequest({user_id});
         alert('탈퇴 성공');
-        moveWelcom();
+        moveWelcome();
       } catch (error) {
         alert('탈퇴 실패');
         console.error("Error deleting User:", error);
@@ -132,6 +132,9 @@ const handleImageChange = (e) => {
   }
 };
 
+// 패스워드 재설정 페이지 이동
+const movePassReset= useMove('/passReset/pw')
+
   return (
     <div className="profile">
       <div className="profileContainer backWhite">
@@ -161,6 +164,7 @@ const handleImageChange = (e) => {
                 <td>
                   {profiles.user_tel}
                 </td>
+                <td></td>
               </tr>
               <tr>
                 <td>이메일</td>
@@ -181,8 +185,8 @@ const handleImageChange = (e) => {
               </tr>
             </tbody>
           </table>
-          <div>
-            <Button text={'패스워드 재설정'}/>
+          <div className='profileBtn'>
+            <Button text={'패스워드 재설정'} onClick={()=>{movePassReset();}}/>
             <Button text={'회원탈퇴'} onClick={onDelete}/>
           </div>
         </div>
