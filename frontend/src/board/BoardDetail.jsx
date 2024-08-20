@@ -140,6 +140,7 @@ const BoardDetail = () => {
     try {
       const replyComment = {
         ...comment,
+        no: parentComment.no,
         subject: parentComment.subject,
         content: replyContent.current.value,
         ref: parentComment.ref,
@@ -273,7 +274,11 @@ const BoardDetail = () => {
                   <Button text={'확인'} onClick={() => handleConfirmEdit(com)} />
                 </div>
               ) : ( 
+                <>
                 <div className='boardCommentItem'>
+                  {/* 대댓글 표시 */}
+                   {Array.from({ length: com.depth-1 }, (_, index) => (<span key={index} style={{ marginLeft: '5px' }}>&ensp;</span>
+                  ))}
                   <ProfileLink user_id={com.user_id} user_nickname={com.user_nickname}></ProfileLink>
                   <p className='boardCommentContent'>: {com.content}</p> <p>({formatDate(comment.reg_date)})</p>
                   <Button text={'댓글'} onClick={() => handleReplyClick(com)} />
@@ -283,14 +288,15 @@ const BoardDetail = () => {
                     <Button text={'삭제'} onClick={() => DeleteComment(com)} />
                     </>
                   )}
-                
-                   {replyingCommentId === com.no && (
-                    <div className="replyInput">
-                      <textarea ref={replyContent} rows="4"></textarea>
-                      <Button onClick={() => submitReply(com)} text={'추가'} className={'replyButton'} />
-                    </div>
-                  )}
+                   
                 </div>
+                {replyingCommentId === com.no && (
+                  <div className="replyInput">
+                    <textarea ref={replyContent} rows="4"></textarea>
+                    <Button onClick={() => submitReply(com)} text={'추가'} className={'replyButton'} />
+                  </div>
+                )}
+                </>
               )}
             </div>
           ))}

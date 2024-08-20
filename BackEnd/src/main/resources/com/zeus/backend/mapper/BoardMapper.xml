@@ -31,7 +31,7 @@
 	</select>
 	<!-- 모든 게시물 조회 -->
 	<select id="list" resultType="com.zeus.backend.domain.Board">
-		SELECT * FROM BOARD
+		SELECT * FROM BOARD ORDER BY ref desc, step asc
 	</select>
 	<!-- 조회수 증가 -->
 	<update id="incrementReadCount">

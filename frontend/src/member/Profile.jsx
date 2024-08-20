@@ -186,7 +186,9 @@ const movePassReset= useMove('/passReset/pw')
             </tbody>
           </table>
           <div className='profileBtn'>
+            {!shouldHideEmailChangeButton() &&
             <Button text={'패스워드 재설정'} onClick={()=>{movePassReset();}}/>
+            }
             <Button text={'회원탈퇴'} onClick={onDelete}/>
           </div>
         </div>

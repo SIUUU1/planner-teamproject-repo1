@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.User;
 import com.zeus.backend.security.CodeGenerator;
+import com.zeus.backend.security.SessionAttributeWithExpiry;
 import com.zeus.backend.security.domain.Response;
 import com.zeus.backend.service.EmailService;
 import com.zeus.backend.service.UserService;
@@ -104,44 +104,69 @@ public class AuthController {
 		String verificationCode = CodeGenerator.generateCode();
 		String user_email = String.valueOf(map.get("user_email"));
 
-		// 세션에 인증 코드와 이메일 저장
-		session.setAttribute("verificationCode", verificationCode);
-		session.setAttribute("user_email", user_email);
+		// 만료 시간 설정 (10분 = 600000 밀리초)
+		long expiryDuration = 600000; // 10분
 
-		// 인증 코드 이메일 전송
-		String subject = "Your Verification Code";
-		String text = "Your verification code is: " + verificationCode;
+		// 세션에 인증 코드와 이메일을 만료 시간을 포함하여 저장
+		session.setAttribute("verificationCode", new SessionAttributeWithExpiry(verificationCode, expiryDuration));
+		session.setAttribute("user_email", new SessionAttributeWithExpiry(user_email, expiryDuration));
+
+		// 이메일 제목 작성
+		String subject = "[WePlan] 보안 인증 코드";
+
+		// 이메일 내용 작성
+		StringBuilder text = new StringBuilder();
+		text.append("안녕하세요, WePlan 사용자님.\n\n").append("WePlan 계정의 보안을 위해 아래의 인증 코드를 입력하여 본인 확인을 완료해 주세요.\n\n")
+				.append("인증 코드: ").append(verificationCode).append("\n\n")
+				.append("이 코드는 10분 동안만 유효합니다. 시간이 지나면 코드가 만료되며, 다시 요청해 주셔야 합니다.\n\n")
+				.append("본인이 요청한 것이 아닌 경우, 즉시 WePlan 고객 지원팀에 문의해 주시기 바랍니다.\n\n").append("감사합니다.\n\n")
+				.append("WePlan 팀 드림\n\n").append("---------------------------------------------\n").append("문의사항:\n")
+				.append("- 고객센터: support@weplan.com\n").append("- 전화: 1234-5678\n")
+				.append("---------------------------------------------\n")
+				.append("추신: 만약 이 이메일이 스팸으로 잘못 분류된 경우, 수신함으로 이동시키고 WePlan 이메일을 신뢰할 수 있는 발신자로 지정해 주세요.");
+		System.out.println("verificationCode" + verificationCode);
 		try {
-			emailService.sendEmail(user_email, subject, text);
+			emailService.sendEmail(user_email, subject, text.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error emailing ");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending email.");
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("Verification code sent successfully");
+		return ResponseEntity.status(HttpStatus.OK).body("Verification code sent successfully.");
 	}
 
 	// 코드 확인
 	@PostMapping("/verifyCode")
 	public ResponseEntity<?> verifyCode(@RequestBody Map<String, Object> map, HttpSession session) {
-		String sessionCode = (String) session.getAttribute("verificationCode");
-		String sessionEmail = (String) session.getAttribute("user_email");
+		String inputCode = String.valueOf(map.get("code"));
 
-		if (sessionCode == null || sessionEmail == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No verification code found in session");
-		}
+		// 세션에서 인증 코드와 이메일 속성 가져오기
+		SessionAttributeWithExpiry sessionCodeWrapper = (SessionAttributeWithExpiry) session
+				.getAttribute("verificationCode");
+		SessionAttributeWithExpiry sessionEmailWrapper = (SessionAttributeWithExpiry) session
+				.getAttribute("user_email");
 
-		if (!sessionEmail.equals(String.valueOf(map.get("user_email")))) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email does not match");
-		}
-
-		if (sessionCode.equals(String.valueOf(map.get("code")))) {
+		if (sessionCodeWrapper == null || sessionCodeWrapper.isExpired() || sessionEmailWrapper == null
+				|| sessionEmailWrapper.isExpired()) {
+			// 세션에서 속성을 제거 (만료된 경우)
 			session.removeAttribute("verificationCode");
 			session.removeAttribute("user_email");
-			return ResponseEntity.status(HttpStatus.OK).body("Verification successful");
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid verification code");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드가 만료되었거나 유효하지 않습니다.");
 		}
+
+		String sessionCode = (String) sessionCodeWrapper.getValue();
+		String sessionEmail = (String) sessionEmailWrapper.getValue();
+
+		if (!inputCode.equals(sessionCode)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드가 일치하지 않습니다.");
+		}
+
+		// 인증이 성공적으로 완료된 경우 세션 속성 제거
+		session.removeAttribute("verificationCode");
+		session.removeAttribute("user_email");
+
+		// 인증 코드가 일치하고 만료되지 않음
+		return ResponseEntity.status(HttpStatus.OK).body("인증이 성공적으로 완료되었습니다.");
 	}
 
 	// 패스워드 재설정
