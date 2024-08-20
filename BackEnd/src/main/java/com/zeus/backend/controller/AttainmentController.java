@@ -1,6 +1,7 @@
 package com.zeus.backend.controller;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +96,23 @@ public class AttainmentController {
 		}
 		System.out.println("user.getUser_id()" + user.getUser_id());
 		List<Attainment> attainments = attainmentService.getAttainmentsByUserIdAndDate(user.getUser_id(),
+				attainmentDuration, selectDate);
+		System.out.println("attainments: "+attainments.toString());
+		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;
+	}
+	
+	@GetMapping("/searchUser")
+	public ResponseEntity<List<Attainment>> getAttainmentsByOtherUserIdAndDate(
+			@RequestParam("attainment_duration") String attainmentDuration,
+			@RequestParam("selectDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectDate, 
+			@RequestParam String user_id ) {
+		System.out.println("======================");
+		System.out.println("start get Attainments By Other UserId And Date");
+		System.out.println("attainmentDuration"+attainmentDuration);
+		System.out.println("selectDate"+selectDate);
+		System.out.println("user_id"+user_id);
+		
+		List<Attainment> attainments = attainmentService.getAttainmentsByUserIdAndDate(user_id,
 				attainmentDuration, selectDate);
 		System.out.println("attainments: "+attainments.toString());
 		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;

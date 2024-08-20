@@ -8,8 +8,10 @@ import useSendPost from '../util/useSendPost';
 import './Schedule.css';
 import dayjs from 'dayjs';
 import ScheduleItem from './ScheduleItem';
+import { useParams } from 'react-router-dom';
 
 const Schedule = () => {
+  const {user_id} = useParams();
   const [schedules, setSchedules] = useState([]);
   const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -20,7 +22,12 @@ const Schedule = () => {
   const [endHour, setEndHour] = useState(0);
   const [endMinute, setEndMinute] = useState(0);
   const [currentEditSchedule, setCurrentEditSchedule] = useState(null);
-  const { data, loading, refetch } = useLoading(`http://localhost:8080/api/user/schedule/search?reg_date=${date}`, 'json');
+  // user_id 유무에 따라 다른 URL을 설정
+  const apiUrl = user_id 
+  ? `http://localhost:8080/api/user/schedule/searchUser?reg_date=${date}&user_id=${user_id}`
+  : `http://localhost:8080/api/user/schedule/search?reg_date=${date}`;
+
+  const { data, loading, refetch } = useLoading(apiUrl, 'json');
   const { postRequest: createSchedule } = useSendPost('http://localhost:8080/api/user/schedule/register', {}, 'json');
   const { postRequest: updateSchedule } = useSendPost(`http://localhost:8080/api/user/schedule/update`, {}, 'json');
   const { postRequest: deleteSchedule } = useSendPost(`http://localhost:8080/api/user/schedule/delete`, {}, 'json');
@@ -156,12 +163,13 @@ const Schedule = () => {
           />
         </div>
         <div className="addButtonContainer">
-          <button onClick={() => setIsAddModalOpen(true)} className="addButton">일정 추가</button>
+          {!user_id&&<button onClick={() => setIsAddModalOpen(true)} className="addButton">일정 추가</button>}
         </div>
         <div className="scheduleList">
-          {schedules && Array.isArray(schedules) && schedules.map((schedule) => (
+          {schedules.map((schedule) => (
             <ScheduleItem  key={schedule.schedule_no} data={schedule} handleEditSchedule={handleEditSchedule} handleDeleteSchedule={handleDeleteSchedule} convertMinutesToTime={convertMinutesToTime}/>
           ))}
+          {((!schedules||(schedules&&Array.isArray(schedules)&&schedules.length==0)))&& <span>등록된 스케쥴이 없습니다</span>}
         </div>
 
         {isAddModalOpen && (
@@ -230,8 +238,9 @@ const Schedule = () => {
                   </select> 분
                 </div>
               </label>
-              <button onClick={handleUpdateSchedule}>수정</button>
-              <button onClick={resetForm}>취소</button>
+              {!user_id&&
+              <><button onClick={handleUpdateSchedule}>수정</button>
+              <button onClick={resetForm}>취소</button></>}
             </div>
           </div>
         )}

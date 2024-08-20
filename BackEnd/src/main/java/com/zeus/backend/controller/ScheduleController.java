@@ -37,30 +37,6 @@ public class ScheduleController {
 		return new ResponseEntity<>(schedules, HttpStatus.OK);
 	}
 
-//	// 특정 사용자에 대한 스케줄 조회
-//	@GetMapping("/{user_id}")
-//	public ResponseEntity<List<Schedule>> getSchedulesByUser(@PathVariable int user_id) {
-//		List<Schedule> schedules = scheduleService.getSchedulesByUser(user_id);
-//		return new ResponseEntity<>(schedules, HttpStatus.OK);
-//	}
-	// 특정 사용자에 대한 특정일 스케줄 조회
-//	@GetMapping("/search")
-//	public ResponseEntity<List<Schedule>> getSchedulesByUserAndDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
-//		System.out.println("============================");
-//		System.out.println("start getSchedulesByUserAndDate");
-//		
-//		User user = null;
-//		try {
-//			user = userServiceImpl.read();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (user == null) {
-//			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
-//		}
-//		List<Schedule> schedules = scheduleService.getSchedulesByUserAndDate(user.getUser_id(),reg_date);
-//		return new ResponseEntity<>(schedules, HttpStatus.OK); // 200 OK
-//	}
 	@GetMapping("/search")
 	public ResponseEntity<List<Schedule>> getSchedulesByUserAndDate(
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date) {
@@ -76,9 +52,17 @@ public class ScheduleController {
 			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
 		}
 		System.out.println("user.getUser_id()" + user.getUser_id());
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//		System.out.println("reg_date"+sdf);
 		List<Schedule> schedules = scheduleService.getSchedulesByUserAndDate(user.getUser_id(), reg_date);
+		return new ResponseEntity<>(schedules, HttpStatus.OK); // 200 OK
+	}
+	@GetMapping("/searchUser")
+	public ResponseEntity<List<Schedule>> getSchedulesByUserIdAndDate(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date reg_date, @RequestParam String user_id) {
+		System.out.println("============================");
+		System.out.println("start getSchedulesByUserIdAndDate");
+		System.out.println("user_id" + user_id);
+		System.out.println("reg_date" + reg_date);
+		List<Schedule> schedules = scheduleService.getSchedulesByUserAndDate(user_id, reg_date);
 		return new ResponseEntity<>(schedules, HttpStatus.OK); // 200 OK
 	}
 
@@ -124,9 +108,4 @@ public class ScheduleController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-//	@PutMapping
-//	public ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule) {
-//		scheduleService.updateSchedule(schedule);
-//		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//	}
 }

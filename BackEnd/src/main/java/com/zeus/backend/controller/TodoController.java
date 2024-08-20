@@ -186,6 +186,16 @@ public class TodoController {
 		List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), todo_date);
 		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
+	@GetMapping("/searchUser")
+	public ResponseEntity<List<Todo>> getTodosByUserIdAndDate(
+	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date todo_date, @RequestParam int user_no) {
+		System.out.println("=============================");
+		System.out.println("start getTodosByUserIdAndDate");
+		System.out.println("user_no:"+user_no);
+
+		List<Todo> todos = todoService.getTodosByUserAndDate(user_no, todo_date);
+		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
+	}
 
 	@GetMapping("/{todo_no}/comments")
 	public ResponseEntity<List<TodoComment>> getCommentsByTodoNo(@PathVariable Long todo_no) {

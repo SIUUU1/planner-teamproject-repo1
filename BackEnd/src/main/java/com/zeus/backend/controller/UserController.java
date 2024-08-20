@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,6 +216,24 @@ public class UserController {
 			
 		}
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("fail to setup admin because members' count is not 0");
+	}
+	
+	//id로 다른 유저의 정보 찾기
+	@GetMapping("/userInfo/{user_id}")
+	public ResponseEntity<?> getUserById(@PathVariable String user_id){
+		System.out.println("================================================");
+		System.out.println("getUserById start");
+		try {
+			User user = userService.getUserById(user_id);
+			if (user == null) {
+				return ResponseEntity.status(499).body("User not found");
+			}
+			System.out.println("userInfo user " + user);
+			return ResponseEntity.ok(user);
+		} catch (Exception e) {
+			log.error("Error fetching user information", e);
+			return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+		}
 	}
 
 }

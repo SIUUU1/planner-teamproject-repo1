@@ -4,6 +4,7 @@
   width: 60%;
   margin: 0 auto;
 }
+
 .schedule .dateDisplay {
   width: 90%;
   margin: 0 auto;
@@ -22,7 +23,9 @@
   cursor: pointer;
   font-size: 1rem;
 }
-
+.scheduleContent{
+  min-height: 650px;
+}
 .scheduleList {
   margin-top: 20px; /* 리스트와 헤더 간격 조정 */
   border-top: 1px solid #ddd;

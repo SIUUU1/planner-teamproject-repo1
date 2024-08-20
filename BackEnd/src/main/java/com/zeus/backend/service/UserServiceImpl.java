@@ -212,4 +212,11 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public User getUserById(String user_id) {
+		return mapper.getUserById(user_id);
+	}
+	
+	
+
 }

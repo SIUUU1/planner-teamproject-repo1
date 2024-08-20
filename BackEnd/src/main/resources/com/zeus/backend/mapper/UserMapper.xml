@@ -77,4 +77,8 @@
 		AND user_id != #{currentUserId} 
 		order by user_no desc
 	</select>
+		<!-- 사용자 아이디로 회원 정보 조회(타 유저 조회 시 사용)-->
+	<select id="getUserById" resultType="com.zeus.backend.domain.User">
+		SELECT user_no,user_id,user_nickname,image_url FROM users WHERE user_id = #{user_id} 
+	</select>
 </mapper>

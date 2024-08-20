@@ -55,4 +55,7 @@ public interface UserService {
 
 	// 검색
 	public List<User> search(String searchkey, String search, String currentUserId) throws Exception;
+
+	// 사용자 아이디로 회원 정보 조회(타 유저 정보 조회)
+	public User getUserById(String user_id);
 }
