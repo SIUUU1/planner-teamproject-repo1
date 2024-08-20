@@ -5,7 +5,7 @@ const ProfileLink = ({ user_nickname, user_id }) => {
 
   return (
     <div className="user_nickname">
-      <span onClick={openProfile(`/userHome/${user_id}`)}>{user_nickname}</span>
+      <span onClick={openProfile(`/user/${user_id}`)}>{user_nickname}</span>
     </div>
   );
 };

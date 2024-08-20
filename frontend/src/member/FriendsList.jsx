@@ -154,7 +154,7 @@ const FriendsList = () => {
                 <img src='/images/cat1.jpg'/>
               )}
                 {/* <span>{search.user_nickname}</span> */}
-                <ProfileLink user_no={search.user_no} user_nickname={search.user_nickname}></ProfileLink>
+                <ProfileLink user_id={search.user_id} user_nickname={search.user_nickname}></ProfileLink>
                 <button onClick={() => addFriend(search)}>추가</button>
               </div>
             ))}

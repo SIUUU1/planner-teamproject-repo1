@@ -11,15 +11,24 @@ import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { faPlus} from "@fortawesome/free-solid-svg-icons";
 import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
+import { useParams } from 'react-router-dom';
+
 const AttainmentMain = () => {
+  const {user_id} = useParams();
   //등록
   const { postRequest, loading: postLoading, error: postError } = useSendPost('http://localhost:8080/api/user/attainments');
   const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [attainment_duration,setAttainment_duration]=useState('short_term');
   const [importance, setImportance] = useState(0);
-  
-  const { data:shortData=[],refetch:refetchShort } = useLoading(`http://localhost:8080/api/user/attainments/search?attainment_duration=short_term&selectDate=${date}`, 'json');
-  const { data:longData=[],refetch:refetchLong } = useLoading(`http://localhost:8080/api/user/attainments/search?attainment_duration=long_term&selectDate=${date}`, 'json');
+  const apiShortUrl = user_id
+  ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=short_term&selectDate=${date}&user_id=${user_id}`:
+  `http://localhost:8080/api/user/attainments/search?attainment_duration=short_term&selectDate=${date}`;
+  const apiLongUrl = user_id
+  ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=long_term&selectDate=${date}&user_id=${user_id}`:
+  `http://localhost:8080/api/user/attainments/search?attainment_duration=long_term&selectDate=${date}`;
+
+  const { data:shortData=[],refetch:refetchShort } = useLoading(apiShortUrl, 'json');
+  const { data:longData=[],refetch:refetchLong } = useLoading(apiLongUrl, 'json');
   const [longHeight,setLongHeight] = useState(longData?longData.length * 70:50);
   const [isRegister,setIsRegister]=useState(false);
   const onClickLeft = () => setDate(dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'));
@@ -68,14 +77,14 @@ const AttainmentMain = () => {
             secondChild={<Button text={<FontAwesomeIcon icon={faAnglesRight} />} onClick={onClickRight}/>}
           />
         </div>
-        <Button onClick={()=>setIsRegister(!isRegister)} className={'addAttainment'} text={<FontAwesomeIcon icon={faPlus} />}></Button>
+        {!user_id&&<Button onClick={()=>setIsRegister(!isRegister)} className={'addAttainment'} text={<FontAwesomeIcon icon={faPlus} />}></Button>}
         <div className="attainmentList" style={{ height: `${shortHeight}px` }}>
-          {shortData?shortData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
-          <p>오늘의 목표를 세워 보세요!</p>}
+          {(shortData&&shortData.length!==0)?shortData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
+          <p>등록된 오늘의 목표가 없습니다!</p>}
         </div>
         <div className="attainmentList" style={{ height: `${longHeight}px` }}>
-        {longData ? longData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
-          <p>장기적인 목표를 세워 보세요!</p>}
+        {longData&&longData.length!==0 ? longData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
+          <p>등록된 장기적인 목표가 없습니다!</p>}
         </div>
       </div>
       {isRegister&&<div className="registerDiv">

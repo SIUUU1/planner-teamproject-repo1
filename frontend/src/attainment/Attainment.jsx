@@ -4,18 +4,7 @@ import useMove from '../util/useMove';
 const Attainment = ({ data, padding }) => {
     const modifiedData = [{...data, attainment_name: data.attainment_name ? data.attainment_name.slice(0, 5) : "Unknown"
     }];
-    // const modifiedData = data.map(item => ({
-    //     ...item,
-    //     attainment_name: item.attainment_name ? item.attainment_name.slice(0, 5) : "Unknown"
-    // }));
     const onClick=useMove(`../attainmentDetail/${data.attainment_no}`);
-    // onClick={(node, event) => {
-    //     // 데이터에서 해당 항목의 attainmentId를 찾음
-    //     const clickedItem = data.find(item => item.attainment_name === node.indexValue);
-    //     if (clickedItem) {
-    //         window.location.href = `attainmentDetail/${type}/${clickedItem.attainment_id}`;
-    //     }
-    // }}
     return (
         <div className="attainmentItem" style={{ height: `70px` }} onClick={onClick}>
             <ResponsiveBar

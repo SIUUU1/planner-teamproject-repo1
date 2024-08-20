@@ -17,14 +17,21 @@ const AttainmentDetail = () => {
   const { data: attainmentdata, loading, refetch } = useLoading(`http://localhost:8080/api/user/attainments/${attainmentNo}`, 'json');
   const [isEdit, setIsEdit] = useState(false);
   const [data, setData] = useState(null);
+  const [isCreater,setIsCreater]=useState(false);
   const { postRequest:updateRequest, error: updateError } = useSendPost('http://localhost:8080/api/user/attainments/update');
   const { postRequest:deleteRequest, error: deleteError } = useSendPost('http://localhost:8080/api/user/attainments/delete');
-
+  //사용자 정보를 가져옵니다.
+  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  
   useEffect(() => {
     if (attainmentdata) {
       setData(attainmentdata);
     }
-  }, [attainmentdata]);
+    if(userData){
+      setIsCreater(attainmentdata.user_id === userData.user_id);
+    }
+
+  }, [userData, attainmentdata]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +68,7 @@ const AttainmentDetail = () => {
     }
     setIsEdit(false);
   }
-  const moveMain=useMove('../../attainmentMain');
+  const moveMain=useMove(`/attainmentMain`);
   const handleDelte=()=>{
     deleteRequest({attainment_no:data.attainment_no})
     if (!deleteError) {
@@ -94,7 +101,7 @@ const AttainmentDetail = () => {
 
   return (
     <div className='attainmentContent backWhite'>
-      <ToBack URL={'/attainmentMain'} />
+      {isCreater?<ToBack URL={'/attainmentMain'} />:<ToBack URL={`/attainmentMain/${attainmentdata.user_id}`} />}
       <div className='attainmentItemContent'>
         <div className="attainmentProgressContainer">
           <CircularProgressbar
@@ -110,26 +117,29 @@ const AttainmentDetail = () => {
         <div className="attainmentDetails">
           <div className="attainmentTitle">
             <h1>{data.attainment_name}</h1>
-            {isEdit ? (
-              <Button className='updateBtn' onClick={updateClick} text={'수정'}></Button>
-              ):(<FontAwesomeIcon icon={faPencil} id='pencil'  onClick={onclickEdit}/>)} 
+            <FontAwesomeIcon icon={faPencil} id='pencil'  onClick={onclickEdit}/>
             </div>
           <p>목표: {data.attainment_target} {data.attainment_type ? '분' : '회'}</p>
           <p>달성량: {data.attainment_finish} {data.attainment_type ? '분' : '회'}</p>
           <p>{'★'.repeat(data.star)}</p>
           <div className="update-controls">
+            {isCreater&&<>
             <button onClick={() => incrementAttainment(-10)}>-10</button>
             <button onClick={() => incrementAttainment(-5)}>-5</button>
             <button onClick={() => incrementAttainment(-1)}>-1</button>
+            </>}
             <input 
               type="number" 
               value={data.attainment_finish} 
               onChange={(e) => updateAttainment(e.target.value)}
               className="attainment-input"
-              />
-            <button onClick={() => incrementAttainment(1)}>+1</button>
-            <button onClick={() => incrementAttainment(5)}>+5</button>
-            <button onClick={() => incrementAttainment(10)}>+10</button>
+              readOnly={!isCreater}
+            />
+            {isCreater&&<>
+              <button onClick={() => incrementAttainment(1)}>+1</button>
+              <button onClick={() => incrementAttainment(5)}>+5</button>
+              <button onClick={() => incrementAttainment(10)}>+10</button>
+            </>}
           </div>
           
         </div>
@@ -198,8 +208,8 @@ const AttainmentDetail = () => {
                 onChange={handleInputChange}
                 className="star-slider"
               />
-              <button className="submitBtn" onClick={handleUpdate}>수정</button>
-              <button className="submitBtn" onClick={handleDelte}>삭제</button>
+              {isCreater&&<><button className="submitBtn" onClick={handleUpdate}>수정</button>
+              <button className="submitBtn" onClick={handleDelte}>삭제</button></>}
               <button className="cancelBtn" onClick={()=>{setIsEdit(!isEdit); setData(attainmentdata);}}>취소</button>
             </div>
           </div>}

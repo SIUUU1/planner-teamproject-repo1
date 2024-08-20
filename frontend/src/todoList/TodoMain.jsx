@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import useSendPost from '../util/useSendPost';
 
 const TodoMain = () => {
-  const { type, date } = useParams();
+  const { type, date, user_no } = useParams();
   const [isResigter,setIsResigter]=useState(false);
   const [todoTitle, setTodoTitle] = useState(''); 
   const [localData,setLocalData]=useState([]);
@@ -45,11 +45,16 @@ const TodoMain = () => {
   const previousDay = currentDate.subtract(1, 'day').format('YYYY-MM-DD');
   const nextDay = currentDate.add(1, 'day').format('YYYY-MM-DD');
 
-  const onClickLeft = useMove(`/todomain/${type}/${previousDay}`);
-  const onClickRight = useMove(`/todomain/${type}/${nextDay}`);
-  // todo 데이터 로드
-  const { data: todoData, loading: loadingdata, error: errordata, refetch  } = useLoading(`http://localhost:8080/api/user/todos/search?todo_date=${date}`, 'json');
+  const onClickLeft = useMove(user_no ? `/todomain/${user_no}/${type}/${previousDay}`:`/todomain/${type}/${previousDay}`) ;
+  const onClickRight = useMove(user_no ? `/todomain/${user_no}/${type}/${nextDay}`: `/todomain/${type}/${nextDay}`);
   
+  // user_id 유무에 따라 다른 URL을 설정
+   const apiUrl = user_no 
+   ? `http://localhost:8080/api/user/todos/searchUser?todo_date=${date}&user_no=${user_no}`
+   : `http://localhost:8080/api/user/todos/search?todo_date=${date}`;
+
+  // todo 데이터 로드
+  const { data: todoData, loading: loadingData, error: errorData, refetch } = useLoading(apiUrl, 'json');
   
   useEffect(() => {
     if (todoData) {
@@ -62,12 +67,12 @@ const TodoMain = () => {
   }, [todoData, type, date]);
   
   // 로딩 중, 오류 처리
-  if (loadingdata) {
+  if (loadingData) {
     return <div className='todoMain'><div className='todoMainContent backWhite'>Loading...</div></div>;
   }
 
-  if (errordata) {
-    return <div className='todoMain'><div className='todoMainContent backWhite'>Error: {errordata.message}</div></div>;
+  if (errorData) {
+    return <div className='todoMain'><div className='todoMainContent backWhite'>Error: {errorData.message}</div></div>;
   }
 
   return (
@@ -81,7 +86,7 @@ const TodoMain = () => {
           />
         </div>
         <div className="isResigterTodo">
-          <Button text={<FontAwesomeIcon icon={faPlus} />} onClick={onClickResigter}/>
+          {isResigter&&<Button text={<FontAwesomeIcon icon={faPlus} />} onClick={onClickResigter}/>}
         </div>
         {isResigter&&(<div className="resigterTodo">
           <input

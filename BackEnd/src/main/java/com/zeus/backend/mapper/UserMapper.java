@@ -50,4 +50,7 @@ public interface UserMapper {
 
 	// 검색
 	public List<User> searchByAll(String search, String currentUserId) throws Exception;
+
+	// 사용자 아이디로 회원 정보 조회(타 회원 조회)
+	public User getUserById(String user_id);
 }
