@@ -16,7 +16,7 @@ import com.zeus.backend.domain.Theme;
 import com.zeus.backend.service.ThemeService;
 
 @RestController
-@RequestMapping("/api/themes")
+@RequestMapping("/api/user/themes")
 public class ThemeController {
 
     @Autowired

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.SettingThemeMapper">
+
+	<select id="selectByUserId" resultType="com.zeus.backend.domain.SettingTheme">
+        SELECT * FROM setting_theme WHERE user_id = #{user_id}
+    </select>
+
+    <insert id="insert" parameterType="com.zeus.backend.domain.SettingTheme">
+        INSERT INTO setting_theme (setting_theme_no, user_id, theme_no, theme_id, update_date)
+        VALUES (setting_theme_seq.NEXTVAL, #{user_id}, #{theme_no}, #{theme_id}, #{update_date})
+    </insert>
+
+    <update id="update" parameterType="com.zeus.backend.domain.SettingTheme">
+        UPDATE setting_theme
+        SET theme_no = #{theme_no}, theme_id = #{theme_id}, update_date = #{update_date}
+        WHERE user_id = #{user_id}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM setting_theme WHERE user_id = #{user_id}
+    </delete>
+</mapper>

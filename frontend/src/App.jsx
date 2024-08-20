@@ -34,6 +34,7 @@ import PaymentForm from './pay/PaymentForm';
 import StudyGroupEditor from './studygroup/StudyGroupEditor';
 import GroupOne from './studygroup/GroupOne';
 import PasswordReset from './member/PasswordReset';
+import MessageList from './message/MessageList';
 
 function App() {
   
@@ -44,17 +45,18 @@ function App() {
       <Header />
       <ThemeProvider>
         <Routes>
-          <Route path='/' element={<Home/>}/>
+        <Route path='/' element={<Home/>}/>
           <Route path="/joinForm" element={<Signup />} /> 
           <Route path='/loginForm' element={<Login/>}/>
           <Route path='/welcome' element={<Welcome/>}/>
-          <Route path="/user" element={<User/>} />
+          <Route path="/user/:user_id" element={<User/>} />
           <Route path='/*' element={<NotFound/>}/>
           <Route path='/as' element={<NotAuthorized/>}/>
           <Route path='/groupmain' element={<StudyGroupMain/>}/>
           <Route path='/groupedit/:id' element={<StudyGroupEditor/>}/>
           <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
           <Route path='/attainmentMain' element={<AttainmentMain/>}/>
+          <Route path='/attainmentMain/:user_id' element={<AttainmentMain/>}/>
           <Route path='/attainmentDetail/:no' element={<AttainmentDetail/>}/>
           <Route path="/boardlist" element={<BoardList />} />
           <Route path="/boardlist" element={<BoardList />} />
@@ -70,11 +72,14 @@ function App() {
           <Route path="/friends" element={<FriendsList />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/schedule/:user_id" element={<Schedule />} />
+          <Route path='/todomain/:user_no/:type/:date' element={<TodoMain/>}/>
           <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
           <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
           <Route path='/payForm' element={<PaymentForm/>}/>
           <Route path='/groupone/:id' element={<GroupOne/>}/>
           <Route path='/passReset/:type' element={<PasswordReset/>}/>
+          <Route path='/msglist' element={<MessageList/>}/>
         </Routes>
         </ThemeProvider>
         <Footer/>
