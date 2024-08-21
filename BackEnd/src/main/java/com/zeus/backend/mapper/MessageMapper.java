@@ -9,6 +9,9 @@ public interface MessageMapper {
 	// 메시지 삽입
 	public void create(Message message) throws Exception;
 
+	// 전체 쪽지 목록 조회
+	public List<Message> list() throws Exception;
+
 	// 특정 사용자의 쪽지 목록 조회
 	public List<Message> findByUserId(String receiver_id) throws Exception;
 
@@ -23,5 +26,5 @@ public interface MessageMapper {
 
 	// 특정 사용자가 받은 모든 쪽지 삭제
 	public void deleteByReceiverId(String receiver_id) throws Exception;
-	
+
 }
