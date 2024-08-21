@@ -1,0 +1,105 @@
+.messageList {
+  margin: 30px auto 50px auto;
+  padding: 5px 40px;
+  width: 65%;
+  min-height: 650px;
+  border-radius: 8px;
+}
+
+.messageList h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.msgHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.msgHeader button {
+  background-color: #424242;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.msgHeader button:hover {
+  background-color: #616161;
+}
+
+.msgHeader select {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.messageList .searchBar {
+  display: flex;
+  align-items: center;
+}
+
+.messageList .searchBar input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.messageList .searchBar button {
+  background-color: #424242;
+  color: white;
+  cursor: pointer;
+  width: 90px;
+  margin-left: 5px;
+}
+
+.messageList table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+
+}
+
+.messageList table thead {
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.messageList table th, .messageList table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.messageList th {
+  background-color: #f0f0f5;
+  font-weight: bold;
+}
+
+.messageList .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.messageList .pagination button {
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.messageList .pagination button.active  {
+  background-color: #c6c9d8;
+  color: white;
+}
+
+.messageList .pagination button[disabled] {
+  cursor: not-allowed;
+}

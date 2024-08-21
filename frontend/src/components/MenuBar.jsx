@@ -69,7 +69,7 @@ const MenuBar = ({ isOpen, onClose }) => {
         </div>
         <div className="menuItem">
           <button className="menuItemLink" onClick={() => onMove('/msglist')}>
-            <FontAwesomeIcon icon={faPaperPlane} /> <span>쪽지보기</span>
+            <FontAwesomeIcon icon={faPaperPlane} /> <span>쪽지함</span>
           </button>
         </div>
         <div className="menuItem">
