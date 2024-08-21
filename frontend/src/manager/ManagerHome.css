@@ -1,0 +1,17 @@
+.managerContent{
+  width: 90%;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 10px;
+  margin: 50px auto;
+  min-height: 650px;
+  padding: 20px 40px;
+}
+.managerMenuInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.managerMenuBtn{
+  display: flex;
+  flex-direction: column;
+}
