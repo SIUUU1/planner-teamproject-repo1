@@ -29,7 +29,7 @@ const ManagerUser=()=>{
           </thead>
           <tbody>
             {data && data.map((user) => (
-              <UserItem key={user.user_id} data={user} />
+              <UserItem key={user.user_id} data={user} refetch={refetch}/>
             ))}
           </tbody>
         </table>
