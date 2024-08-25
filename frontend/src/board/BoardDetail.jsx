@@ -8,7 +8,8 @@ import ProfileLink from '../components/ProfileLink'
 import Toback from '../components/ToBack'
 
 const BoardDetail = () => {
-  const { id } = useParams();
+  const {user_id} = useParams();
+  const { no } = useParams();
   const navigate = useNavigate();
 
   const initComment = {
@@ -41,9 +42,14 @@ const BoardDetail = () => {
     reg_date:'',
   });
 
-  const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${id}`, 'json');
+  const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${no}`, 'json');
   const {data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardListData } = useLoading('http://localhost:8080/api/board/list', 'json');
-  const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+
+  // user_id 유무에 따라 다른 URL을 설정
+  const apiUrl = user_id 
+  ? `http://localhost:8080/api/user/userInfo/${user_id}`
+  : `http://localhost:8080/api/user/userInfo`;
+  const {data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading(apiUrl, 'json');
   
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState({initComment});
@@ -84,12 +90,11 @@ const BoardDetail = () => {
   const onEdit = () => {
     navigate(`/boardwrite/${board.no}`);
   }
-  //게시판 삭제
+  // 게시판 삭제
   const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/board/delete', {}, 'json');
 
   const onDelete = async () => {
     try {
-      const no = id;
       await deleteRequest({no});
       alert('게시판이 삭제되었습니다.');
       navigate('/boardlist');
@@ -125,12 +130,12 @@ const BoardDetail = () => {
     }));
   };
 
-  //대댓글
+  // 대댓글
   const handleReplyClick = (comment) => {
     setReplyingCommentId(replyingCommentId === comment.no ? null : comment.no);
   };
 
-  const replyContent =useRef();
+  const replyContent = useRef();
 
   const submitReply = async (parentComment) => {
     if(!replyContent.current.value){
@@ -188,7 +193,7 @@ const BoardDetail = () => {
 
   //댓글 삭제
   const { postRequest: deleteCommentRequest } = useSendPost('http://localhost:8080/api/board/delete/comment', {}, 'json');
-
+  
   const DeleteComment = async (comment) => {
     try {
       if (!comment.no) {
@@ -251,8 +256,12 @@ const BoardDetail = () => {
         <div className='boardInfo'>
           <p>{formatDate(board.reg_date)} &middot; {board.category}</p>
           <div className="buttonGroup">
+            {!user_id &&
+            <>
             <Button onClick={onEdit} className={"editButton"} text={'수정'}/>
             <Button onClick={onDelete} className={"deleteButton"} text={'삭제'}/>
+            </>
+            }
           </div>
         </div>
         <div className='boardContentText'>

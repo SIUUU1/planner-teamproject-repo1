@@ -21,48 +21,46 @@
 }
 
 .msgHeader button {
-  background-color: #424242;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  width: 100px;
+  padding: 0 10px;
+  height: 35px;
+  border: 1px solid #bcbcbc;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  width: 90px;
 }
 
 .msgHeader button:hover {
-  background-color: #616161;
+  background-color: #9f9e9e;
 }
 
 .msgHeader select {
-  padding: 5px;
+  padding: 8px 10px;
   border-radius: 5px;
+  text-align: center;
+  margin-right: 10px;
 }
 
 .messageList .searchBar {
   display: flex;
   align-items: center;
+  width: 40%;
 }
 
 .messageList .searchBar input[type="text"] {
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-right: 10px;
-}
-
-.messageList .searchBar button {
-  background-color: #424242;
-  color: white;
-  cursor: pointer;
-  width: 90px;
-  margin-left: 5px;
 }
 
 .messageList table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-
 }
 
 .messageList table thead {

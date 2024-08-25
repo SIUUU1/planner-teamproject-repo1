@@ -1,14 +1,15 @@
 import useLoading from '../util/useLoading';
 import useMove from '../util/useMove';
 import useSendPost from '../util/useSendPost';
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 
-const Modal =({ group, onClose })=>{
+const Modal =({ group, onClose})=>{
 
   if (!group) return null; // 그룹이 선택되지 않으면 모달을 표시하지 않음
+  
   // 사용자 정보
-  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-  const moveToEdit = useMove(`/groupedit/${group.group_id}`);
+  const {data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  
   const moveToMain = useMove('/groupmain');
   const moveToGroupOne = useMove(`/groupone/${group.group_id}`);
 
@@ -22,12 +23,6 @@ const Modal =({ group, onClose })=>{
       setFilteredGroupOne(filtered.length > 0 ? filtered[0] : null);
     }
   }, [groupOneData, userData]);
-
-  //그룹원 관리
-  const handleJoinGroup = () => {
-    alert("그룹에 지원하셨습니다! 그룹 대표의 수락을 기다리세요");  // 여기서 그룹 가입 로직을 구현하거나 다른 처리를 가능
-    onClose();  // 가입 후 모달을 닫을 수 있음.
-  };
 
   //그룹 지원
   const {postRequest: insertRequest, error:insertError} = useSendPost(
@@ -43,7 +38,7 @@ const Modal =({ group, onClose })=>{
     };
     await insertRequest(insertedData);
     if (!insertError) {
-      alert("그룹에 지원하셨습니다! 그룹 대표의 수락을 기다리세요");  // 여기서 그룹 가입 로직을 구현하거나 다른 처리를 가능
+      alert("그룹에 지원하셨습니다! 그룹 대표의 수락을 기다리세요");  
       refetchGroupOne();
       onClose();
     }else{
@@ -54,24 +49,6 @@ const Modal =({ group, onClose })=>{
       alert('이미 지원한 그룹입니다! 그룹 대표의 수락을 기다리세요');
    };
   
-  //그룹 삭제
-  const deleteRequest = useSendPost(
-    'http://localhost:8080/api/group/delete',
-    { group_id: group.group_id },
-    'json'
-  );
-  const { postRequest: postRequestDel, loading: loadingDel, error: errorDel } = deleteRequest;
-
-  const onDelete = async () => {
-    try {
-      await postRequestDel({ group_id: group.group_id });
-    } catch (error) {
-      console.error("Error delete:", error);
-    }
-    onClose();
-    moveToMain();
-  };
-
   const formatModalContent = (content) => {
     return content
       .split('\n')
@@ -93,11 +70,7 @@ const Modal =({ group, onClose })=>{
         <div>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
         <div>{group.group_notice ? formatModalContent(group.group_notice) : '기본 모달 내용'}</div> {/* Display custom content */}
         {group.leader_id===userData.user_id?(
-          <>
-          <button className="joinButton" onClick={()=>{moveToGroupOne()}}>그룹원 관리</button>
-          <button className="joinButton" onClick={()=>{moveToEdit()}}>수정</button>
-          <button className="joinButton" onClick={onDelete}>삭제</button>
-          </>
+          <button className="joinButton" onClick={()=>{moveToGroupOne()}}>그룹 관리</button>
         ):(
           !filteredGroupOne ?(
             <button className="joinButton" onClick={onJoinGroup}>그룹 가입</button>

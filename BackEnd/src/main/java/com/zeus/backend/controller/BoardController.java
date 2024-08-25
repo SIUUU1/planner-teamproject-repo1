@@ -53,7 +53,7 @@ public class BoardController {
 		}
 		return new ResponseEntity<>(boardList, HttpStatus.OK);
 	}
-
+	
 	// 게시판 상세보기(수정 시 사용)
 	@GetMapping("/read/{no}")
 	public ResponseEntity<Board> getBoard(@PathVariable int no) {

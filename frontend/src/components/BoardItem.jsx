@@ -1,11 +1,14 @@
 import './BoardItem.css'
 import { useNavigate } from 'react-router-dom';
 
-const BoardItem =({ board })=>{
+const BoardItem =({ board, user_id })=>{
   const nav = useNavigate();
   const onClick = async (no) => {
     await incrementReadCount(no);
-    nav(`/boarddetail/${no}`);
+    const apiUrl = user_id 
+  ? `/boarddetail/${no}/${user_id}`
+  : `/boarddetail/${no}`;
+    nav(apiUrl);
   };
 
   const incrementReadCount = async (no) => {

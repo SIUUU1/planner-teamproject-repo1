@@ -2,12 +2,15 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
+import useMove from '../util/useMove';
 
 const GroupOne = () => {
   const { id } = useParams();
   // 그룹원 정보
   const { data: groupOneData, loading: loadingGroupOne, error: errorGroupOne, refetch: refetchGroupOne } = useLoading(`http://localhost:8080/api/group/groupone/list/${id}`, 'json');
-  
+  // 그룹 수정
+  const moveToEdit = useMove(`/groupedit/${id}`);
+
   //지원 수락
   const {postRequest: updateRequest, error:updateError} = useSendPost(
     'http://localhost:8080/api/group/groupone/accept',
@@ -53,12 +56,36 @@ const GroupOne = () => {
     refetchGroupOne();
   };
 
+  //그룹 삭제
+  const deleteGroupRequest = useSendPost(
+    'http://localhost:8080/api/group/delete',
+    { group_id: id },
+    'json'
+  );
+  const { postRequest: postRequestDelGroup, loading: loadingDelGroup, error: errorDelGroup } = deleteGroupRequest;
+
+  const onDelGroup = async () => {
+    if(!window.confirm('정말로 삭제하시겠습니까?')){
+      return;
+    }
+    try {
+      await postRequestDelGroup({ group_id: id });
+    } catch (error) {
+      console.error("Error delete:", error);
+    }
+    moveToMain();
+  };
+
 if(loadingGroupOne){
 return <div>loading...</div>;
 }
   return (
       <div>
-        <h3>그룹원 관리</h3>
+        <h3>그룹 관리</h3>
+        <div>
+        <button className="joinButton" onClick={()=>{moveToEdit()}}>그룹 수정</button>
+        <button className="joinButton" onClick={onDelGroup}>그룹 삭제</button>
+        </div>
         <table>
             <thead>
                 <tr>

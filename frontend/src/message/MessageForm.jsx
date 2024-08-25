@@ -4,9 +4,10 @@ import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
 import useMove from '../util/useMove';
 
-const MessageForm = ({ isOpen, onClose }) => {
+const MessageForm = ({ isOpen, onClose, receiver_id }) => {
   // 사용자 정보
   const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  
   // 친구 목록
   const { data: friendData, loading: loadingFriend, error: errorFriend, refetch: refetchFriendData } = useLoading('http://localhost:8080/api/user/friend/list', 'json');
   
@@ -25,19 +26,37 @@ const MessageForm = ({ isOpen, onClose }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
+    console.log(" start receiver_id: " + receiver_id);
     if (userData) {
       setMessage(prev => ({
         ...prev,
         sender_id: userData.user_id,
-        sender_nickname: userData.user_nickname
+        sender_nickname: userData.user_nickname,
       }));
     }
-  }, [userData]);
+
+    // receiver_id가 있을 때 받는이 설정
+    if (receiver_id && friendData) {
+      const selectedFriend = friendData.find(friend => friend.friend_id === receiver_id);
+      console.log("receiver_id: " + receiver_id);
+      if (selectedFriend) {
+        setMessage(prev => ({
+          ...prev,
+          receiver_id: selectedFriend.friend_id,
+          receiver_nickname: selectedFriend.friend_nickname,
+        }));
+      }
+    }
+  }, [userData, receiver_id, friendData]);
 
   // 쪽지 보내기
   const { postRequest: sendRequest } = useSendPost('http://localhost:8080/api/msg/insert', {}, 'json');
 
   const handleSubmit = async () => {
+    if (!message.content || !message.receiver_id) {
+      alert('메시지 내용과 받는 사람을 입력하세요.');
+      return;
+  }
     try {
       await sendRequest(message);
       console.log(`쪽지 전송: ${message.receiver_nickname}, 내용: ${message.content}`);
@@ -48,6 +67,7 @@ const MessageForm = ({ isOpen, onClose }) => {
         sender_nickname: userData.user_nickname,
       });
       onClose(); // 폼 닫기
+      location.reload();
     } catch (error) {
       console.error('쪽지 전송 실패:', error);
       alert('쪽지 전송에 실패했습니다.');
@@ -81,16 +101,17 @@ const MessageForm = ({ isOpen, onClose }) => {
       <div className="messageFormBody">
         <label>받는 사람:</label>
         <div className="customSelectContainer">
-          <div 
-            className="customSelectHeader" 
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
+          <div className="customSelectHeader"  onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             {message.receiver_nickname || "친구를 선택하세요"}
           </div>
           <div className={`customSelectList ${isDropdownOpen ? '' : 'hidden'}`}>
             {friendData && friendData.length > 0 ? (
               friendData.map(friend => (
-                <div key={friend.friend_id} className="customSelectListItem" onClick={() => handleFriendSelect(friend)}>
+                <div 
+                  key={friend.friend_id} 
+                  className={`customSelectListItem ${friend.friend_id === message.receiver_id ? 'selected' : ''}`} 
+                  onClick={() => handleFriendSelect(friend)}
+                >
                   {friend.friend_nickname}
                 </div>
               ))
@@ -102,7 +123,7 @@ const MessageForm = ({ isOpen, onClose }) => {
         <label>메시지:</label>
         <textarea value={message.content} onChange={(e) => setMessage(prev => ({ ...prev, content: e.target.value }))} />
         <button type="button" onClick={handleSubmit}>보내기</button>
-        <button type="button" onClick={()=>{moveToMsgList();}}>쪽지함</button>
+        <button type="button" onClick={() => { moveToMsgList(); onClose(); }}>쪽지함</button>
       </div>
     </div>
   );

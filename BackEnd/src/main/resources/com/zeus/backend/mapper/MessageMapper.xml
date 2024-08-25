@@ -4,9 +4,9 @@
 	<!-- 메시지 삽입 -->
 	<insert id="create" >
 		INSERT INTO messages (
-		message_id, sender_id, sender_nickname, receiver_id, receiver_nickname, content
+		message_id, ref, user_id, sender_id, sender_nickname, receiver_id, receiver_nickname, content
 		) VALUES (
-		message_id_seq.NEXTVAL, #{sender_id}, #{sender_nickname}, #{receiver_id}, #{receiver_nickname}, #{content}
+		message_id_seq.NEXTVAL, #{ref}, #{user_id}, #{sender_id}, #{sender_nickname}, #{receiver_id}, #{receiver_nickname}, #{content}
 		)
 	</insert>
 	<!-- 전체 목록 조회 -->
@@ -15,23 +15,33 @@
 	</select>
 	<!-- 특정 사용자의 쪽지 목록 조회 -->
 	<select id="findByUserId" resultType="com.zeus.backend.domain.Message">
-		SELECT * FROM messages WHERE receiver_id = #{user_id} or sender_id = #{user_id} ORDER BY sent_at DESC
-	</select>
-	<!-- 특정 사용자의 특정 보낸이로부터 쪽지 목록 조회 -->
-	<select id="findByReceiverId" resultType="com.zeus.backend.domain.Message">
-		SELECT * FROM messages WHERE receiver_id = #{receiver_id} and sender_id = #{sender_id}
-		ORDER BY sent_at DESC
+		SELECT * FROM messages WHERE user_id = #{user_id} ORDER BY sent_at DESC
 	</select>
 	<!-- 쪽지를 읽음 상태로 업데이트 -->
 	<update id="updateRead">
-		UPDATE messages SET is_read = 1 WHERE message_id = #{message_id}
+		UPDATE messages SET is_read = 1 WHERE ref = #{ref}
 	</update>
 	<!-- 쪽지 삭제 -->
     <delete id="deleteById" >
         DELETE FROM messages WHERE message_id = #{message_id}
     </delete>
     <!-- 특정 사용자가 받은 모든 쪽지 삭제 -->
-    <delete id="deleteByReceiverId" >
-        DELETE FROM messages WHERE receiver_id = #{receiver_id}
+    <delete id="deleteByUserId" >
+        DELETE FROM messages WHERE user_id = #{user_id}
     </delete>
+    <!-- message_id 최댓값 --> 
+	  <select id="maxMessageId" resultType="Integer">
+	    SELECT nvl(max(message_id), 0) FROM messages
+	  </select>
+	<!-- 검색 -->
+	<select id="search" resultType="com.zeus.backend.domain.Message">
+		SELECT DISTINCT * FROM messages 
+    	WHERE ((LOWER(sender_id) LIKE LOWER(#{search}) 
+        OR LOWER(sender_nickname) LIKE LOWER(#{search}) 
+        OR LOWER(receiver_id) LIKE LOWER(#{search}) 
+        OR LOWER(receiver_nickname) LIKE LOWER(#{search}) 
+        OR LOWER(content) LIKE LOWER(#{search})))	
+        AND user_id = #{user_id} 
+   		ORDER BY sent_at DESC 
+	</select>  
 </mapper>

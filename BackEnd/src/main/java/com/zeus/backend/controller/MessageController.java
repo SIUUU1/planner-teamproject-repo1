@@ -29,6 +29,21 @@ public class MessageController {
 	@Autowired
 	private MessageService service;
 
+	// 쪽기 전체 목록
+	@GetMapping("/msg/list")
+	public ResponseEntity<List<Message>> getMsgList() {
+		System.out.println("getMsgList msg:");
+		List<Message> messageList = null;
+
+		try {
+			messageList = service.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageList);
+		}
+		return new ResponseEntity<>(messageList, HttpStatus.OK);
+	}
+
 	// 특정 사용자의 쪽지 목록 조회
 	@GetMapping("/user/msg/list")
 	public ResponseEntity<List<Message>> getMsgByUserId() {
@@ -57,15 +72,28 @@ public class MessageController {
 		return new ResponseEntity<>(messageList, HttpStatus.OK);
 	}
 
-	// 특정 사용자의 특정 보낸이로부터 쪽지 목록 조회
-	@PostMapping("/user/msg/listByRe")
-	public ResponseEntity<List<Message>> getMsgByReceiverId(@RequestBody Map<String, Object> map) {
-		System.out.println("getMsgByReceiverId msg:" + map.toString());
+	// 쪽지 검색
+	@PostMapping("/msg/search")
+	public ResponseEntity<List<Message>> searchMsg(@RequestBody Map<String, String> payload) {
+		String search = payload.get("search");
+		System.out.println("search :" + search);
 		List<Message> messageList = null;
 
-		// 사용자 문의내역을 가져온다.
+		// 토큰에서 사용자 정보를 얻는다.
+		User user = null;
 		try {
-			messageList = service.findByReceiverId(map);
+			user = userService.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageList);
+		}
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+
+		try {
+			messageList = service.search(search,user.getUser_id());
+			System.out.println("searchMsg msg:" + messageList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageList);
@@ -78,15 +106,15 @@ public class MessageController {
 	public ResponseEntity<Void> insert(@RequestBody Message message) throws Exception {
 		System.out.println("insert message:" + message);
 		service.create(message);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// 쪽지를 읽음 상태로 업데이트
 	@PostMapping("/msg/updateRead")
 	public ResponseEntity<Void> updateRead(@RequestBody Map<String, String> payload) throws Exception {
-		int message_id = Integer.parseInt(payload.get("message_id"));
-		System.out.println("updateRead msg:" + message_id);
-		service.updateRead(message_id);
+		int ref = Integer.parseInt(payload.get("ref"));
+		System.out.println("updateRead msg:" + ref);
+		service.updateRead(ref);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

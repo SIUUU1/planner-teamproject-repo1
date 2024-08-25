@@ -11,8 +11,8 @@ import Weather from '../components/Weather';
 import { useState,useEffect } from 'react';
 import dayjs from 'dayjs';
 import useMove from '../util/useMove';
-// import GroupList from '../components/GroupList';
-// import Modal from '../studygroup/Modal';
+import GroupList from '../components/GroupList';
+import Modal from '../studygroup/Modal';
 import BoardItem from '../components/BoardItem';
 
 const currentDate = dayjs().format('YYYY-MM-DD');
@@ -41,6 +41,11 @@ const Home = ()=>{
     .filter(board => board.user_id === otherUserData.user_id)
     .filter(board => board.step === 0)
     .slice(0, 5) : [];
+
+  // 그룹
+  const { data: GroupListData = [], loading: loadingGroupList, error: errorMroupList, refetch: refetchMyGroupList } = useLoading(`http://localhost:8080/api/group/${user_id}/list`, 'json');
+  const filteredGroup = GroupListData && GroupListData.length > 0 ? GroupListData.slice(0, 5) : [];
+  const [selectedGroup, setSelectedGroup] = useState(null); 
 
   // todo 데이터를 로드
   const [todoUrl, setTodoUrl] = useState(null);
@@ -91,7 +96,7 @@ const Home = ()=>{
 
 
   // 로딩 중, 오류 처리
-  if (loadingScheduler||loadingOtherUser) {
+  if (loadingScheduler||loadingOtherUser||loadingBoardList||loadingGroupList) {
     return <div>Loading...</div>;
   }
 
@@ -160,33 +165,32 @@ const Home = ()=>{
           </div>
           
           <div className='board backWhite'>
-          {/* <ToFullList URL={`/boardlist`}/>
+          <ToFullList URL={`/boardlist/${user_id}`}/>
             <div className='board1'>
           {filteredBoard&&filteredBoard.length!==0?(
-              filteredBoard.map((board, index) => (<BoardItem key={index} board={board}/>))
+              filteredBoard.map((board, index) => (<BoardItem key={index} board={board} user_id={user_id}/>))
           ):(
-            <div className='progressInfo'>게시글을 작성해보세요!</div>
+            <div className='progressInfo'>게시글이 없습니다!</div>
           )}
-           </div>*/}
+           </div>
           </div> 
         </div>
         
-        {/*<div className='homeForthMiddle'>
+        <div className='homeForthMiddle'>
           <div className='studyGroup backWhite'>
-          <ToFullList URL={`/groupmain`}/>
           <div className='studyGroup1'>
            {filteredGroup&&filteredGroup.length!==0?(
               filteredGroup.map((group, index) => (<GroupList key={index} group={group} onClick={() => setSelectedGroup(group)}/>))
           ):(
-            <div className='progressInfo'>내 목표에 맞는 그룹에 가입해보세요!</div>
+            <div className='progressInfo'>유저가 그룹에 가입하지 않았습니다!</div>
           )} 
           </div>
           </div>
-        </div>*/}
+        </div>
       </div>
 
-       {/* 모달 표시 
-       {selectedGroup && <Modal group={selectedGroup} onClose={() => setSelectedGroup(null)} />}*/}
+       {/* 모달 표시  */}
+       {selectedGroup && <Modal group={selectedGroup} onClose={() => setSelectedGroup(null)} />}
     </div>
   );
 };

@@ -99,6 +99,22 @@ public class GroupController {
 		}
 		return new ResponseEntity<>(groupList, HttpStatus.OK);
 	}
+	
+	// 친구 그룹(가입된)
+	@GetMapping("/{user_id}/list")
+	public ResponseEntity<List<Group>> getGroupFriendList(@PathVariable String user_id) {
+		System.out.println("getGroupFriendList");
+		List<Group> groupList = null;
+		try {
+			groupList = groupService.myList(user_id);
+			System.out.println(user_id);
+			System.out.println("Friendgroup" + groupList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(groupList);
+		}
+		return new ResponseEntity<>(groupList, HttpStatus.OK);
+	}
 
 	// 내가 지원한 그룹(가입전)
 	@GetMapping("/list/myApply")

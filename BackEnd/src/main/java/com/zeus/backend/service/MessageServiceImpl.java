@@ -1,7 +1,6 @@
 package com.zeus.backend.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,17 +16,33 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public void create(Message message) throws Exception {
+		int number = 0;
+
+		// 가장 최근 num 값을 가져온다.
+		Integer maxNo = mapper.maxMessageId();
+		if (maxNo != null) {
+			number = maxNo+1;
+		} else {
+			number = 1;
+		}
+		
+		message.setRef(number);
+		
+		//보낸이 쪽지함
+		message.setUser_id(message.getSender_id());
+		mapper.create(message);
+
+		//받는이 쪽지함
+		maxNo = mapper.maxMessageId();
+		number = maxNo;
+		
+		message.setUser_id(message.getReceiver_id());
 		mapper.create(message);
 	}
 
 	@Override
-	public List<Message> findByUserId(String receiver_id) throws Exception {
-		return mapper.findByUserId(receiver_id);
-	}
-
-	@Override
-	public List<Message> findByReceiverId(Map<String, Object> map) throws Exception {
-		return mapper.findByReceiverId(map);
+	public List<Message> findByUserId(String user_id) throws Exception {
+		return mapper.findByUserId(user_id);
 	}
 
 	@Override
@@ -41,8 +56,19 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public void deleteByReceiverId(String receiver_id) throws Exception {
-		mapper.deleteByReceiverId(receiver_id);
+	public List<Message> list() throws Exception {
+		return mapper.list();
+	}
+
+	@Override
+	public void deleteByReceiverId(String user_id) throws Exception {
+		mapper.deleteByUserId(user_id);
+	}
+
+	@Override
+	public List<Message> search(String search,String user_id) throws Exception {
+		search = "%" + search + "%";
+		return mapper.search(search, user_id);
 	}
 
 }

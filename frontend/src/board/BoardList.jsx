@@ -3,9 +3,10 @@ import './BoardList.css';
 import Pagination from '../components/Pagination';
 import useMove from '../util/useMove';
 import useLoading from '../util/useLoading';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 const BoardList = () => {
+  const {user_id} = useParams();
   const [boards, setBoards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -17,18 +18,26 @@ const BoardList = () => {
   const nav = useNavigate();
 
   const { data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
-// 유저 정보
-const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  // 유저 정보
+  const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
   useEffect(() => {
     let filteredBoards = [];
-    
-    if (searching && userData) {
-      filteredBoards = searchList.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
-    } else if (boardListData && userData) {
-      filteredBoards = boardListData.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
+    if(user_id){ // 친구
+      if (searching) {
+        filteredBoards = searchList.filter(board=>board.user_id === user_id).filter(board => board.step === 0);
+      } else if (boardListData) {
+        filteredBoards = boardListData.filter(board=>board.user_id === user_id).filter(board => board.step === 0);
+      }
+    }else{ // 사용자 본인
+      if (searching && userData) {
+        filteredBoards = searchList.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
+      } else if (boardListData && userData) {
+        filteredBoards = boardListData.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
+      }
     }
-
+   
+    // 정렬
     if (sortOrder === 'latest') {
       filteredBoards = filteredBoards.sort((a, b) => new Date(b.reg_date) - new Date(a.reg_date));
     } else if (sortOrder === 'regOrder') {
@@ -50,7 +59,11 @@ const { data: userData, loading: loadingUser, error: errorUser, refetch: refetch
 
   const handleTitleClick = async (no) => {
     await incrementReadCount(no);
-    nav(`/boarddetail/${no}`);
+    if(user_id){
+      nav(`/boarddetail/${no}/${user_id}`);
+    }else{
+      nav(`/boarddetail/${no}`);
+    }
   };
   
   const handleSortOrderChange =(e)=>{
@@ -127,7 +140,7 @@ if(loadingUser){
         </select>
         <input type="text" placeholder="검색어를 입력해주세요" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
         <button onClick={onSearch}>검색</button>
-        <button onClick={handleWrite} className="writeButton">글쓰기</button>
+        {!user_id &&  <button onClick={handleWrite} className="writeButton">글쓰기</button>}
       </div>
       <table className="boardListTable">
         <thead>

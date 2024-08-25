@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Message {
 	private int message_id; // message pk
+	private int ref; // 0:참조 없음(읽는 상태를 위함)
+	private String user_id; // user_id 
 	private String sender_id; // 보낸이 아이디
 	private String sender_nickname; // 보낸이 닉네임
 	private String receiver_id; // 받는이 아이디
