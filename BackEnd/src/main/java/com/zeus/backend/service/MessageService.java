@@ -1,7 +1,6 @@
 package com.zeus.backend.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.zeus.backend.domain.Message;
 
@@ -11,6 +10,9 @@ public interface MessageService {
 
 	// 전체 쪽지 목록 조회
 	public List<Message> list() throws Exception;
+
+	// 특정 쪽지 조회
+	public Message read(int message_id) throws Exception;
 
 	// 특정 사용자의 쪽지 목록 조회
 	public List<Message> findByUserId(String user_id) throws Exception;

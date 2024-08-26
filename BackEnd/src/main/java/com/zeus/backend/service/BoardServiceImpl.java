@@ -96,4 +96,9 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.filename(no);
 	}
 
+	@Override
+	public Board readByRef(int ref) throws Exception {
+		return mapper.readByRef(ref);
+	}
+
 }

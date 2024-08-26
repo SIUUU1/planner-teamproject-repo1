@@ -7,7 +7,6 @@ import MenuBar from './MenuBar';
 import useMove from "../util/useMove";
 import useLoading from "../util/useLoading";
 import MessageForm from '../message/MessageForm';
-import NotificationList from "../notification/NotificationList";
 
 const Header = () => {
   
@@ -16,9 +15,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
-  const [notifications] = useState([
-    { id: 1, date: '7월 12일', category: '보안기능', message: '새로운 환경에서 로그인 되었습니다.' }
-  ]);
+  // const [notifications] = useState([
+  //   { id: 1, date: '7월 12일', category: '보안기능', message: '새로운 환경에서 로그인 되었습니다.' }
+  // ]);
 
   const onMoveLoginform = useMove('/loginForm');
   const onLogout = ()=>{
@@ -42,10 +41,6 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
-  };
-
   const toggleMessageForm = () => {
     setShowMessageForm(!showMessageForm);
   };
@@ -53,9 +48,6 @@ const Header = () => {
   const handleClickOutside = (event) => {
     if (isMenuOpen && !event.target.closest('.menuBar') && !event.target.closest('.fa-bars')) {
       setIsMenuOpen(false);
-    }
-    if (showNotifications && !event.target.closest('.notificationList') && !event.target.closest('.fa-bell')) {
-      setShowNotifications(false);
     }
     if (showMessageForm && !event.target.closest('.messageForm') && !event.target.closest('.fa-paper-plane')) {
       setShowMessageForm(false);
@@ -85,13 +77,12 @@ const Header = () => {
           </div>
           <div className='rightHeader'>
             <div className='headerFifthChild'><Button text={<FontAwesomeIcon icon={faPaperPlane} onClick={toggleMessageForm} />} /></div>
-            <div className='headerSixthChild'><Button text={<FontAwesomeIcon icon={faBell} onClick={toggleNotifications} />} /></div>
+            <div className='headerSixthChild'><Button text={<FontAwesomeIcon icon={faBell} onClick={()=>{location.href='/notificationlist'}} />} /></div>
           </div>
         </div>
       </div>
       {isMenuOpen && <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />}
       {showMessageForm && <MessageForm isOpen={showMessageForm} onClose={()=>{setShowMessageForm(false)}}/>}
-      {showNotifications && <NotificationList isOpen={showNotifications} onClose={()=>{setShowNotifications(false)}}/>}
     </header>
   );
 };

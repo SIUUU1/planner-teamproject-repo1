@@ -29,6 +29,10 @@
 	<select id="read" resultType="com.zeus.backend.domain.Board">
 		SELECT * FROM BOARD WHERE no = #{no}
 	</select>
+	<!-- Ref로 게시물 상세 -->
+	<select id="readByRef" resultType="com.zeus.backend.domain.Board">
+		SELECT * FROM BOARD WHERE ref = #{ref} and step = 0 and depth = 0
+	</select>
 	<!-- 모든 게시물 조회 -->
 	<select id="list" resultType="com.zeus.backend.domain.Board">
 		SELECT * FROM BOARD ORDER BY ref desc, step asc

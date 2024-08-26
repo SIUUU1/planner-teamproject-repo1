@@ -36,8 +36,8 @@ public class GroupOneServiceImpl implements GroupOneService {
 	}
 
 	@Override
-	public void delete(String user_id) throws Exception {
-		mapper.delete(user_id);
+	public void delete(Map<String, Object> map) throws Exception {
+		mapper.delete(map);
 	}
 
 	@Override

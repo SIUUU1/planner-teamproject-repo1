@@ -1,5 +1,6 @@
 package com.zeus.backend.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zeus.backend.domain.Notification;
 import com.zeus.backend.domain.Todo;
 import com.zeus.backend.domain.TodoCheeringEmoji;
 import com.zeus.backend.domain.TodoComment;
 import com.zeus.backend.domain.User;
+import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.TodoCheeringEmojiService;
 import com.zeus.backend.service.TodoCommentService;
 import com.zeus.backend.service.TodoService;
@@ -29,10 +32,12 @@ import com.zeus.backend.service.UserServiceImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/user/todos")
 @RequiredArgsConstructor
+@Slf4j
 public class TodoController {
 
 	@Autowired
@@ -51,6 +56,9 @@ public class TodoController {
 	private TodoCommentService todoCommentService;
 	@Autowired
 	private TodoCheeringEmojiService todoCheeringEmojiService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	@PostMapping("/register")
 	public ResponseEntity<List<Todo>> registerTodo(@RequestBody Todo todo) {
@@ -136,6 +144,7 @@ public class TodoController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+
 	@PostMapping("/update")
 	public ResponseEntity<Void> updateComment(@RequestBody Todo todo) {
 		System.out.println("====================");
@@ -144,7 +153,6 @@ public class TodoController {
 		todoService.updateTodo(todo);
 		return ResponseEntity.ok().build();
 	}
-
 
 	@PostMapping("/delete")
 	public ResponseEntity<Map<String, Object>> deleteTodo(@RequestBody Map<String, String> payload) {
@@ -186,12 +194,13 @@ public class TodoController {
 		List<Todo> todos = todoService.getTodosByUserAndDate(user.getUser_no(), todo_date);
 		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
+
 	@GetMapping("/searchUser")
 	public ResponseEntity<List<Todo>> getTodosByUserIdAndDate(
-	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date todo_date, @RequestParam int user_no) {
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date todo_date, @RequestParam int user_no) {
 		System.out.println("=============================");
 		System.out.println("start getTodosByUserIdAndDate");
-		System.out.println("user_no:"+user_no);
+		System.out.println("user_no:" + user_no);
 
 		List<Todo> todos = todoService.getTodosByUserAndDate(user_no, todo_date);
 		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
@@ -220,6 +229,34 @@ public class TodoController {
 		System.out.println("getUser_no: " + comment.getUser_id());
 
 		TodoComment savedComment = todoCommentService.addComment(comment);
+
+		// ToDo 원글 작성자 아이디 찾기
+		Todo todo = null;
+		String user_id = null;
+		try {
+			todo = todoService.getTodoByNO(comment.getTodo_no().intValue());
+			user_id = userServiceImpl.findByUserNo(todo.getUser_no()).getUser_id();
+		} catch (Exception e) {
+			log.error("ToDo 작성자 정보를 가져오는 중 예외 발생", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
+		// ToDo 댓글 알림 보내기
+		if (!user_id.equals(comment.getUser_id())) { // 본인 작성 제외
+			Notification notification = new Notification();
+			notification.setUser_id(user_id);
+			notification.setType("ToDoComment");
+			notification.setLink("/todoDetail/" + String.valueOf(comment.getTodo_no()) + "/my/" + todo.getTodo_date());
+
+			try {
+				notificationService.create(notification);
+			} catch (Exception e) {
+				log.error("알림 생성 중 예외 발생", e);
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+
+		}
+
 		return ResponseEntity.ok(savedComment);
 	}
 
@@ -238,26 +275,54 @@ public class TodoController {
 		todoCommentService.deleteComment(comment.getTodo_comment_no());
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@GetMapping("/{todo_no}/cheering-emojis")
 	public ResponseEntity<List<TodoCheeringEmoji>> getEmojiByTodoNo(@PathVariable Long todo_no) {
 		System.out.println("==================");
 		System.out.println("start getEmojiByTodoNo");
-		System.out.println("todo_no: "+todo_no);
+		System.out.println("todo_no: " + todo_no);
 		List<TodoCheeringEmoji> emojis = todoCheeringEmojiService.getEmojiByTodoNo(todo_no);
-		System.out.println("emojis(list):"+emojis);
+		System.out.println("emojis(list):" + emojis);
 		return ResponseEntity.ok(emojis);
 	}
-	
+
 	@PostMapping("/cheering-emojis")
-	public ResponseEntity<Void> addCheeringEmoji (@RequestBody TodoCheeringEmoji Emoji){
+	public ResponseEntity<Void> addCheeringEmoji(@RequestBody TodoCheeringEmoji Emoji) {
 		System.out.println("==================");
 		System.out.println("start registerCheeringEmoji");
 		todoCheeringEmojiService.addCheeringEmoji(Emoji);
+
+		// ToDo 원글 작성자 아이디 찾기
+		Todo todo = null;
+		String user_id = null;
+		try {
+			todo = todoService.getTodoByNO(Emoji.getTodo_no().intValue());
+			user_id = userServiceImpl.findByUserNo(todo.getUser_no()).getUser_id();
+		} catch (Exception e) {
+			log.error("ToDo 작성자 정보를 가져오는 중 예외 발생", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
+		// ToDo 응원 알림 보내기
+		if (!user_id.equals(Emoji.getUser_id())) { // 본인 작성 제외
+			Notification notification = new Notification();
+			notification.setUser_id(user_id);
+			notification.setType("ToDoCheering");
+			notification.setLink("/todoDetail/" + String.valueOf(Emoji.getTodo_no()) + "/my/" + todo.getTodo_date());
+
+			try {
+				notificationService.create(notification);
+			} catch (Exception e) {
+				log.error("알림 생성 중 예외 발생", e);
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+		}
+
 		return ResponseEntity.ok().build();
 	}
+
 	@PostMapping("/cheering-emojis/delete")
-	public ResponseEntity<Void> deleteCheeringEmoji (@RequestBody TodoCheeringEmoji Emoji){
+	public ResponseEntity<Void> deleteCheeringEmoji(@RequestBody TodoCheeringEmoji Emoji) {
 		System.out.println("==================");
 		System.out.println("start deleteCheeringEmoji");
 		todoCheeringEmojiService.deleteCheeringEmoji(Emoji);

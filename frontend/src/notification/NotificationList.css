@@ -1,56 +1,85 @@
 .notificationList {
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  width: 300px;
-  border: 1px solid #ddd;
+  margin: 30px auto 50px auto;
+  padding: 5px 40px;
+  width: 65%;
+  min-height: 650px;
   border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  padding: 20px;
 }
 
-.notificationList .notiListHeader {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+.notificationList h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.notiListHeader button {
-  background: none;
-  border: none;
+.notificationList .notiHeader {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.notificationList .notiHeader button {
+  width: 100px;
+  padding: 0 10px;
+  height: 35px;
+  border: 1px solid #bcbcbc;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  width: 90px;
 }
 
-.notiListBody {
-  display: flex;
-  flex-direction: column;
+.notificationList .notiHeader button:hover {
+  background-color: #9f9e9e;
 }
 
-.notiListBody label {
-  margin-bottom: 10px;
-}
-
-.notiListBody input,
-.notiListBody textarea {
+.notificationList table {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-.notiListBody button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
+.notificationList table thead {
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.notificationList table th, .notificationList table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.notificationList th {
+  background-color: #f0f0f5;
+  font-weight: bold;
+}
+
+.notificationList .isRead {
+  color: #9f9e9e;
+}
+
+.notificationList .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.notificationList .pagination button {
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  margin: 0 5px;
   cursor: pointer;
 }
 
-.notiListBody button:hover {
-  background-color: #45a049;
+.notificationList .pagination button.active  {
+  background-color: #c6c9d8;
+  color: white;
+}
+
+.notificationList .pagination button[disabled] {
+  cursor: not-allowed;
 }

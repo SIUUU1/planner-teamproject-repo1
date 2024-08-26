@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zeus.backend.domain.Notification;
 import com.zeus.backend.domain.Qna;
 import com.zeus.backend.domain.User;
+import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.QnaService;
 import com.zeus.backend.service.UserService;
 
@@ -29,6 +31,9 @@ public class QnaController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	// 전체 문의내역 가져오기
 	@GetMapping("/qna/list")
@@ -85,7 +90,7 @@ public class QnaController {
 		}
 		return new ResponseEntity<>(qnaData, HttpStatus.OK);
 	}
-	
+
 	// 사용자 문의내역 등록
 	@PostMapping("/user/qna/insert")
 	public ResponseEntity<Void> insertByUser(@RequestBody Qna qna) throws Exception {
@@ -98,8 +103,18 @@ public class QnaController {
 	@PostMapping("/mngr/qna/insert")
 	public ResponseEntity<Void> insertByMngr(@RequestBody Qna qna) throws Exception {
 		System.out.println("insertByMngr qna:" + qna);
-		//group_id 받아와야 함
+		// group_id 받아와야 함
 		qnaService.createByMngr(qna);
+		
+		// 문의내역 작성자 아이디 가져오기
+		Qna qnaInquiry = qnaService.readByGroupId(qna.getGroup_id());
+
+		// 문의내역 답변 등록 알림 보내기
+		Notification notification = new Notification();
+		notification.setUser_id(qnaInquiry.getUser_id());
+		notification.setType("QnaResponse");
+		notification.setLink("/qna/myqna/0");
+		notificationService.create(notification);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 

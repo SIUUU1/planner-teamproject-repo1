@@ -18,6 +18,9 @@ public interface BoardMapper {
 	// 상세 보기
 	public Board read(int no) throws Exception;
 
+	// Ref로 게시물 상세 보기
+	public Board readByRef(int ref) throws Exception;
+
 	// 파일이름 찾기
 	public String filename(int no) throws Exception;
 
@@ -35,7 +38,7 @@ public interface BoardMapper {
 
 	// 검색
 	public List<Board> search(String search) throws Exception;
-	
+
 	// 검색
 	public List<Board> searchByCategory(String search, String category) throws Exception;
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zeus.backend.domain.Message;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.service.MessageService;
+import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +74,21 @@ public class MessageController {
 		return new ResponseEntity<>(messageList, HttpStatus.OK);
 	}
 
+	// 특정 쪽지 조회
+	@GetMapping("/msg/read/{message_id}")
+	public ResponseEntity<Message> getMsg(@PathVariable int message_id) {
+		System.out.println("getMsg msg:" + message_id);
+		Message message = null;
+
+		try {
+			message = service.read(message_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+		}
+		return new ResponseEntity<>(message, HttpStatus.OK);
+	}
+
 	// 쪽지 검색
 	@PostMapping("/msg/search")
 	public ResponseEntity<List<Message>> searchMsg(@RequestBody Map<String, String> payload) {
@@ -92,7 +109,7 @@ public class MessageController {
 		}
 
 		try {
-			messageList = service.search(search,user.getUser_id());
+			messageList = service.search(search, user.getUser_id());
 			System.out.println("searchMsg msg:" + messageList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,7 +118,7 @@ public class MessageController {
 		return new ResponseEntity<>(messageList, HttpStatus.OK);
 	}
 
-	// 메시지 삽입
+	// 쪽지 삽입
 	@PostMapping("/msg/insert")
 	public ResponseEntity<Void> insert(@RequestBody Message message) throws Exception {
 		System.out.println("insert message:" + message);

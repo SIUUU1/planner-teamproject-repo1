@@ -23,6 +23,9 @@ public interface QnaMapper {
 	// 사용자 문의내역 갯수
 	public int countByUser(String user_id) throws Exception;
 
+	// group_id로 문의내역 조회
+	public Qna readByGroupId(int group_id) throws Exception;
+	
 	// 문의내역 조회
 	public Qna read(int qna_id) throws Exception;
 

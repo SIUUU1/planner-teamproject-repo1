@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeus.backend.domain.Notice;
+import com.zeus.backend.domain.Notification;
+import com.zeus.backend.domain.User;
 import com.zeus.backend.service.NoticeService;
+import com.zeus.backend.service.NotificationService;
+import com.zeus.backend.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +30,12 @@ public class NoticeController {
 
 	@Autowired
 	private NoticeService noticeService;
+
+	@Autowired
+	private NotificationService notificationService;
+
+	@Autowired
+	private UserService userService;
 
 	// 공지사항 리스트
 	@GetMapping("/list")
@@ -74,6 +84,19 @@ public class NoticeController {
 	public ResponseEntity<Void> insert(@RequestBody Notice notice) throws Exception {
 		System.out.println("insert notice:" + notice);
 		noticeService.createNew(notice);
+
+		// 새 공지글 알림 보내기
+		Notification notification = new Notification();
+
+		notification.setType("Notice");
+		notification.setLink("/qna/notice/0");
+
+		List<User> userList = userService.list();
+		for (User data : userList) {
+			notification.setUser_id(data.getUser_id());
+			notificationService.create(notification);
+		}
+
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 

@@ -86,6 +86,9 @@ public class QnaServiceImpl implements QnaService {
 		return mapper.listByCategory(category);
 	}
 
-	
+	@Override
+	public Qna readByGroupId(int group_id) throws Exception {
+		return mapper.readByGroupId(group_id);
+	}
 
 }

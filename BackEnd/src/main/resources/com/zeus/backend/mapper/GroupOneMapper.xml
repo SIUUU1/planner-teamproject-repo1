@@ -43,7 +43,7 @@
     </update>
     <!-- 그룹원 삭제 -->
     <delete id="delete">
-        DELETE FROM GroupOne WHERE user_id = #{user_id}
+        DELETE FROM GroupOne WHERE group_id = #{group_id} and user_id = #{user_id}
     </delete>
     <!-- 특정 그룹에 속한 모든 그룹원 삭제 -->
     <delete id="deleteByGroupId">

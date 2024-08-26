@@ -29,6 +29,12 @@ const QnaCustomerSupport = () => {
     if(mode==='edit'){
       setSelectedTab('voice');
     }
+    if(mode==='notice'){
+      setSelectedTab('notice');
+    }
+    if(mode==='myqna'){
+      setSelectedTab('myqna');
+    }
     if (qnaListData) {
       setQnaList(qnaListData);
     }

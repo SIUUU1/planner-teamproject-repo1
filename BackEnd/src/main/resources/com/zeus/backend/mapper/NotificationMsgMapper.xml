@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.NotificationMsgMapper">
+	<!-- 해당 타입의 알림 내용 삽입 -->
+	<insert id="create">
+		INSERT INTO notificationmsg (notificationmsg_id, type, content
+		) VALUES (
+		notificationmsg_id_seq.NEXTVAL, #{type}, #{content}
+		)
+	</insert>
+	<!-- 전체 목록 조회 -->
+	<select id="list" resultType="com.zeus.backend.domain.NotificationMsg">
+		SELECT * FROM notificationmsg ORDER BY type
+	</select>
+	<!-- 특정 타입의 알림 내용 조회 -->
+	<select id="read" resultType="com.zeus.backend.domain.NotificationMsg">
+		SELECT * FROM notificationmsg WHERE type = #{type}
+	</select>
+	<!-- 특정 타입의 알림 내용 수정 -->
+	<update id="update"> 
+		UPDATE notificationmsg SET content = #{content} WHERE notificationmsg_id = #{notificationmsg_id}
+	</update>
+	<!-- 특정 타입의 알림 내용 삭제 -->
+	<delete id="delete">
+		DELETE FROM notificationmsg WHERE notificationmsg_id = #{notificationmsg_id}
+	</delete>
+</mapper>

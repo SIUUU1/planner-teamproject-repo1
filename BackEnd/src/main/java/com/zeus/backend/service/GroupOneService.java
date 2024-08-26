@@ -34,7 +34,7 @@ public interface GroupOneService {
 	public void accept(Map<String, Object> map) throws Exception;
 
 	// 삭제 처리
-	public void delete(String user_id) throws Exception;
+	public void delete(Map<String, Object> map) throws Exception;
 
 	// 특정 그룹에 속한 모든 그룹원 삭제
 	public void deleteByGroupId(int group_id) throws Exception;
