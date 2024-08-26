@@ -176,4 +176,16 @@ public class AuthController {
 		service.updatePw(user);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	// 회원 테이블에 데이터가 없으면 최초 관리자를 생성한다.(아이디, 비번, 이름만 있으면 된다.)
+	@PostMapping("/setup")
+	public ResponseEntity<?> setupAdmin(@RequestBody User user) throws Exception {
+		try {
+			service.setupAdmin(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail to setup admin");
+		}
+		return new ResponseEntity<>("success to setupAdmin", HttpStatus.OK);
+	}
 }

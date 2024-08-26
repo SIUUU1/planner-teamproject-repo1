@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
 
 import com.zeus.backend.domain.Friend;
 import com.zeus.backend.domain.User;
+import com.zeus.backend.security.auth.PrincipalDetails;
 import com.zeus.backend.service.FriendService;
 import com.zeus.backend.service.UserOauthService;
 import com.zeus.backend.service.UserService;
@@ -25,6 +27,8 @@ import com.zeus.backend.service.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+
 
 @Slf4j
 @RestController
@@ -201,23 +205,6 @@ public class UserController {
 		return new ResponseEntity<>(userList, HttpStatus.OK);
 	}
 	
-	// 회원 테이블에 데이터가 없으면 최초 관리자를 생성한다.(아이디, 비번, 이름만 있으면 된다.)
-	@PostMapping("/setup")
-	public  ResponseEntity<?> setupAdmin(@RequestBody User user) throws Exception {
-		// 회원 테이블 데이터 건수를 확인하여 빈 테이블이면 최초 관리자를 생성한다.
-		if (userService.countAll() == 0) {
-			try {
-				userService.setupAdmin(user);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail to setup admin");
-			}
-			return new ResponseEntity<>("success to setupAdmin",HttpStatus.OK);
-			
-		}
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("fail to setup admin because members' count is not 0");
-	}
-	
 	//id로 다른 유저의 정보 찾기
 	@GetMapping("/userInfo/{user_id}")
 	public ResponseEntity<?> getUserById(@PathVariable String user_id){
@@ -235,5 +222,15 @@ public class UserController {
 			return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
 		}
 	}
+	 @GetMapping("/role")
+	    public ResponseEntity<String> getUserRole(Authentication authentication) {
+	        if (authentication != null) {
+	            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+	            String role = principalDetails.getUser().getRole();
+	            return ResponseEntity.ok(role);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        }
+	    }
 
 }

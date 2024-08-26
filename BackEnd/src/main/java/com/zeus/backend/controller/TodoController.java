@@ -87,29 +87,6 @@ public class TodoController {
 		System.out.println("todoNo:" + todo_no);
 		return todoService.getTodoByNO(todo_no);
 	}
-//	@PostMapping("/{todo_no}")
-//    public ResponseEntity<Map<String, Object>> getTodoByNO(@RequestBody Map<String, String> payload) {
-//        int todoNo = Integer.parseInt(payload.get("todo_no"));
-//
-//        System.out.println("=============================");
-//        System.out.println("start getTodoByNO");
-//        System.out.println("todoNo:"+todoNo);
-//
-//        // 상태 업데이트 처리 로직
-//        todoService.getTodoByNO(todoNo);
-//
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//            // 성공적인 업데이트 후 JSON 응답 반환
-//            response.put("success", true);
-//            response.put("message", "Todo 상태가 업데이트되었습니다.");
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            response.put("success", false);
-//            response.put("message", "Todo 상태 업데이트 중 오류가 발생했습니다.");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
 
 	@PostMapping("/updateState")
 	public ResponseEntity<Map<String, Object>> updateTodoState(@RequestBody Map<String, String> payload) {
