@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Welcome.css';
-import { ThemeContext } from '../contexts/ThemeContext';
+// import { ThemeContext } from '../contexts/ThemeContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faBars, faUserGroup, faChartSimple, faRightFromBracket, faPaperPlane, faSignInAlt, faRegistered } from "@fortawesome/free-solid-svg-icons";
 import Button from '../components/Button';
@@ -16,7 +16,7 @@ const images = [
 ];
 
 const Welcome = () => {
-  const { themeColor } = useContext(ThemeContext);
+  // const { themeColor } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
@@ -66,7 +66,7 @@ const Welcome = () => {
   }, [showNotifications, showMessageForm]);
 
   return (
-    <div className="welcome" style={{ backgroundColor: themeColor }}>
+    <div className="welcome" /*style={{ backgroundColor: themeColor }}*/>
             <div className="mainContent">
         <div className="slideShow">
           <img src={images[currentIndex]} alt={`Slide ${currentIndex}`} className="slideImage" />

@@ -6,7 +6,7 @@ import com.zeus.backend.domain.Theme;
 
 public interface ThemeService {
     List<Theme> getAllThemes();
-    Theme getThemeByNo(Long theme_no);
+    Theme getThemeByName(String theme_name);
     void saveTheme(Theme theme);
     void updateTheme(Theme theme);
     void deleteTheme(Long theme_no);
