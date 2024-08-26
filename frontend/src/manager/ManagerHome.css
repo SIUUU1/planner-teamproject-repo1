@@ -15,3 +15,132 @@
   display: flex;
   flex-direction: column;
 }
+/* 여기 아래부터 user 고객센터 css 그대로 가져와서 수정해야함 */
+.managerHomeInfo{
+  text-align: center;
+  margin-top: 40px;
+}
+.UserTable{
+  width: 80%;
+  margin: 50px auto;
+  text-align: center;
+  line-height: 170%;
+}
+.managerCustomerService{
+  padding: 20px 60px;
+  font-family: Arial, sans-serif;
+  width: 70%; /* 내용이 중앙에 정렬되도록 너비 설정 */
+  margin: 20px auto 70px auto;
+  min-height: 650px;
+}
+.mainTitle {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.subTitle {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  
+}
+
+.subTitleItem {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.contentBox {
+  line-height: 170%;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  border-top: 1.5px solid rgb(240, 240, 240);
+  border-bottom: 1.5px solid rgb(240, 240, 240);
+}
+
+.faqSection {
+  margin-top: 20px;
+}
+
+.faqItem {
+  margin-bottom: 10px;
+}
+
+.faqQuestion {
+  font-weight: bold;
+}
+
+.faqAnswer {
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.supportForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.title,.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  color: red;
+  font-size: 12px;
+}
+
+.formLabel {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px; /* 상담유형 글씨 크기 조정 */
+}
+
+.radioGroup {
+  display: flex;
+  gap: 20px; /* 라디오 버튼 사이의 간격을 조정합니다 */
+  font-size: 14px; /* 상담유형 옵션 글씨 크기 조정 */
+  justify-content: space-around;
+}
+
+.radioGroup label {
+  display: flex;
+  flex-direction: column; /* 수직 정렬을 위해 추가 */
+  align-items: center;
+  gap: 5px;
+}
+
+.formInput, .formTextarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px; /* 입력 필드 글씨 크기 조정 */
+}
+
+.formTextarea {
+  height: 100px;
+}
+
+.submitButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  align-self: center;
+}
+
+.submitButton:hover {
+  background-color: #45a049;
+}
