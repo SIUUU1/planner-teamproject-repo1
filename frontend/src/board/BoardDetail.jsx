@@ -45,11 +45,8 @@ const BoardDetail = () => {
   const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${no}`, 'json');
   const {data: boardListData, loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardListData } = useLoading('http://localhost:8080/api/board/list', 'json');
 
-  // user_id 유무에 따라 다른 URL을 설정
-  const apiUrl = user_id 
-  ? `http://localhost:8080/api/user/userInfo/${user_id}`
-  : `http://localhost:8080/api/user/userInfo`;
-  const {data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading(apiUrl, 'json');
+  //사용자 정보
+  const {data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState({initComment});
@@ -251,7 +248,7 @@ const BoardDetail = () => {
   return (
     <div className="boardDetail">
       <div className='boardContent backWhite'>
-        <Toback URL={'/boardlist'} />
+        <Toback URL={user_id ? `/boardlist/${user_id}` : '/boardlist'} />
         <h1>{board.subject}</h1>
         <div className='boardInfo'>
           <p>{formatDate(board.reg_date)} &middot; {board.category}</p>

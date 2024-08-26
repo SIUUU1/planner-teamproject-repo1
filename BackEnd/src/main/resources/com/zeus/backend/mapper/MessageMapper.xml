@@ -12,6 +12,10 @@
 	<!-- 전체 목록 조회 -->
 	<select id="list" resultType="com.zeus.backend.domain.Message">
 		SELECT * FROM messages ORDER BY sent_at DESC
+	</select> 
+	<!-- 특정 쪽지 조회 -->
+	<select id="read" resultType="com.zeus.backend.domain.Message">
+		SELECT * FROM messages WHERE message_id = #{message_id}
 	</select>
 	<!-- 특정 사용자의 쪽지 목록 조회 -->
 	<select id="findByUserId" resultType="com.zeus.backend.domain.Message">

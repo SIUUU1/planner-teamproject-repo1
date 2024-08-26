@@ -81,8 +81,10 @@ function MyQnaList({qnas,onChangeTab}) {
                 {inquiry.reply === 1 ? '답변 완료' : '답변 대기중'}
               </td>
               <td>{formatDate(inquiry.reg_date)}</td>
-              <td><Button className='qnaBtn' text={<FontAwesomeIcon icon={faPenToSquare} onClick={(e) => { e.stopPropagation(); goEdit(inquiry.qna_id); }}/>}/> 
-              <Button className='qnaBtn' text={<FontAwesomeIcon icon={faMinus} onClick={(e) => { e.stopPropagation(); onDelete(inquiry.qna_id); }}/>} /></td>
+              <td>
+                <Button className='qnaBtn' text={<FontAwesomeIcon icon={faPenToSquare} onClick={(e) => { e.stopPropagation(); goEdit(inquiry.qna_id); }}/>}/> 
+                <Button className='qnaBtn' text={<FontAwesomeIcon icon={faMinus} onClick={(e) => { e.stopPropagation(); onDelete(inquiry.qna_id); }}/>} />
+              </td>
             </tr>
             {visible[inquiry.group_id] &&
               inquiries.filter(response => response.group_id === inquiry.group_id && response.qora === 2).map((response, resIndex) => (

@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zeus.backend.domain.Group;
 import com.zeus.backend.domain.GroupOne;
+import com.zeus.backend.domain.Notification;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.service.GroupOneService;
 import com.zeus.backend.service.GroupService;
+import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.UserService;
 
 import jakarta.servlet.ServletContext;
@@ -41,6 +43,9 @@ public class GroupController {
 
 	@Autowired
 	private GroupOneService groupOneService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	// 그룹 리스트
 	@GetMapping("/list")
@@ -99,7 +104,7 @@ public class GroupController {
 		}
 		return new ResponseEntity<>(groupList, HttpStatus.OK);
 	}
-	
+
 	// 친구 그룹(가입된)
 	@GetMapping("/{user_id}/list")
 	public ResponseEntity<List<Group>> getGroupFriendList(@PathVariable String user_id) {
@@ -312,6 +317,18 @@ public class GroupController {
 			groupOneService.create(map);
 			// 지원수 업데이트
 			groupService.incrementApplyCount(Integer.parseInt(String.valueOf(map.get("group_id"))));
+
+			// 그룹 리더 아이디 찾기
+			Group group = groupService.read(Integer.parseInt(String.valueOf(map.get("group_id"))));
+
+			// 그룹 지원 알림
+			Notification notification = new Notification();
+			notification.setUser_id(group.getLeader_id());
+			notification.setContent(group.getGroup_name());
+			notification.setType("GroupJoinRequest");
+			notification.setLink("-");
+			notificationService.create(notification);
+
 			return ResponseEntity.ok("Groupone insert successfully");
 		} catch (Exception e) {
 			log.error("Error inserting Groupone", e);
@@ -326,6 +343,18 @@ public class GroupController {
 
 		try {
 			groupOneService.accept(map);
+
+			// 그룹명 찾기
+			Group group = groupService.read(Integer.parseInt(String.valueOf(map.get("group_id"))));
+
+			// 그룹 가입 수락 알림
+			Notification notification = new Notification();
+			notification.setUser_id(String.valueOf(map.get("user_id")));
+			notification.setContent(group.getGroup_name());
+			notification.setType("GroupJoinConfirmation");
+			notification.setLink("-");
+			notificationService.create(notification);
+
 			return ResponseEntity.ok("Groupone accept successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -339,7 +368,19 @@ public class GroupController {
 		System.out.println("deleteGroupOne");
 
 		try {
-			groupOneService.delete(String.valueOf(map.get("user_id")));
+			groupOneService.delete(map);
+
+			// 그룹명 찾기
+			Group group = groupService.read(Integer.parseInt(String.valueOf(map.get("group_id"))));
+
+			// 그룹 탈퇴 및 거절 알림
+			Notification notification = new Notification();
+			notification.setUser_id(String.valueOf(map.get("user_id")));
+			notification.setContent(group.getGroup_name());
+			notification.setType("GroupJoinRejection");
+			notification.setLink("-");
+			notificationService.create(notification);
+
 			return ResponseEntity.ok("Groupone delete successfully");
 		} catch (Exception e) {
 			e.printStackTrace();

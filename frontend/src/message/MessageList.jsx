@@ -1,13 +1,12 @@
-import React, { useRef,useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MessageList.css';
 import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
 import Pagination from '../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX , faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope, faEnvelopeOpen } from "@fortawesome/free-regular-svg-icons";
-import MessageForm from '../message/MessageForm';
 import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 const MessageList =()=>{
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +16,7 @@ const MessageList =()=>{
   const [searching, setSearching] = useState(false); // 검색 중 여부를 나타내는 상태
   const [searchTerm, setSearchTerm] = useState(''); // 실제 검색어를 저장하는 상태
   const [sortOrder, setSortOrder] = useState('latest');
+  const nav = useNavigate();
 
   // 사용자 정보
   const { data: userData, loading: loadingUser, error: errorUser, refetch: refetchUserData } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
@@ -71,10 +71,6 @@ const MessageList =()=>{
     setCurrentPage(page);
   };
 
-  const [showMessageForm, setShowMessageForm] = useState(false);
-
- 
-
   useEffect(() => {
     if (SearchData) {
       setSearchList(SearchData);
@@ -83,17 +79,6 @@ const MessageList =()=>{
     }
   }, [SearchData]);
 
-  // 삭제
-  const deleteRequest = useSendPost('http://localhost:8080/api/msg/delete',{},'json');
-  const onDelete=async(msg)=>{
-    try {
-      await deleteRequest.postRequest({ message_id: msg.message_id });
-      alert(`쪽지 삭제 성공`);
-    } catch (error) {
-      console.error("Error delete:", error);
-    }
-    refetchMsgList();
-  };
 
   // 비우기
   const delAllRequest = useSendPost('http://localhost:8080/api/msg/deleteAll','json');
@@ -107,11 +92,22 @@ const MessageList =()=>{
     refetchMsgList();
   };
 
-  // 답장
-  const [receiverId, setSeceiverId] = useState('');
-  const onReply=(msg)=>{
-    setSeceiverId(msg.sender_id)
-    setShowMessageForm(!showMessageForm);
+  // 읽음 표시
+  const upReadRequest = useSendPost('http://localhost:8080/api/msg/updateRead','json');
+  const onUpRead = async(msg)=>{
+    // 받는이만 읽음 표시 한다.
+    if(userData.user_id !== msg.receiver_id){
+      return;
+    }
+    if(msg.is_read!==0){
+      return;
+    }
+    try {
+      await upReadRequest.postRequest({ref : msg.ref});
+    } catch (error) {
+      console.error("Error updateRead:", error);
+    }
+    refetchMsgList();
   };
 
   const indexOfLastMsg = currentPage * itemsPerPage;
@@ -124,6 +120,15 @@ const MessageList =()=>{
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
+  };
+  
+  // 글자수 대로 자르기
+  const truncateContent = (content) => {
+    if (content.length > 20) {
+      const truncatedText = `${content.substring(0, 20)}...`;
+      return truncatedText;
+    }
+    return content; // 텍스트가 20자 이하라면 그대로 반환
   };
 
   if(loadingUser||loadingMsgList){
@@ -154,25 +159,21 @@ const MessageList =()=>{
       <table>
                 <thead>
                     <tr>
-                        <th>보낸이</th>
-                        <th>받는이</th>
-                        <th>내용</th>
-                        <th>날짜</th>
-                        <th>읽음 상태</th>
-                        <th></th>
+                        <th style={{ width: '80px' }}>보낸이</th>
+                        <th style={{ width: '80px' }}>받는이</th>
+                        <th style={{ width: '300px' }}>내용</th>
+                        <th style={{ width: '120px' }}>날짜</th>
+                        <th style={{ width: '50px' }}>읽음 상태</th>
                     </tr>
                 </thead>
                 <tbody>
                     {currentMsgs.map((msg) => (
-                        <tr key={msg.message_id}>
-                            <td>{userData.user_nickname === msg.sender_nickname ?('나'):(msg.sender_nickname)}</td>
-                            <td>{userData.user_nickname === msg.receiver_nickname ?('나'):(msg.receiver_nickname)}</td>
-                            <td>{msg.content}</td>
+                        <tr key={msg.message_id} onClick={()=>{onUpRead(msg); nav(`/msgitem/${msg.message_id}`);}} >
+                            <td>{msg.sender_nickname}</td>
+                            <td>{msg.receiver_nickname}</td>
+                            <td>{truncateContent(msg.content)}</td>
                             <td>{formatDate(msg.sent_at)}</td>
                             <td>{msg.is_read!==0 ? <FontAwesomeIcon icon={faEnvelopeOpen}/> : <FontAwesomeIcon icon={faEnvelope}/>}</td>
-                            <td>
-                              {msg.sender_id !== userData.user_id && <Button text={<FontAwesomeIcon icon={faPaperPlane} onClick={() => onReply(msg)} />} />}
-                              <Button text={<FontAwesomeIcon icon={faX} onClick={()=>{onDelete(msg)}} />} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -180,7 +181,7 @@ const MessageList =()=>{
             <div className="pagination">
             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
             </div>
-            {showMessageForm && <MessageForm receiver_id={receiverId} isOpen={showMessageForm} onClose={()=>{setShowMessageForm(false)}}/>}
+           
     </div>
   );
 };

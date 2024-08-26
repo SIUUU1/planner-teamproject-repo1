@@ -21,23 +21,26 @@ public class MessageServiceImpl implements MessageService {
 		// 가장 최근 num 값을 가져온다.
 		Integer maxNo = mapper.maxMessageId();
 		if (maxNo != null) {
-			number = maxNo+1;
+			number = maxNo + 1;
 		} else {
 			number = 1;
 		}
-		
+
 		message.setRef(number);
-		
-		//보낸이 쪽지함
+
+		// 보낸이 쪽지함
 		message.setUser_id(message.getSender_id());
 		mapper.create(message);
-
-		//받는이 쪽지함
-		maxNo = mapper.maxMessageId();
-		number = maxNo;
 		
-		message.setUser_id(message.getReceiver_id());
-		mapper.create(message);
+		if (!message.getSender_id().equals(message.getReceiver_id())) { // 내게 보내기할 때 두 번 등록하지 않는다.
+			// 받는이 쪽지함
+			maxNo = mapper.maxMessageId();
+			number = maxNo;
+
+			message.setUser_id(message.getReceiver_id());
+			mapper.create(message);
+		}
+		
 	}
 
 	@Override
@@ -66,9 +69,14 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public List<Message> search(String search,String user_id) throws Exception {
+	public List<Message> search(String search, String user_id) throws Exception {
 		search = "%" + search + "%";
 		return mapper.search(search, user_id);
+	}
+
+	@Override
+	public Message read(int message_id) throws Exception {
+		return mapper.read(message_id);
 	}
 
 }

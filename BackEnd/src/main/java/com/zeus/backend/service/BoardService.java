@@ -15,6 +15,9 @@ public interface BoardService {
 	// 상세 보기
 	public Board read(int no) throws Exception;
 
+	// Ref로 게시물 상세 보기
+	public Board readByRef(int ref) throws Exception;
+
 	// 수정 처리
 	public void modify(Map<String, Object> map) throws Exception;
 

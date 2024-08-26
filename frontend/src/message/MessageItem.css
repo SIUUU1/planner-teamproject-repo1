@@ -1,0 +1,36 @@
+.messageItem {
+  margin: 30px auto 50px auto;
+  padding: 30px 40px;
+  width: 65%;
+  min-height: 300px;
+  border-radius: 8px;
+  font-size: 18px;
+}
+.messageItem p {
+  margin-bottom: 10px;
+}
+.messageItem .msgContent {
+  min-height: 200px;
+  border: 1px solid #bcbcbc;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px 0;
+}
+.messageItem  .msgItemBtn {
+  text-align: right;
+}
+
+
+.messageItem button {
+  width: 100px;
+  padding: 0 10px;
+  height: 35px;
+  border: 1px solid #bcbcbc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  width: 90px;
+  margin-left: 10px;
+}

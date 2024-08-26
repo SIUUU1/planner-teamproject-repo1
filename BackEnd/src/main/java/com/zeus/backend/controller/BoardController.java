@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
 import com.zeus.backend.domain.Board;
+import com.zeus.backend.domain.Notification;
 import com.zeus.backend.service.BoardService;
+import com.zeus.backend.service.NotificationService;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +41,9 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	// 게시판 리스트
 	@GetMapping("/list")
@@ -53,7 +58,7 @@ public class BoardController {
 		}
 		return new ResponseEntity<>(boardList, HttpStatus.OK);
 	}
-	
+
 	// 게시판 상세보기(수정 시 사용)
 	@GetMapping("/read/{no}")
 	public ResponseEntity<Board> getBoard(@PathVariable int no) {
@@ -123,7 +128,21 @@ public class BoardController {
 		map.put("filename", null);
 		try {
 			boardService.createNew(map);
+
+			// 게시글 원글 작성자 아이디 찾기
+			Board board = boardService.readByRef(Integer.parseInt(String.valueOf(map.get("ref"))));
+
+			// 게시글 댓글 등록 알림 보내기
+			if(!board.getUser_id().equals(String.valueOf(map.get("user_id")))) { //본인 작성 제외
+				Notification notification = new Notification();
+				notification.setUser_id(board.getUser_id());
+				notification.setType("BoardComment");
+				notification.setLink("/boarddetail/"+String.valueOf(map.get("ref")));
+				notificationService.create(notification);
+			}
+			
 			return ResponseEntity.ok("Board insert successfully");
+			
 		} catch (Exception e) {
 			log.error("Error inserting Board", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inserting Board");
@@ -145,6 +164,7 @@ public class BoardController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updateComment Board");
 		}
 	}
+
 	// 게시판 댓글삭제
 	@Transactional
 	@PostMapping("/delete/comment")
@@ -159,7 +179,7 @@ public class BoardController {
 			log.error("Invalid 'no' format: " + noString, e);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid 'no' format.");
 		}
-		
+
 		try {
 			boardService.delete(no);
 			return ResponseEntity.ok("board comment remove successfully");
@@ -273,7 +293,8 @@ public class BoardController {
 			}
 			// 캐시 무효화를 위해 Cache-Control 헤더 추가
 			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + UriUtils.encode(resource.getFilename(), "UTF-8") + "\"");
+			headers.add(HttpHeaders.CONTENT_DISPOSITION,
+					"attachment; filename=\"" + UriUtils.encode(resource.getFilename(), "UTF-8") + "\"");
 			headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
 			headers.add(HttpHeaders.PRAGMA, "no-cache");
 			headers.add(HttpHeaders.EXPIRES, "0");
@@ -281,13 +302,13 @@ public class BoardController {
 			return ResponseEntity.ok().headers(headers).body(resource);
 
 		} catch (MalformedURLException e) {
-			 System.out.println("MalformedURLException: " + e.getMessage());
-		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		    } catch (FileNotFoundException e) {
-		        System.out.println("FileNotFoundException: " + e.getMessage());
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-		    } catch (Exception e) {
-		        System.out.println("Exception: " + e.getMessage());
+			System.out.println("MalformedURLException: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}

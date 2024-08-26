@@ -38,7 +38,7 @@ const GroupOne = () => {
 
   const onRefuse = async (groupone) => {
     try {
-      await postRequestDel({ user_id: groupone.user_id });
+      await postRequestDel({ user_id: groupone.user_id,  group_id: groupone.group_id });
       alert(`${groupone.user_nickname} 지원 거절하셨습니다.`);
     } catch (error) {
       console.error("Error refuse:", error);
@@ -48,7 +48,7 @@ const GroupOne = () => {
 
   const onDelete = async (groupone) => {
     try {
-      await postRequestDel({ user_id: groupone.user_id });
+      await postRequestDel({ user_id: groupone.user_id, group_id: groupone.group_id });
       alert(`${groupone.user_nickname} 탈퇴시켰습니다.`);
     } catch (error) {
       console.error("Error delete:", error);

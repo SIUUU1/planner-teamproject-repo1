@@ -73,8 +73,8 @@ const MenuBar = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => onMove('/analytics')}>
-            <FontAwesomeIcon icon={faBell} /> <span>알림설정</span>
+          <button className="menuItemLink" onClick={() => onMove('/notificationlist')}>
+            <FontAwesomeIcon icon={faBell} /> <span>알림</span>
           </button>
         </div>
         <div className="menuItem">
