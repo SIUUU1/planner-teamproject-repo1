@@ -20,8 +20,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme getThemeByNo(Long theme_no) {
-        return themeMapper.getThemeByNo(theme_no);
+    public Theme getThemeByName(String theme_name) {
+        return themeMapper.getThemeByName(theme_name);
     }
 
     @Override

@@ -2,22 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zeus.backend.mapper.SettingThemeMapper">
 
-	<select id="selectByUserId" resultType="com.zeus.backend.domain.SettingTheme">
-        SELECT * FROM setting_theme WHERE user_id = #{user_id}
-    </select>
+	<resultMap id="SettingThemeResultMap"
+		type="com.zeus.backend.domain.SettingTheme">
+		<id property="setting_theme_no" column="setting_theme_no" />
+		<result property="user_id" column="user_id" />
+		<result property="theme_no" column="theme_no" />
+		<result property="theme_name" column="theme_name" />
+		<result property="update_date" column="update_date" />
+	</resultMap>
 
-    <insert id="insert" parameterType="com.zeus.backend.domain.SettingTheme">
-        INSERT INTO setting_theme (setting_theme_no, user_id, theme_no, theme_id, update_date)
-        VALUES (setting_theme_seq.NEXTVAL, #{user_id}, #{theme_no}, #{theme_id}, #{update_date})
-    </insert>
+	<select id="selectAllThemes" resultMap="SettingThemeResultMap">
+		SELECT * FROM setting_theme
+	</select>
 
-    <update id="update" parameterType="com.zeus.backend.domain.SettingTheme">
-        UPDATE setting_theme
-        SET theme_no = #{theme_no}, theme_id = #{theme_id}, update_date = #{update_date}
-        WHERE user_id = #{user_id}
-    </update>
+	<select id="selectThemesByUserId"
+		resultType="com.zeus.backend.domain.SettingTheme" parameterType="string">
+		SELECT * FROM setting_theme WHERE user_id = #{user_id}
+	</select>
 
-    <delete id="delete" parameterType="string">
-        DELETE FROM setting_theme WHERE user_id = #{user_id}
-    </delete>
+	<select id="selectThemeByNo" resultMap="SettingThemeResultMap"
+		parameterType="long">
+		SELECT * FROM setting_theme WHERE setting_theme_no = #{setting_theme_no}
+	</select>
+
+	<insert id="insertTheme"
+		parameterType="com.zeus.backend.domain.SettingTheme">
+		INSERT INTO setting_theme (setting_theme_no, user_id, theme_no, theme_name,
+		update_date)
+		VALUES (setting_theme_seq.NEXTVAL, #{user_id}, #{theme_no}, #{theme_name},
+		SYSDATE)
+	</insert>
+
+	<update id="updateTheme"
+		parameterType="com.zeus.backend.domain.SettingTheme">
+		UPDATE setting_theme
+		SET user_id = #{user_id},
+		theme_no = #{theme_no},
+		theme_name = #{theme_name},
+		update_date = SYSDATE
+		WHERE setting_theme_no = #{setting_theme_no}
+	</update>
+
+	<delete id="deleteTheme" parameterType="long">
+		DELETE FROM setting_theme WHERE setting_theme_no = #{setting_theme_no}
+	</delete>
+
 </mapper>

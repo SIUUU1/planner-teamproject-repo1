@@ -1,46 +1,79 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import useLoading from '../util/useLoading';
+import { useUser } from './UserContext'; 
+// 기본 테마 설정
 
-// 테마 Context 생성
-export const ThemeContext = createContext({
-  currentTheme: null,
-  setCurrentTheme: () => {},
-});
+const ThemeContext = createContext();
 
-// 테마 제공 컴포넌트
-export const ThemeProvider = ({ children }) => {
-  // //사용자 정보를 가져옵니다.
-  // const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-  // // 현제 사용자 테마 가져오기
-  // const { data: themeData, loading: loadingTheme, error: errorTheme } = useLoading(`http://localhost:8080/api/user/setting-theme/`, 'json');
+export function ThemeProvider({ children }) {
+  const { user, isLoggedIn } = useUser(); // UserContext에서 가져온 값
+  const [theme, setTheme] = useState(null); // 현재 적용된 테마
+  const [themeType, setThemeType] = useState(null); // 현재 적용된 테마 타입
+  const [userId, setUserId] = useState(null); // 현재 사용자 ID
+  const [otherUserId, setOtherUserId] = useState(null); // 요청된 사용자 ID
   
-  // 초기 테마 설정 (초기값 null로 설정, 데이터를 가져온 후 설정)
-  const [currentTheme, setCurrentTheme] = useState({
-    theme_name: 'Theme Defualt',
-    theme_main: '#F1F6FF',
-    theme_dark: '#D3B3E5',
-    theme_right: '#E5CCF2',
-    theme_btn_dark: '#6A0DAD',
-    theme_btn_right: '#A36BCF',
-  });
+  // API URL
+  const allThemeUrl = `http://localhost:8080/api/user/themes`; // 기본 테마
+  const basicThemeUrl = `http://localhost:8080/api/user/themes/basic`; // 기본 테마
+  const userThemeUrl = userId ? `http://localhost:8080/api/user/setting-themes/user/${userId}` : null;
+  const otherUserThemeUrl = otherUserId ? `http://localhost:8080/api/user/setting-themes/user/${otherUserId}` : null;
+  
+  // useLoading 훅을 통해 테마를 로드
+  const { data: allThemeData } = useLoading(allThemeUrl, 'json');
+  const { data: basicThemeData } = useLoading(basicThemeUrl, 'json');
+  const { data: userThemeSettingData, refetch: refetchUserTheme } = useLoading(userThemeUrl, 'json');
+  const { data: otherUserSettingThemeData, refetch: refetchOtherUserTheme } = useLoading(otherUserThemeUrl, 'json');
 
-  // // themeData가 업데이트 될 때 currentTheme 설정
-  // useEffect(() => {
-  //   if (themeData && themeData.length > 0) {
-  //     setCurrentTheme(themeData[0]);
-  //   }
-  // }, [themeData]);
+// 사용자 id 업데이트
+useEffect(() => {
+  if (user) {
+    setUserId(user.user_id);
+    refetchUserTheme();
+  }else{
+    setUserId(null);
+  }
+}, [user]);
 
-  const changeTheme = (theme) => {
-    setCurrentTheme(theme);
-  };
+// 사용자 테마 데이터가 로드되면 테마 상태를 업데이트
+useEffect(() => {
+  if (user&&userThemeSettingData) {
+    setTheme(allThemeData.find(theme => theme.theme_no === userThemeSettingData.theme_no));
+  }else{
+    setTheme(basicThemeData);
+  }
+}, [userThemeSettingData,allThemeData]);
+
+// 다른 사용자 테마 업데이트
+useEffect(() => {
+  if (otherUserId) {
+    refetchOtherUserTheme();
+  }
+}, [otherUserId]);
+
+useEffect(() => {
+  if (themeType=='user'&&allThemeData&&userThemeSettingData) {
+    setTheme(allThemeData.find(theme => theme.theme_no === userThemeSettingData.theme_no));
+  }else if (themeType === 'other'&&allThemeData&&otherUserSettingThemeData) {
+   setTheme(allThemeData.find(theme => theme.theme_no === otherUserSettingThemeData.theme_no));
+  }
+}, [themeType,allThemeData,userThemeSettingData,otherUserSettingThemeData]);
+
+const updateTheme = (type = 'user', newUserId = userId) => {
+  if (type === 'user') {
+    setThemeType('user')
+  } else if (type === 'other') {
+    if (newUserId) {
+      setOtherUserId(newUserId);
+      setThemeType('other')
+    }
+  }
+};
 
   return (
-    <ThemeContext.Provider value={{ currentTheme, changeTheme }}>
+    <ThemeContext.Provider value={{basicThemeData,allThemeData, theme, updateTheme, otherUserSettingThemeData,themeType}}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-// 테마 Context 사용을 위한 커스텀 훅
 export const useTheme = () => useContext(ThemeContext);

@@ -5,8 +5,8 @@
         SELECT * FROM themes
     </select>
 
-    <select id="getThemeByNo" parameterType="long" resultType="com.zeus.backend.domain.Theme">
-        SELECT * FROM themes WHERE theme_no = #{theme_no}
+    <select id="getThemeByName" parameterType="String" resultType="com.zeus.backend.domain.Theme">
+        SELECT * FROM themes WHERE theme_name = #{theme_name}
     </select>
 
     <insert id="saveTheme" parameterType="com.zeus.backend.domain.Theme">

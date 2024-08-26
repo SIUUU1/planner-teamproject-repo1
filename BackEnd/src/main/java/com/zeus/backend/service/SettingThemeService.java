@@ -1,13 +1,20 @@
 package com.zeus.backend.service;
 
+import java.util.List;
+
 import com.zeus.backend.domain.SettingTheme;
 
 public interface SettingThemeService {
-	SettingTheme getSettingTheme(String userId);
 
-	void createSettingTheme(SettingTheme settingTheme);
+    List<SettingTheme> getAllThemes();
 
-	void updateSettingTheme(SettingTheme settingTheme);
+    SettingTheme getThemeByNo(Long setting_theme_no);
 
-	void deleteSettingTheme(String userId);
+    SettingTheme getThemesByUserId(String user_id);
+
+    void saveTheme(SettingTheme settingTheme);
+
+    void updateTheme(SettingTheme settingTheme);
+
+    void deleteTheme(Long setting_theme_no);
 }

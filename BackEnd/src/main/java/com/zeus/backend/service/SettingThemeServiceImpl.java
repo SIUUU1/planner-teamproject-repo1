@@ -1,5 +1,7 @@
 package com.zeus.backend.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,22 +15,32 @@ public class SettingThemeServiceImpl implements SettingThemeService {
     private SettingThemeMapper settingThemeMapper;
 
     @Override
-    public SettingTheme getSettingTheme(String userId) {
-        return settingThemeMapper.selectByUserId(userId);
+    public List<SettingTheme> getAllThemes() {
+        return settingThemeMapper.selectAllThemes();
     }
 
     @Override
-    public void createSettingTheme(SettingTheme settingTheme) {
-        settingThemeMapper.insert(settingTheme);
+    public SettingTheme getThemeByNo(Long setting_theme_no) {
+        return settingThemeMapper.selectThemeByNo(setting_theme_no);
     }
 
     @Override
-    public void updateSettingTheme(SettingTheme settingTheme) {
-        settingThemeMapper.update(settingTheme);
+    public SettingTheme getThemesByUserId(String user_id) {
+        return settingThemeMapper.selectThemesByUserId(user_id);
     }
 
     @Override
-    public void deleteSettingTheme(String userId) {
-        settingThemeMapper.delete(userId);
+    public void saveTheme(SettingTheme settingTheme) {
+        settingThemeMapper.insertTheme(settingTheme);
+    }
+
+    @Override
+    public void updateTheme(SettingTheme settingTheme) {
+        settingThemeMapper.updateTheme(settingTheme);
+    }
+
+    @Override
+    public void deleteTheme(Long setting_theme_no) {
+        settingThemeMapper.deleteTheme(setting_theme_no);
     }
 }

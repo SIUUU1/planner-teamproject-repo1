@@ -13,13 +13,17 @@ import useMove from '../util/useMove';
 import GroupList from '../components/GroupList';
 import Modal from '../studygroup/Modal';
 import BoardItem from '../components/BoardItem';
+import { useUser } from '../contexts/UserContext'; // UserContext에서 가져오기
+import { useTheme } from '../contexts/ThemeContext'; // ThemeContext에서 가져오기
 
 const currentDate = dayjs().format('YYYY-MM-DD');
 
 const Home = ()=>{
+  const { user } = useUser(); // UserContext에서 사용자 정보 가져오기
+  const { userThemeData } = useTheme(); // ThemeContext에서 사용자 테마 정보 가져오기
 
-  //사용자 정보를 가져옵니다.
-  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  // //사용자 정보를 가져옵니다.
+  // const { data: user, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   const [selectedImage, setSelectedImage] = useState('/images/cat1.jpg');
    // 스케쥴 데이터 로드
   const { data: SchedulerData= [], loading: loadingScheduler, error: errorScheduler } = useLoading(`http://localhost:8080/api/user/schedule/search?reg_date=${currentDate}`, 'json');
@@ -35,8 +39,8 @@ const Home = ()=>{
 
   // 게시판
   const { data: boardListData=[], loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
-  const filteredBoard = userData && boardListData && boardListData.length > 0 ? boardListData
-    .filter(board => board.user_id === userData.user_id)
+  const filteredBoard = user && boardListData && boardListData.length > 0 ? boardListData
+    .filter(board => board.user_id === user.user_id)
     .filter(board => board.step === 0)
     .slice(0, 5) : [];
 
@@ -76,18 +80,18 @@ const Home = ()=>{
     if(weatherData){
       setWeather(weatherData);
     }
-    if (userData) {
+    if (user) {
       let src='';
-      if(userData.image_url){
-        src=`http://localhost:8080/static/images/profile/${userData.image_url}`;
+      if(user.image_url){
+        src=`http://localhost:8080/static/images/profile/${user.image_url}`;
         setSelectedImage(src || '/images/cat1.jpg');
       }
     }
-  }, [adviceData,weatherData,userData]);
+  }, [adviceData,weatherData,user]);
 
 
   // 로딩 중, 오류 처리
-  if (loadingScheduler||loadingUser) {
+  if (loadingScheduler) {
     return <div>Loading...</div>;
 }
 
@@ -126,7 +130,7 @@ if (errorScheduler) {
                   key={i.todo_no}
                   todoData={i}
                   clickEvent={`/todoDetail/${i.todo_no}/my/${currentDate}`}
-                  userData={userData}
+                  user={user}
                 />
               ))}
             </div>
