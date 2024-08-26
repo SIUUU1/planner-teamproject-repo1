@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zeus.backend.domain.Notification;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.security.CodeGenerator;
 import com.zeus.backend.security.SessionAttributeWithExpiry;
 import com.zeus.backend.security.domain.Response;
 import com.zeus.backend.service.EmailService;
+import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +36,9 @@ public class AuthController {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	// 회원가입폼에 oauth2 인증한 사용자 정보 가져오기
 	@GetMapping("/joinform")
 	public User getjoinform(HttpSession session) {
@@ -46,6 +51,14 @@ public class AuthController {
 	public Response<String> joinProc(@RequestBody User user) throws Exception {
 		System.out.println("apiCon" + user);
 		service.create(user);
+
+		// 회원가입 축하 알림 보내기
+		Notification notification = new Notification();
+		notification.setUser_id(user.getUser_id());
+		notification.setType("WelcomeMessage");
+		notification.setLink("-");
+		notificationService.create(notification);
+
 		return new Response<>(HttpStatus.OK.value(), "회원가입 완료");
 	}
 
