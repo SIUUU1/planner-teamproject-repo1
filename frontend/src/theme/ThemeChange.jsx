@@ -1,146 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import './ThemeChange.css';
-import Footer from '../components/Footer';
-import Attainment from '../attainment/Attainment';
-import ToFullList from '../components/ToFullList';
 import Button from '../components/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from '../contexts/ThemeContext';
+import { useUser } from '../contexts/UserContext';
+import useSendPost from '../util/useSendPost';
 
 const ThemeChange = () => {
-  const { currentTheme, setTheme } = useTheme();
-// const themes = [
-//   {
-//     theme_name: 'Theme 0',
-//     theme_main: '#FAEAFF',
-//     theme_dark: '#D3B3E5',
-//     theme_right: '#E5CCF2',
-//     theme_btn_dark: '#6A0DAD',
-//     theme_btn_right: '#A36BCF',
-//     theme_btn: '#9D00FF',
-//     theme_btn_text: '#FFFFFF',
-//   },
-//   {
-//     theme_name: 'Theme 1',
-//     theme_main: 'linear-gradient(135deg, #f79d00, #64f38c)',
-//     theme_dark: '#C76D00',
-//     theme_right: '#52CC70',
-//     theme_btn_dark: '#f79d00',
-//     theme_btn_right: '#64f38c',
-//     theme_btn: '#FFA500',
-//     theme_btn_text: '#FFFFFF',
-//   },
-//   {
-//     theme_name: 'Theme 2',
-//     theme_main: 'linear-gradient(135deg, #BE93C5, #7BC6CC)',
-//     theme_dark: '#9B729B',
-//     theme_right: '#5FA2A9',
-//     theme_btn_dark: '#BE93C5',
-//     theme_btn_right: '#7BC6CC',
-//     theme_btn: '#9D7AB7',
-//     theme_btn_text: '#FFFFFF',
-//   },
-//   {
-//     theme_name: 'Theme 3',
-//     theme_main: 'linear-gradient(135deg, #A1FFCE, #FAFFD1)',
-//     theme_dark: '#80E0A6',
-//     theme_right: '#E5F2A8',
-//     theme_btn_dark: '#A1FFCE',
-//     theme_btn_right: '#FAFFD1',
-//     theme_btn: '#8FFFB3',
-//     theme_btn_text: '#000000',
-//   },
-//   {
-//     theme_name: 'Theme 4',
-//     theme_main: 'linear-gradient(135deg, #ef32d9, #89fffd)',
-//     theme_dark: '#D11DC1',
-//     theme_right: '#78D4E6',
-//     theme_btn_dark: '#ef32d9',
-//     theme_btn_right: '#89fffd',
+  const { user } = useUser();
+  const { theme, userThemeSettingData, updateTheme, allThemeData, refetchUserTheme } = useTheme(); 
+  
+  // Update theme when component mounts or when the user changes
+  useEffect(() => {
+    updateTheme('user');
+  }, [user, updateTheme]);
 
-//   },
-//   {
-//     theme_name: 'Theme 5',
-//     theme_main: 'linear-gradient(135deg, #a80077, #66ff00)',
-//     theme_dark: '#8B005E',
-//     theme_right: '#4DC300',
-//     theme_btn_dark: '#a80077',
-//     theme_btn_right: '#66ff00',
+  const { postRequest } = useSendPost(`http://localhost:8080/api/user/setting-themes/update`, {}, 'json');
 
-//   },
-//   {
-//     theme_name: 'Theme 6',
-//     theme_main: 'linear-gradient(135deg, #2980B9, #2980B9,#FFFFFF)',
-//     theme_dark: '#206499',
-//     theme_right: '#1A507A',
-//     theme_btn_dark: '#2980B9',
-//     theme_btn_right: '#89CFF0',
-//   },
-//   {
-//     theme_name: 'Theme 7',
-//     theme_main: 'linear-gradient(135deg, #12c2e9,#c471ed,#F64F59)',
-//     theme_dark: '#10A2C7',
-//     theme_right: '#A258DB',
-//     theme_btn_dark: '#12c2e9',
-//     theme_btn_right: '#F64F59',
-//   },
-//   {
-//     theme_name: 'Theme 8',
-//     theme_main: 'linear-gradient(135deg, #FEAC5E,#C779D0,#4bc0c8)',
-//     theme_dark: '#DA8A48',
-//     theme_right: '#A567C0',
-//     theme_btn_dark: '#FEAC5E',
-//     theme_btn_right: '#4bc0c8',
-//   },
-//   {
-//     theme_name: 'Theme 9',
-//     theme_main: 'linear-gradient(135deg, #5433FF,#20BDFF,#a6Fecb)',
-//     theme_dark: '#4326CB',
-//     theme_right: '#1B9AD4',
-//     theme_btn_dark: '#5433FF',
-//     theme_btn_right: '#20BDFF',
-//   },
-//   {
-//     theme_name: 'Theme 10',
-//     theme_main: 'linear-gradient(135deg, #C6FFDD,#FBD786,#f7797d)',
-//     theme_dark: '#A3DDBB',
-//     theme_right: '#D6A75E',
-//     theme_btn_dark: '#C6FFDD',
-//     theme_btn_right: '#f7797d',
-//   },
-// ];
-
-
-const ThemeChange = () => {
-  const [currentTheme, setCurrentTheme] = useState({
-    theme_name: 'Theme Defualt',
-    theme_main: '#F1F6FF',
-    theme_dark: '#D3B3E5',
-    theme_right: '#E5CCF2',
-    theme_btn_dark: '#6A0DAD',
-    theme_btn_right: '#A36BCF',
-  });
-  //사용자 테마 정보 로드
-  const { data: userThemeData, loading: loadingUserTheme, error: errorUserTheme } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-
-  const selectTheme = (theme) => {
-    setCurrentTheme(theme);
+  const updateSettingTheme = async (selectTheme) => {
+    try {
+      await postRequest({
+        user_id: user.user_id,
+        theme_name: selectTheme.theme_name,
+        theme_no: selectTheme.theme_no,
+      });
+      refetchUserTheme();
+    } catch (error) {
+      console.error("테마 업데이트 중 오류 발생:", error);
+      alert("테마 업데이트에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
-    <div className="theme-change" style={{
-      background: currentTheme.theme_main,
-      '--theme-btn-color': currentTheme.theme_btn,
-      '--theme-btn-text-color': currentTheme.theme_btn_text,
-    }}>
+    <div className="theme-change">
       <div className="theme-selector">
-        {themes.map((theme, index) => (
+        {allThemeData && allThemeData.map((theme, index) => (
           <button
             key={index}
             style={{ background: theme.theme_main }}
-            onClick={() => selectTheme(theme)}
-            aria-label={`Change theme to ${theme.theme_name}`}
+            onClick={() => updateSettingTheme(theme)} // Pass the function as a callback
           />
         ))}
       </div>
@@ -160,20 +59,19 @@ const ThemeChange = () => {
             <div className="toDoList backWhite">
               <Button
                 text={<FontAwesomeIcon icon={faPlus} />}
-                textColor={currentTheme.theme_btn_dark}
-                textHoverColor={currentTheme.theme_btn_right}
+                // textColor={theme.theme_btn_dark}
+                // textHoverColor={theme.theme_btn_right}
               />
             </div>
             <div className="circleSchedule backWhite">
-              {/* Content for circle schedule */}
             </div>
           </div>
           <div className="homeThirdMiddle">
             <div className="progress backWhite">
               <Button
                 text={<FontAwesomeIcon icon={faPlus} />}
-                themeColor={currentTheme.theme_btn}
-                textColor={currentTheme.theme_btn_text}
+                // themeColor={theme.theme_btn}
+                // textColor={theme.theme_btn_text}
               />
               <div className="progress1" style={{ height: '50px' }}>
                 {/* Content for progress1 */}

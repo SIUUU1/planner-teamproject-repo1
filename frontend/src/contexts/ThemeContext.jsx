@@ -70,7 +70,7 @@ const updateTheme = (type = 'user', newUserId = userId) => {
 };
 
   return (
-    <ThemeContext.Provider value={{basicThemeData,allThemeData, theme, updateTheme, otherUserSettingThemeData,themeType}}>
+    <ThemeContext.Provider value={{basicThemeData,allThemeData, theme, updateTheme,userThemeSettingData, otherUserSettingThemeData,themeType,refetchUserTheme}}>
       {children}
     </ThemeContext.Provider>
   );

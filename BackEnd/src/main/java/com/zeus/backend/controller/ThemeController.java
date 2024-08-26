@@ -95,10 +95,12 @@ public class ThemeController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/setting-themes/{setting_theme_no}")
-    public ResponseEntity<Void> updateSettingTheme(@PathVariable Long setting_theme_no, @RequestBody SettingTheme settingTheme) {
-        settingTheme.setSetting_theme_no(setting_theme_no);
-        settingThemeService.updateTheme(settingTheme);
+    @PostMapping("/setting-themes/update")
+    public ResponseEntity<Void> updateSettingTheme(@RequestBody SettingTheme settingTheme) {
+        System.out.println("==================");
+        System.out.println("updateSettingTheme");
+        System.out.println("settingTheme:"+settingTheme.toString());
+    	settingThemeService.updateTheme(settingTheme);
         return ResponseEntity.ok().build();
     }
 

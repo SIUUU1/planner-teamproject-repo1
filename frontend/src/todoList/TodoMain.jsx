@@ -10,16 +10,22 @@ import TodoItem from './TodoItem';
 import useLoading from '../util/useLoading';
 import dayjs from 'dayjs';
 import useSendPost from '../util/useSendPost';
+import {useUser} from '../contexts/UserContext'
 
 const TodoMain = () => {
   const { type, date, user_no } = useParams();
   const [isResigter,setIsResigter]=useState(false);
+  const [isCreater,setIsCreater]=useState(false);
   const [todoTitle, setTodoTitle] = useState(''); 
   const [localData,setLocalData]=useState([]);
   const { postRequest } = useSendPost('http://localhost:8080/api/user/todos/register', {}, 'json');
-  //사용자 정보를 가져옵니다.
-  const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  const {user:userData} =useUser();
 
+  useEffect(() => {
+    if (!user_no) {
+      setIsCreater(true);
+    }
+  }, [user_no]);
   const onClickResigter=()=>{
     setIsResigter(!isResigter);
   };
@@ -86,7 +92,7 @@ const TodoMain = () => {
           />
         </div>
         <div className="isResigterTodo">
-          {isResigter&&<Button text={<FontAwesomeIcon icon={faPlus} />} onClick={onClickResigter}/>}
+          {isCreater&&<Button text={<FontAwesomeIcon icon={faPlus} />} onClick={onClickResigter}/>}
         </div>
         {isResigter&&(<div className="resigterTodo">
           <input

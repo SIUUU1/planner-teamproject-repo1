@@ -18,7 +18,7 @@ import Chat from './openChat/Chat';
 import QnaCustomerSupport from './qna/QnaCustomerSupport';
 import NoticeBoard from './qna/NoticeBoard';
 // import Support from './qna/Support';
-// import ThemeChange from './theme/ThemeChange';
+import ThemeChange from './theme/ThemeChange';
 import FriendsList from './member/FriendsList';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { UserProvider } from './contexts/UserContext';
@@ -37,7 +37,7 @@ import GroupOne from './studygroup/GroupOne';
 import PasswordReset from './member/PasswordReset';
 import MessageList from './message/MessageList';
 import ManagerRoute from './router/ManagerRoute';
-import UserRoute from './router/UserRoute';
+// import UserRoute from './router/UserRoute';
 import ManagerHome from './manager/ManagerHome';
 import ManagerCustomerService from './manager/ManagerCustomerService';
 import ManagerUser from './manager/ManagerUser';
@@ -79,7 +79,7 @@ function App() {
             <Route path="/qna/:mode/:qna_id" element={<QnaCustomerSupport />} />
             {/* <Route path='/support' element={<Support />} /> */}
             <Route path="/notice" element={<NoticeBoard />} />
-            {/* <Route path="/themechange" element={<ThemeChange />} /> */}
+            <Route path="/themechange" element={<ThemeChange />} />
             <Route path="/friends" element={<FriendsList />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/schedule" element={<Schedule />} />

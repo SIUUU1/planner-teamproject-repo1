@@ -36,11 +36,11 @@
 	<update id="updateTheme"
 		parameterType="com.zeus.backend.domain.SettingTheme">
 		UPDATE setting_theme
-		SET user_id = #{user_id},
+		SET
 		theme_no = #{theme_no},
 		theme_name = #{theme_name},
 		update_date = SYSDATE
-		WHERE setting_theme_no = #{setting_theme_no}
+		WHERE user_id = #{user_id}
 	</update>
 
 	<delete id="deleteTheme" parameterType="long">
