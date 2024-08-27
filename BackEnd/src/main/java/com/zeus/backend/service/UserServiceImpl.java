@@ -77,12 +77,23 @@ public class UserServiceImpl implements UserService {
 	public User findByUserId(String user_id) throws Exception {
 		return mapper.findByUserId(user_id);
 	}
+	
+	@Override
+    public User findByUserNo(int user_no) throws Exception {
+        return mapper.findByUserNo(user_no);
+    }
 
 	// 회원 테이블의 데이터 건수 조회
 	@Override
 	public int countAll() throws Exception {
 		return mapper.countAll();
 	}
+	
+	//최근 7일 누적 회원 수 조회
+	@Override
+    public Map<String, String> getUserCountByDate() {
+        return mapper.getUserCountByDate();
+    }
 
 	// 수정 처리
 	@Override

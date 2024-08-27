@@ -20,6 +20,9 @@ public interface UserMapper {
 
 	// 회원 테이블의 데이터 건수 조회
 	public int countAll() throws Exception;
+	
+	//최근 7일 누적 회원 수 
+	public Map<String, String> getUserCountByDate();
 
 	// 회원 정보 수정 처리
 	public void modify(Map<String, Object> map) throws Exception;

@@ -23,6 +23,19 @@
 	<select id="findByUserNo" resultType="com.zeus.backend.domain.User">
 		SELECT * FROM users WHERE user_no = #{user_no} 
 	</select>
+	<!-- 최근 7일 누적 회원 수 정보 조회 -->
+	<select id="getUserCountByDate" resultType="java.util.Map">
+        SELECT
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 6 THEN 1 END)) AS day1,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 5 THEN 1 END)) AS day2,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 4 THEN 1 END)) AS day3,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 3 THEN 1 END)) AS day4,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 2 THEN 1 END)) AS day5,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 1 THEN 1 END)) AS day6,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) THEN 1 END)) AS day7
+        FROM USERS
+    </select>
+	
 	<!-- 사용자 수정 -->
 	<update id="modify">
 		UPDATE users SET user_nickname = #{user_nickname}, image_url = #{image_url}, 
