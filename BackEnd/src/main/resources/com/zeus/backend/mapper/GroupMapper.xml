@@ -51,13 +51,6 @@
 		select image_url from Groups where group_id=#{group_id}
 	</select>
 	<!-- 검색 -->
-	<!-- <select id="search" resultType="com.zeus.backend.domain.Group">
-		SELECT * FROM Groups 
-		where LOWER(category) LIKE LOWER(#{search}) 
-        OR LOWER(group_name) LIKE LOWER(#{search}) 
-        OR LOWER(group_goal) LIKE LOWER(#{search}) 
-		order by reg_date desc
-	</select> -->
 	<select id="search" resultType="com.zeus.backend.domain.Group">
 	    SELECT g.* FROM Groups g 
 	    JOIN GroupCategory gc ON LOWER(g.category) = LOWER(gc.code) 

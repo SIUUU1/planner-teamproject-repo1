@@ -1,12 +1,14 @@
 package com.zeus.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,12 +41,12 @@ public class FaqController {
 	}
 
 	// faq 상세 보기
-	@GetMapping("/read")
-	public ResponseEntity<Faq> getFaq(@RequestBody Faq faq) {
+	@GetMapping("/read/{faq_id}")
+	public ResponseEntity<Faq> getFaq(@PathVariable int faq_id) {
 		System.out.println("getFaq");
 		Faq faqData = null;
 		try {
-			faqData = service.read(faq.getFaq_id());
+			faqData = service.read(faq_id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(faqData);
@@ -73,9 +75,10 @@ public class FaqController {
 	// 문의내역 삭제
 	@Transactional
 	@PostMapping("/delete")
-	public ResponseEntity<Void> deleteFaq(@RequestBody Faq faq) throws Exception {
-		System.out.println("deleteFaq " + faq);
-		service.delete(faq.getFaq_id());
+	public ResponseEntity<Void> deleteFaq(@RequestBody Map<String, String> payload) throws Exception {
+		int faq_id = Integer.parseInt(payload.get("faq_id"));
+		System.out.println("deleteFaq " + faq_id);
+		service.delete(faq_id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

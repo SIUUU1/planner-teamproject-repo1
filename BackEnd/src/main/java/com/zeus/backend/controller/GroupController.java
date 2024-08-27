@@ -346,6 +346,9 @@ public class GroupController {
 
 			// 그룹명 찾기
 			Group group = groupService.read(Integer.parseInt(String.valueOf(map.get("group_id"))));
+			
+			// 그룹원 수 증가
+			groupService.incrementGroupOneCount(Integer.parseInt(String.valueOf(map.get("group_id"))));
 
 			// 그룹 가입 수락 알림
 			Notification notification = new Notification();

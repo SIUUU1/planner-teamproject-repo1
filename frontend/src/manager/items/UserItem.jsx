@@ -2,8 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import useSendPost from "../../util/useSendPost";
+import React, { useState } from 'react';
 
-const UserItem = ({ data,refetch }) => {
+const UserItem = ({ data,refetch,no }) => {
   const { postRequest, loading, error } = useSendPost('http://localhost:8080/api/mngr/user/delete');
   const onDelClick = async () => {
 
@@ -16,6 +17,7 @@ const UserItem = ({ data,refetch }) => {
   
   return (
     <tr className="userItem">
+      <td style={{ width: '70px' }}>{no}</td>
       <td style={{ width: '70px' }}>{data.user_name}</td>
       <td style={{ width: '250px' }}>{data.user_id}</td>
       <td style={{ width: '150px' }}>{data.role}</td>
