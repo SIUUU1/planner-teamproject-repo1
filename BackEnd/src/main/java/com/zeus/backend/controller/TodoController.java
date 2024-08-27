@@ -183,6 +183,17 @@ public class TodoController {
 		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
 	}
 
+	@GetMapping("/searchGroup")
+	public ResponseEntity<List<Todo>> getTodosByGroupAndDate(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date todo_date, @RequestParam Long group_id) {
+		System.out.println("=============================");
+		System.out.println("start getTodosByGroupAndDate");
+		System.out.println("group_id:" + group_id);
+		
+		List<Todo> todos = todoService.getTodosByGroupAndDate(group_id, todo_date);
+		return new ResponseEntity<>(todos, HttpStatus.OK); // 200 OK
+	}
+
 	@GetMapping("/{todo_no}/comments")
 	public ResponseEntity<List<TodoComment>> getCommentsByTodoNo(@PathVariable Long todo_no) {
 		List<TodoComment> comments = todoCommentService.getCommentsByTodoNo(todo_no);

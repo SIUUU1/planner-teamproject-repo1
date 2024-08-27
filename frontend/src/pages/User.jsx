@@ -130,7 +130,7 @@ const Home = ()=>{
             <p className='todoListP'>유저가 해야할 일을 등록하지 않았습니다!</p>
           ) : (
             <div className='sliceTodoList'>
-              {todoData.slice(0, 4).map((i) => (
+              {todoData.slice(0, 3).map((i) => (
                 <TodoItem
                   key={i.todo_no}
                   todoData={i}

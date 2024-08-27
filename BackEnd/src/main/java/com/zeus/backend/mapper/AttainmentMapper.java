@@ -15,6 +15,8 @@ public interface AttainmentMapper {
 	Attainment getAttainmentByIdNo(Long no);
 
 	void createAttainment(Attainment attainment);
+	
+	void createGroupAttainment(Attainment attainment);
 
 	void updateAttainment(Attainment attainment);
 
@@ -25,4 +27,8 @@ public interface AttainmentMapper {
 	List<Attainment> getShortTermAttainments(String user_id, LocalDate select_date);
 
 	List<Attainment> getLongTermAttainments(String user_id, LocalDate select_date);
+
+	List<Attainment> getLongTermAttainmentsByGroupId(Long group_id, LocalDate select_date);
+
+	List<Attainment> getShortTermAttainmentsByGroupId(Long group_id, LocalDate select_date);
 }

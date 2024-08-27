@@ -18,6 +18,8 @@ const GroupOne = () => {
     'json'
   );
 
+  const moveToMain=useMove('../');
+
   const onAccept =async(groupone)=>{
     try {
       await updateRequest({ user_id: groupone.user_id, group_id: groupone.group_id });

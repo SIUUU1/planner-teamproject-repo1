@@ -14,21 +14,51 @@ import useSendPost from '../util/useSendPost';
 import { useParams } from 'react-router-dom';
 
 const AttainmentMain = () => {
-  const {user_id} = useParams();
+  const {user_id,group_id} = useParams();
   //등록
   const { postRequest, loading: postLoading, error: postError } = useSendPost('http://localhost:8080/api/user/attainments');
   const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [attainment_duration,setAttainment_duration]=useState('short_term');
   const [importance, setImportance] = useState(0);
-  const apiShortUrl = user_id
-  ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=short_term&selectDate=${date}&user_id=${user_id}`:
-  `http://localhost:8080/api/user/attainments/search?attainment_duration=short_term&selectDate=${date}`;
-  const apiLongUrl = user_id
-  ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=long_term&selectDate=${date}&user_id=${user_id}`:
-  `http://localhost:8080/api/user/attainments/search?attainment_duration=long_term&selectDate=${date}`;
+  // const apiShortUrl = user_id
+  // ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=short_term&selectDate=${date}&user_id=${user_id}`:
+  // (group_id?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=short_term&selectDate=${date}&group_id=${group_id}`:
+  // `http://localhost:8080/api/user/attainments/search?attainment_duration=short_term&selectDate=${date}`);
 
-  const { data:shortData=[],refetch:refetchShort } = useLoading(apiShortUrl, 'json');
-  const { data:longData=[],refetch:refetchLong } = useLoading(apiLongUrl, 'json');
+  // const apiLongUrl = user_id
+  // ?`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=long_term&selectDate=${date}&user_id=${user_id}`:
+  // `http://localhost:8080/api/user/attainments/search?attainment_duration=long_term&selectDate=${date}`;
+
+  // 공통된 부분
+  const baseUrl = `http://localhost:8080/api/user/attainments/`;
+  const shortTermParams = `?attainment_duration=short_term&selectDate=${date}`;
+  const longTermParams = `?attainment_duration=long_term&selectDate=${date}`;
+
+  // Short Term URL 구성
+  let shortTermUrl;
+
+  if (user_id) {
+    shortTermUrl = `${baseUrl}searchUser${shortTermParams}&user_id=${user_id}`;
+  } else if (group_id) {
+    shortTermUrl = `${baseUrl}searchGroup${shortTermParams}&group_id=${group_id}`;
+  } else {
+    shortTermUrl = `${baseUrl}search${shortTermParams}`;
+  }
+
+  // Long Term URL 구성
+  let longTermUrl;
+
+  if (user_id) {
+    longTermUrl = `${baseUrl}searchUser${longTermParams}&user_id=${user_id}`;
+  } else if (group_id) {
+    longTermUrl = `${baseUrl}searchGroup${longTermParams}&group_id=${group_id}`;
+  } else {
+    longTermUrl = `${baseUrl}search${longTermParams}`;
+  }
+
+
+  const { data:shortData=[],refetch:refetchShort } = useLoading(shortTermUrl, 'json');
+  const { data:longData=[],refetch:refetchLong } = useLoading(longTermUrl, 'json');
   const [longHeight,setLongHeight] = useState(longData?longData.length * 70:50);
   const [isRegister,setIsRegister]=useState(false);
   const onClickLeft = () => setDate(dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'));
@@ -42,7 +72,8 @@ const AttainmentMain = () => {
     attainment_duration: 'short_term',
     start_date: '',
     end_date: '',
-    star: 0
+    star: 0,
+    group_id:group_id,
   });
 
   const handleInputChange = (e) => {

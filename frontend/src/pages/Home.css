@@ -44,6 +44,11 @@
   width: 69%;
   border: 1px solid black;
 }
+.groupToDoList {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+}
 .circleSchedule{
   width: 300px;
   height: 100%;
@@ -93,9 +98,17 @@
 .todoListP{
   margin-left: 35px;
 }
-.sliceTodoList{
+.sliceTodoList,.sliceGroupTodoList{
   padding: 0 20px;
 }
+.sliceGroupTodoList{
+ display: flex;
+ flex-direction: row;
+}
+.sliceGroupTodoListLeft, .sliceGroupTodoListRight{
+  width: 50%;
+}
+
 .schedulInfo{
   text-align: center;
 }

@@ -125,7 +125,7 @@ if (errorScheduler) {
             <p className='todoListP'>오늘 해야할 일을 정리해보세요!</p>
           ) : (
             <div className='sliceTodoList'>
-              {todoData.slice(0, 4).map((i) => (
+              {todoData.slice(0, 3).map((i) => (
                 <TodoItem
                   key={i.todo_no}
                   todoData={i}

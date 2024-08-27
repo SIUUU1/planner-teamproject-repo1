@@ -47,6 +47,7 @@ public class AttainmentController {
 	public ResponseEntity<String> createAttainment(@RequestBody Attainment attainment) {
 		System.out.println("===============================");
 		System.out.println("start create attainment");
+		System.out.println("attainment:"+attainment.toString());
 		User user = null;
 		try {
 			user = userServiceImpl.read();
@@ -113,6 +114,23 @@ public class AttainmentController {
 		System.out.println("user_id"+user_id);
 		
 		List<Attainment> attainments = attainmentService.getAttainmentsByUserIdAndDate(user_id,
+				attainmentDuration, selectDate);
+		System.out.println("attainments: "+attainments.toString());
+		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;
+	}
+	
+	@GetMapping("/searchGroup")
+	public ResponseEntity<List<Attainment>> getAttainmentsByOtherGroupIdAndDate(
+			@RequestParam("attainment_duration") String attainmentDuration,
+			@RequestParam("selectDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectDate, 
+			@RequestParam Long group_id ) {
+		System.out.println("======================");
+		System.out.println("start get Attainments By Other group_id And Date");
+		System.out.println("attainmentDuration"+attainmentDuration);
+		System.out.println("selectDate"+selectDate);
+		System.out.println("group_id"+group_id);
+		
+		List<Attainment> attainments = attainmentService.getAttainmentsByOtherGroupIdAndDate(group_id,
 				attainmentDuration, selectDate);
 		System.out.println("attainments: "+attainments.toString());
 		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Todo {
     private int todo_no;
     private int user_no;
+    private Long group_id;
     private String todo_title;
     private String is_done;
     private LocalDate todo_date;

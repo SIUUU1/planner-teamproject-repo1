@@ -13,11 +13,11 @@ import useSendPost from '../util/useSendPost';
 import {useUser} from '../contexts/UserContext'
 
 const TodoMain = () => {
-  const { type, date, user_no } = useParams();
+  const { type, date, user_no, group_id } = useParams();
   const [isResigter,setIsResigter]=useState(false);
   const [isCreater,setIsCreater]=useState(false);
   const [todoTitle, setTodoTitle] = useState(''); 
-  const [localData,setLocalData]=useState([]);
+  // const [localData,setLocalData]=useState([]);
   const { postRequest } = useSendPost('http://localhost:8080/api/user/todos/register', {}, 'json');
   const {user:userData} =useUser();
 
@@ -33,7 +33,8 @@ const TodoMain = () => {
     const newTodo = {
       todo_title: todoTitle,
       todo_date: date,
-      type: 'my'
+      type: type.toLowerCase,
+      group_id:group_id,
     };
 
     try {
@@ -51,26 +52,37 @@ const TodoMain = () => {
   const previousDay = currentDate.subtract(1, 'day').format('YYYY-MM-DD');
   const nextDay = currentDate.add(1, 'day').format('YYYY-MM-DD');
 
-  const onClickLeft = useMove(user_no ? `/todomain/${user_no}/${type}/${previousDay}`:`/todomain/${type}/${previousDay}`) ;
-  const onClickRight = useMove(user_no ? `/todomain/${user_no}/${type}/${nextDay}`: `/todomain/${type}/${nextDay}`);
-  
-  // user_id 유무에 따라 다른 URL을 설정
-   const apiUrl = user_no 
-   ? `http://localhost:8080/api/user/todos/searchUser?todo_date=${date}&user_no=${user_no}`
-   : `http://localhost:8080/api/user/todos/search?todo_date=${date}`;
+  // URL 생성 함수
+  const createUrl = (direction, date) => {
+    if (user_no) {
+      return `/todomain/${user_no}/${type}/${date}`;
+    } else if (group_id) {
+      return `/${group_id}/todomain/${type}/${date}`;
+    } else {
+      return `/todomain/${type}/${date}`;
+    }
+  };
+
+  // onClickLeft 및 onClickRight 함수 정의
+  const onClickLeft = useMove(createUrl('left', previousDay));
+  const onClickRight = useMove(createUrl('right', nextDay));
+
+  // 공통된 부분
+  const baseUrl = 'http://localhost:8080/api/user/todos/';
+
+  // URL 구성
+  let apiUrl;
+
+  if (user_no) {
+    apiUrl = `${baseUrl}searchUser?todo_date=${date}&user_no=${user_no}`;
+  } else if (group_id) {
+    apiUrl = `${baseUrl}searchGroup?todo_date=${date}&group_id=${group_id}`;
+  } else {
+    apiUrl = `${baseUrl}search?todo_date=${date}`;
+  }
 
   // todo 데이터 로드
   const { data: todoData, loading: loadingData, error: errorData, refetch } = useLoading(apiUrl, 'json');
-  
-  useEffect(() => {
-    if (todoData) {
-      if (type === 'my') {
-        setLocalData(todoData.filter(i => i.type === 'my' && i.todo_date === date));
-      } else if (type === 'team') {
-        setLocalData(todoData.filter(i => i.type === 'team' && i.todo_date === date));
-      }
-    }
-  }, [todoData, type, date]);
   
   // 로딩 중, 오류 처리
   if (loadingData) {
@@ -106,16 +118,16 @@ const TodoMain = () => {
 
 
         <div className='todoItemList'>
-          {localData.map((i) => (
+          {todoData.map((i) => (
             <TodoItem
               key={i.todo_no}
-              todoData={localData.find((e) => e.todo_no === i.todo_no)}
+              todoData={todoData.find((e) => e.todo_no === i.todo_no)}
               clickEvent={`/todoDetail/${i.todo_no}/${type}/${date}`}
               refetch={refetch}
               userData={userData}
             />
           ))}
-          {localData.length === 0 && <p className='noDataInfo'>아직 등록된 내용이 없습니다</p>}
+          {todoData.length === 0 && <p className='noDataInfo'>아직 등록된 내용이 없습니다</p>}
         </div>
       </div>
     </div>

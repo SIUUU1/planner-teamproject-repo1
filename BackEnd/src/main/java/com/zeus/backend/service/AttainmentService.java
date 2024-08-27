@@ -21,4 +21,7 @@ public interface AttainmentService {
 
 	List<Attainment> getAttainmentsByUserIdAndDate(String user_id, String attainment_duration,
 			LocalDate date);
+
+	List<Attainment> getAttainmentsByOtherGroupIdAndDate(Long group_id, String attainmentDuration,
+			LocalDate selectDate);
 }

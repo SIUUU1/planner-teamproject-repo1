@@ -30,6 +30,23 @@
 		#{attainment_finish}, #{attainment_rate},
 		#{star}, #{start_date}, #{end_date})
 	</insert>
+	
+	<!-- 새로운 Group Attainment 생성 -->
+	<insert id="createGroupAttainment"
+		parameterType="com.zeus.backend.domain.Attainment">
+		INSERT INTO attainment (attainment_no,user_id,
+		attainment_name, attainment_type,
+		attainment_duration,
+		attainment_target,
+		attainment_finish, attainment_rate, star,
+		start_date, end_date,group_id)
+		VALUES (attainment_seq.nextval, #{user_id},
+		#{attainment_name}, #{attainment_type},
+		#{attainment_duration},
+		#{attainment_target},
+		#{attainment_finish}, #{attainment_rate},
+		#{star}, #{start_date}, #{end_date},#{group_id})
+	</insert>
 
 	<!-- Attainment 업데이트 -->
 	<update id="updateAttainment"
@@ -82,6 +99,7 @@
 		attainment_duration = 'short_term'
 		AND TRUNC(start_date) =
 		TRUNC(#{select_date})
+		AND group_id IS NULL
 	</select>
 
 	<!-- user_id가 일치하고, long_term & select_date 조건을 만족하는 데이터를 조회 -->
@@ -89,6 +107,30 @@
 		resultType="com.zeus.backend.domain.Attainment">
 		SELECT * FROM attainment
 		WHERE user_id = #{user_id}
+		AND
+		attainment_duration = 'long_term'
+		AND TRUNC(start_date) &lt;=
+		TRUNC(#{select_date})
+		AND TRUNC(end_date) &gt;=TRUNC(#{select_date})
+		AND group_id IS NULL
+	</select>
+	
+	<!-- group_id가 일치하고, short_term & start_date가 일치하는 데이터를 조회 -->
+	<select id="getShortTermAttainmentsByGroupId"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+		WHERE group_id = #{group_id}
+		AND
+		attainment_duration = 'short_term'
+		AND TRUNC(start_date) =
+		TRUNC(#{select_date})
+	</select>
+
+	<!-- group_id가 일치하고, long_term & select_date 조건을 만족하는 데이터를 조회 -->
+	<select id="getLongTermAttainmentsByGroupId"
+		resultType="com.zeus.backend.domain.Attainment">
+		SELECT * FROM attainment
+		WHERE group_id = #{group_id}
 		AND
 		attainment_duration = 'long_term'
 		AND TRUNC(start_date) &lt;=

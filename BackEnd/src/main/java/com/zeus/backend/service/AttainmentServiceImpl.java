@@ -27,7 +27,11 @@ public class AttainmentServiceImpl implements AttainmentService {
 
     @Override
     public Attainment createAttainment(Attainment attainment) {
-        attainmentMapper.createAttainment(attainment);
+    	if(attainment.getGroup_id()==null) {
+    		attainmentMapper.createAttainment(attainment);
+    	}else {
+    		attainmentMapper.createGroupAttainment(attainment);
+    	}
         return attainment;
     }
 
@@ -58,5 +62,20 @@ public class AttainmentServiceImpl implements AttainmentService {
 		}
 		return null;
 	}
+
+	@Override
+	public List<Attainment> getAttainmentsByOtherGroupIdAndDate(Long group_id, String attainment_duration,
+			LocalDate select_date) {
+		System.out.println("attainment_duration: "+attainment_duration);
+		if(attainment_duration.equals("short_term")) {
+			return attainmentMapper.getShortTermAttainmentsByGroupId(group_id, select_date);
+		}
+		if(attainment_duration.equals("long_term")) {
+			return attainmentMapper.getLongTermAttainmentsByGroupId(group_id, select_date);
+		}
+		return null;
+	}
+	
+	
     
 }

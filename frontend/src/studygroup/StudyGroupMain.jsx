@@ -111,12 +111,6 @@ function StudyGroupMain() {
 
             <div className="studyGroupSection">
               <span>그룹</span>
-              {/* <div className="options">
-                <label><input type="checkbox" /> 개발자</label>
-                <label><input type="checkbox" /><FontAwesomeIcon icon={faCamera} /> 사진</label>
-                <label><input type="checkbox" /> 빈자리</label>
-                <label><input type="checkbox" /> 공개</label>
-              </div> */}
             </div>
             <StudyGroupList groups={displayedGroups} onItemClick={setSelectedGroup} />
             </>

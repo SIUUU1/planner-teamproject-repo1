@@ -47,6 +47,7 @@ import ManagerChat from './manager/ManagerChat';
 import ManagerSignUp from './manager/ManagerSignUp';
 import MessageItem from './message/MessageItem';
 import NotificationList from './notification/NotificationList';
+import StudyGroup from './pages/StudyGroup';
 
 
 function App() {
@@ -65,11 +66,14 @@ function App() {
             <Route path="/user/:user_id" element={<User/>} />
             <Route path='/*' element={<NotFound/>}/>
             <Route path='/as' element={<NotAuthorized/>}/>
+            <Route path='/group/:group_id' element={<StudyGroup/>}/>
             <Route path='/groupmain' element={<StudyGroupMain/>}/>
             <Route path='/groupedit/:id' element={<StudyGroupEditor/>}/>
             <Route path='/groupsearch' element={<StudyGroupSearch/>}/>
+            <Route path='/groupone/:id' element={<GroupOne/>}/>
             <Route path='/attainmentMain' element={<AttainmentMain/>}/>
             <Route path='/attainmentMain/:user_id' element={<AttainmentMain/>}/>
+            <Route path='/attainmentMain/group/:group_id' element={<AttainmentMain/>}/>
             <Route path='/attainmentDetail/:no' element={<AttainmentDetail/>}/>
             <Route path="/boardlist" element={<BoardList />} />
             <Route path="/boardwrite/:no" element={<BoardWrite />} />
@@ -86,9 +90,9 @@ function App() {
             <Route path="/schedule/:user_id" element={<Schedule />} />
             <Route path='/todomain/:user_no/:type/:date' element={<TodoMain/>}/>
             <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
+            <Route path='/:group_id/todomain/:type/:date' element={<TodoMain/>}/>
             <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>
             <Route path='/payForm' element={<PaymentForm/>}/>
-            <Route path='/groupone/:id' element={<GroupOne/>}/>
             <Route path='/passReset/:type' element={<PasswordReset/>}/>
             <Route path='/msglist' element={<MessageList/>}/>
             <Route path='/managerJoin' element={<ManagerSignUp/>}/>

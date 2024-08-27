@@ -52,5 +52,12 @@ public class TodoServiceImpl implements TodoService {
         return todoMapper.getTodosByUserAndDate(user_no, todo_date);
     }
 
+	@Override
+	public List<Todo> getTodosByGroupAndDate(Long group_id, Date todo_date) {
+		return todoMapper.getTodosByGroupAndDate(group_id, todo_date);
+	}
+    
+    
+
 	
 }

@@ -31,4 +31,6 @@ public interface TodoMapper {
     
     // 투두 완료 여부 업데이트
 	void updateTodoState(int todo_no, String is_done);
+
+	List<Todo> getTodosByGroupAndDate(Long group_id, Date todo_date);
 }
