@@ -19,6 +19,9 @@ public interface UserService {
 
 	// 회원 정보 조회
 	public User read() throws Exception;
+	
+	//최근 7일 누적 회원수 조회
+	public Map<String, String> getUserCountByDate();
 
 	// 수정 처리
 	public void modify(Map<String, Object> map) throws Exception;
@@ -58,4 +61,8 @@ public interface UserService {
 
 	// 사용자 아이디로 회원 정보 조회(타 유저 정보 조회)
 	public User getUserById(String user_id);
+
+	// 사용자 user_no pk로 회원 정보 조회
+    public User findByUserNo(int user_no) throws Exception;
+
 }

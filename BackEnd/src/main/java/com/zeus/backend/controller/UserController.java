@@ -61,6 +61,15 @@ public class UserController {
 			return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
 		}
 	}
+	// 최근 7일 누적 회원
+	@GetMapping("/countByDate")
+	public ResponseEntity<Map<String, String>> getUserCountByDate() {
+	    System.out.println("getUserCountByDate");
+	    Map<String, String> map = userService.getUserCountByDate();
+	    System.out.println("map: " + map.toString());
+	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	}
+
 	
 	// 목록 페이지
 	@GetMapping("/list")
