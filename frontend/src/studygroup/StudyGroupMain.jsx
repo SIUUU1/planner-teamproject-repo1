@@ -8,6 +8,7 @@ import Modal from './Modal';
 import useLoading from '../util/useLoading';
 import useSendPost from '../util/useSendPost';
 import GroupBestItem from './GroupBestItem';
+import { useTheme } from '../contexts/ThemeContext';
 
 function StudyGroupMain() {
   const { data: groupListData, loading: loadingGroupList, error: errorGroupList, refetch: refetchGroupList } = useLoading('http://localhost:8080/api/group/list', 'json');
@@ -23,6 +24,12 @@ function StudyGroupMain() {
 
   const [displayedGroups, setDisplayedGroups] = useState([]);
   const navigate = useNavigate();
+
+  const {theme, updateTheme } = useTheme(); 
+  // 테마 업데이트
+  useEffect(() => {
+      updateTheme('user');
+    }, [updateTheme]);
 
  useEffect(() => {
     if (groupListData) {

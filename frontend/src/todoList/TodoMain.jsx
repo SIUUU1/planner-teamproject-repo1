@@ -11,16 +11,26 @@ import useLoading from '../util/useLoading';
 import dayjs from 'dayjs';
 import useSendPost from '../util/useSendPost';
 import {useUser} from '../contexts/UserContext'
+import { useTheme } from '../contexts/ThemeContext';
 
 const TodoMain = () => {
-  const { type, date, user_no, group_id } = useParams();
+  const { type, date, user_no, user_id, group_id } = useParams();
+  const {theme, updateTheme } = useTheme(); 
   const [isResigter,setIsResigter]=useState(false);
   const [isCreater,setIsCreater]=useState(false);
   const [todoTitle, setTodoTitle] = useState(''); 
   // const [localData,setLocalData]=useState([]);
   const { postRequest } = useSendPost('http://localhost:8080/api/user/todos/register', {}, 'json');
   const {user:userData} =useUser();
-
+  // user_id에 따라 테마 업데이트
+  useEffect(() => {
+    if (user_id) {
+      updateTheme('other', user_id);
+    } else {
+      updateTheme('user');
+    }
+  }, [user_id, updateTheme]);
+  
   useEffect(() => {
     if (!user_no) {
       setIsCreater(true);

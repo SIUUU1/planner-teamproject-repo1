@@ -88,7 +88,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/schedule/:user_id" element={<Schedule />} />
-            <Route path='/todomain/:user_no/:type/:date' element={<TodoMain/>}/>
+            <Route path='/todomain/:user_no/:type/:date/:user_id' element={<TodoMain/>}/>
             <Route path='/todomain/:type/:date' element={<TodoMain/>}/>
             <Route path='/:group_id/todomain/:type/:date' element={<TodoMain/>}/>
             <Route path='/todoDetail/:no/:type/:date' element={<TodoDetail/>}/>

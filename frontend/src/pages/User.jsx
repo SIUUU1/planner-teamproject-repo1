@@ -14,11 +14,11 @@ import useMove from '../util/useMove';
 import GroupList from '../components/GroupList';
 import Modal from '../studygroup/Modal';
 import BoardItem from '../components/BoardItem';
-
+import { useTheme } from '../contexts/ThemeContext';
 const currentDate = dayjs().format('YYYY-MM-DD');
 
 const Home = ()=>{
-
+  const {theme, updateTheme } = useTheme(); 
   //사용자 정보를 가져옵니다.
   const { data: userData, loading: loadingUser, error: errorLoadingUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
   //유저 ID 받기
@@ -57,6 +57,15 @@ const Home = ()=>{
   // 달성표 로드
   const { data:shortData,refetch:refetchShort } = useLoading(`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=short_term&selectDate=${currentDate}&user_id=${user_id}`, 'json');
   const { data:longData,refetch:refetchLong } = useLoading(`http://localhost:8080/api/user/attainments/searchUser?attainment_duration=long_term&selectDate=${currentDate}&user_id=${user_id}`, 'json');
+  
+  // user_id에 따라 테마 업데이트
+  useEffect(() => {
+    if (user_id) {
+      updateTheme('other', user_id);
+    } else {
+      updateTheme('user');
+    }
+  }, [user_id, updateTheme]);
   
   const modifiedShortData = shortData?shortData
     .filter(item => item.star > 0)
@@ -125,7 +134,7 @@ const Home = ()=>{
 
       <div className='homeSecondMiddle'> 
         <div className='toDoList backWhite'>
-          <ToFullList URL={`/todomain/${otherUserData.user_no}/my/${currentDate}`}></ToFullList>
+          <ToFullList URL={`/todomain/${otherUserData.user_no}/my/${currentDate}/${otherUserData.user_id}`}></ToFullList>
           {(todoData===null||todoData.length === 0) ? (
             <p className='todoListP'>유저가 해야할 일을 등록하지 않았습니다!</p>
           ) : (
