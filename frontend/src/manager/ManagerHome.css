@@ -30,6 +30,42 @@
   line-height: 170%;
 }
 
+.UserTable input {
+  text-align: center;
+  width: 60%;
+  font-size: 16px;
+  margin: 0;
+}
+.managerContent .writeBtnDiv {
+  margin-top: 40px;
+  text-align: right;
+  padding-right: 30px;
+}
+.managerContent .writeBtn {
+  border-radius: 5px;
+  background-color: #424242;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 5px;
+  /* width: 90px; */
+}
+
+.managerContent .writeBtn:hover{
+  background-color: rgb(114, 120, 129);
+}
+
+/* managerGroupCateEditor */
+.managerContent .categoryForm {
+  margin-top: 10px;
+  text-align: center;
+}
+.managerContent .categoryForm input{
+  text-align: center;
+  width: 30%;
+  font-size: 16px;
+  margin: 0 10px;
+}
 /* managerCustomerService */
 .managerCustomerService .subTitle {
   font-size: 20px;
@@ -61,7 +97,12 @@
 }
 
 /* managerFaqEditor */
-.formGroup {
+.managerContent .managerEditorForm {
+  width: 60%;
+  margin: 60px auto 50px;
+}
+
+.managerEditorForm .formGroup {
   margin-bottom: 15px;
 }
 .formGroup label {
@@ -93,6 +134,8 @@
   border-radius: 4px;
   cursor: pointer;
   font-weight: 550;
+  width: 100px;
+  margin-left: 10px;
 }
 .newCategory button{
   width: 90px;
@@ -106,10 +149,9 @@ textarea {
 }
 .btnSub{
   display: flex;
-  justify-content: end;
+  justify-content: center;
+  align-items: center;
 }
-
-
 
 .supportForm {
   display: flex;
@@ -120,7 +162,7 @@ textarea {
   margin-bottom: 15px;
 }
 
-.title,.formGroup {
+.title {
   display: flex;
   flex-direction: column;
 }

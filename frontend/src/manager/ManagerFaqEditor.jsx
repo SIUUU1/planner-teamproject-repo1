@@ -16,18 +16,16 @@ const ManagerFaqEditor =()=>{
   const {no} = useParams();
   const [faq, setFaq] = useState(initFaq);
   const {data: faqData, loading: loadingfaqData, error: errorfaqData, refetch: refetchfaqData } = useLoading(`http://localhost:8080/api/faq/read/${no}`, 'json');
-  // 사용자 정보
-  const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
 
    useEffect(() => {
     if (faqData) {
       setFaq(faqData);
     }
-  }, [faqData, userData]);
+  }, [faqData,]);
 
   const onChange = (e) => {
     const { name, value } = e.target;
-    setBoard((prevData) => ({
+    setFaq((prevData) => ({
       ...prevData,
       [name]: value,
   }));
@@ -44,10 +42,47 @@ const ManagerFaqEditor =()=>{
     }
   };
 
+  const moveToFaqList = useMove('/manager/customer-service/faq');
+
   //등록
-  const onSubmit =()=>{}
+  const { postRequest: sendRequest } = useSendPost('http://localhost:8080/api/faq/insert', {}, 'json');
+  const onSubmit =async()=>{
+    if (!faq.faq_category || !faq.faq_title ||!faq.faq_content) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+    try {
+      await sendRequest(faq);
+      alert('faq 등록 되었습니다.');
+      setFaq({
+        ...initFaq,
+      });
+      moveToFaqList();//목록
+    } catch (error) {
+      console.error('faq 등록 실패:', error);
+      alert('faq 등록 실패했습니다.');
+    }
+  };
+
   //수정
-  const onUpdate =()=>{}
+  const { postRequest: updateRequest } = useSendPost('http://localhost:8080/api/faq/update', {}, 'json');
+  const onUpdate =async()=>{
+    if (!faq.faq_category || !faq.faq_title ||!faq.faq_content) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+    try {
+      await updateRequest(faq);
+      alert('faq 수정 되었습니다.');
+      setFaq({
+        ...initFaq,
+      });
+      moveToFaqList();//목록
+    } catch (error) {
+      console.error('faq 수정 실패:', error);
+      alert('faq 수정 실패했습니다.');
+    }
+  }
 
   return(
     <>
@@ -55,6 +90,7 @@ const ManagerFaqEditor =()=>{
       <div className="managerContent backWhite">
         <ManagerMenuInfo/>
         
+      <div className='managerEditorForm'> 
       <div className="formGroup">
         <label htmlFor="faq_title">제목:</label>
         <input type="text" name="faq_title" value={faq.faq_title} onChange={onChange}/>
@@ -78,15 +114,16 @@ const ManagerFaqEditor =()=>{
       </div>
       <div className="formGroup">
         <label htmlFor="content">내용:</label>
-        <textarea  name="faq_contents" onChange={onChange}>{faq.faq_content}</textarea>
+        <textarea name="faq_content" value={faq.faq_content} onChange={onChange} />
       </div>
       <div className="formGroup btnSub">
         {no!=0 ?(
         <button onClick={onUpdate} className="completeButton">수정</button>
       ):(
         <button onClick={onSubmit} className="completeButton">등록</button>)}
-        <button onClick={onUpdate} className="completeButton">목록</button>
+        <button onClick={moveToFaqList} className="completeButton">목록</button>
       </div>
+      </div>  
 
       </div>
     </div>

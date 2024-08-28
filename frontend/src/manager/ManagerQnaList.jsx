@@ -31,15 +31,6 @@ function ManagerQnaList() {
   const indexOfFirstQna = indexOfLastQna - itemsPerPage;
   const currentQnas = qnas.slice(indexOfFirstQna, indexOfLastQna);
 
-
-  // const navigate = useNavigate();
-  // // 수정 페이지로 이동
-  // const goEdit = (qna_id) => {
-  //   navigate(`/qna/edit/${qna_id}`);
-  //   onChangeTab('voice'); //탭 바꾸기
-  // };
-
-  
   if(loadingQnaList){
     return(<div>loading...</div>)
   }
@@ -49,6 +40,7 @@ function ManagerQnaList() {
           <thead>
             <tr>
               <th style={{ width: '70px' }}>번호</th>
+              <th style={{ width: '70px' }}>카테고리</th>
               <th style={{ width: '150px' }}>제목</th>
               <th style={{ width: '250px' }}>내용</th>
               <th style={{ width: '100px' }}>상태</th>

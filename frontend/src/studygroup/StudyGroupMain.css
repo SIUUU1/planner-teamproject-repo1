@@ -4,54 +4,58 @@
   padding: 20px;
   box-sizing: border-box;
 }
-
-.studyGroupMain .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-}
-
-.studyGroupMain .header h1 {
-  margin-left: 20px;
+.studyGroupMain h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .studyGroupMain .searchBar {
   display: flex;
-  align-items: center;
+  margin-bottom: 20px;
 }
 
 .studyGroupMain .searchBar input[type="text"] {
-  padding: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  border: 1px solid #ccc;
 }
 
-.studyGroupMain .searchBar .searchButton {
-  padding: 8px 10px;
-  margin-left: 10px;
-  background-color: #007BFF;
+.studyGroupMain .searchBar button {
+  background-color: #424242;
   color: white;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
+  width: 90px;
+  margin-left: 5px;
+  border-radius: 5px;
+}
+.studyGroupMain .searchBar button:hover {
+  background-color: #616161;
 }
 
-.studyGroupMain .missionGroup span {
+.studyGroupMain .missionGroup span,
+.studyGroupMain .studyGroupSection span,
+.studyGroupMain .studyGroupSection span {
   display: block;
   padding: 20px;
-  background-color: #EFEFEF;
+  width: 90%;
+  text-align: center;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  margin-top: 30px;
 }
 
 .studyGroupMain .missionGroup .missionCards {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   padding: 20px;
   background-color: white;
 }
 
 .studyGroupMain .missionCard {
-  width: 180px;
+  width: 250px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -181,7 +185,7 @@
 }
 
 .groupItem {
-  width: calc(33.333% - 40px); 
+  width: 25%; 
   margin: 10px; 
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   border-radius: 8px;
@@ -239,9 +243,17 @@
   border-radius: 8px;
   padding: 20px;
   width: 25%; /* 너비 설정 */
-  height: 80%; /* 높이 설정 */
+  height: 60%; /* 높이 설정 */
   overflow-y: auto; /* 내용이 넘칠 경우 스크롤 가능하게 설정 */
   position: relative; /* 닫기 버튼을 배치하기 위해 position 설정 */
+  text-align: center;
+}
+
+.modalContent .groupBtnDiv {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 모달 이미지 */
@@ -274,7 +286,7 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    margin-left: 10px; /* 버튼 사이에 간격 추가 */
+    margin: 0 20px; /* 버튼 사이에 간격 추가 */
   }
   
   .joinButton {

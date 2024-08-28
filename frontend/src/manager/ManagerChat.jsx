@@ -45,7 +45,6 @@ const ManagerChat=()=>{
               <th style={{ width: '70px' }}>채팅방 이름</th>
               <th style={{ width: '250px' }}>채팅방 생성자 ID</th>
               <th style={{ width: '150px' }}>채팅방 설명</th>
-              <th style={{ width: '70px' }}>링크</th>
               <th style={{ width: '40px' }}>삭제</th>
             </tr>
           </thead>

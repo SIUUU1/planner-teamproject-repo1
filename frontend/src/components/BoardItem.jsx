@@ -22,18 +22,17 @@ const BoardItem =({ board, user_id })=>{
     }
   };
 
+   // 텍스트가 20자를 넘을 경우 자르고 '...'을 추가
   const truncateContent = (content) => {
-    // 텍스트를 먼저 추출한 후 자릅니다.
+    // 임시 div 요소를 생성하여 HTML을 텍스트로 변환
     const div = document.createElement('div');
     div.innerHTML = content;
     const textContent = div.textContent || div.innerText || "";
-
-    // 텍스트가 20자를 넘을 경우 자르고, HTML 구조를 유지한 상태로 반환합니다.
+   
     if (textContent.length > 20) {
-      const truncatedText = `${textContent.substring(0, 20)}...`;
-      return truncatedText;
+      return `${textContent.substring(0, 20)}...`;
     }
-    return content; // 텍스트가 20자 이하라면 그대로 반환
+    return textContent;
   };
 
   return(

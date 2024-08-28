@@ -134,7 +134,7 @@ public class AuthController {
 				.append("이 코드는 10분 동안만 유효합니다. 시간이 지나면 코드가 만료되며, 다시 요청해 주셔야 합니다.\n\n")
 				.append("본인이 요청한 것이 아닌 경우, 즉시 WePlan 고객 지원팀에 문의해 주시기 바랍니다.\n\n").append("감사합니다.\n\n")
 				.append("WePlan 팀 드림\n\n").append("---------------------------------------------\n").append("문의사항:\n")
-				.append("- 고객센터: support@weplan.com\n").append("- 전화: 1234-5678\n")
+				.append("- 고객센터: weplan2024@gmail.com\n")
 				.append("---------------------------------------------\n")
 				.append("추신: 만약 이 이메일이 스팸으로 잘못 분류된 경우, 수신함으로 이동시키고 WePlan 이메일을 신뢰할 수 있는 발신자로 지정해 주세요.");
 		System.out.println("verificationCode" + verificationCode);

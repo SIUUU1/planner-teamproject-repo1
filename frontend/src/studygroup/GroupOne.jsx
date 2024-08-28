@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import useSendPost from '../util/useSendPost';
 import useLoading from '../util/useLoading';
 import useMove from '../util/useMove';
+import './GroupOne.css';
+import GroupOneItem from './GroupOneItem';
 
 const GroupOne = () => {
   const { id } = useParams();
@@ -10,53 +12,6 @@ const GroupOne = () => {
   const { data: groupOneData, loading: loadingGroupOne, error: errorGroupOne, refetch: refetchGroupOne } = useLoading(`http://localhost:8080/api/group/groupone/list/${id}`, 'json');
   // 그룹 수정
   const moveToEdit = useMove(`/groupedit/${id}`);
-
-  //지원 수락
-  const {postRequest: updateRequest, error:updateError} = useSendPost(
-    'http://localhost:8080/api/group/groupone/accept',
-    {},
-    'json'
-  );
-
-  const moveToMain=useMove('../');
-
-  const onAccept =async(groupone)=>{
-    try {
-      await updateRequest({ user_id: groupone.user_id, group_id: groupone.group_id });
-      alert(`${groupone.user_nickname} 지원 수락하셨습니다.`);
-    } catch (error) {
-      console.error("Error accept:", error);
-    }
-    refetchGroupOne();
-  };
-
-  //지원 거절 및 그룹 탈퇴시키기
-  const deleteRequest = useSendPost(
-    'http://localhost:8080/api/group/groupone/delete',
-    {},
-    'json'
-  );
-  const { postRequest: postRequestDel, loading: loadingDel, error: errorDel } = deleteRequest;
-
-  const onRefuse = async (groupone) => {
-    try {
-      await postRequestDel({ user_id: groupone.user_id,  group_id: groupone.group_id });
-      alert(`${groupone.user_nickname} 지원 거절하셨습니다.`);
-    } catch (error) {
-      console.error("Error refuse:", error);
-    }
-    refetchGroupOne();
-  };
-
-  const onDelete = async (groupone) => {
-    try {
-      await postRequestDel({ user_id: groupone.user_id, group_id: groupone.group_id });
-      alert(`${groupone.user_nickname} 탈퇴시켰습니다.`);
-    } catch (error) {
-      console.error("Error delete:", error);
-    }
-    refetchGroupOne();
-  };
 
   //그룹 삭제
   const deleteGroupRequest = useSendPost(
@@ -82,38 +37,25 @@ if(loadingGroupOne){
 return <div>loading...</div>;
 }
   return (
-      <div>
+      <div className='groupOne backWhite'>
         <h3>그룹 관리</h3>
-        <div>
+        <div className='joinBtnDiv'>
         <button className="joinButton" onClick={()=>{moveToEdit()}}>그룹 수정</button>
         <button className="joinButton" onClick={onDelGroup}>그룹 삭제</button>
         </div>
-        <table>
+        <table className='groupOneTable'>
             <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>닉네임</th>
-                    <th></th>
+                    <th style={{ width: '70px' }}>번호</th>
+                    <th style={{ width: '250px' }}>닉네임</th>
+                    <th style={{ width: '250px' }}>가입날짜</th>
+                    <th style={{ width: '150px' }}>수락 / 거절</th>
                 </tr>
             </thead>
             <tbody>
-                {groupOneData.map((groupone, index) => (
-                    <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{groupone.user_nickname}</td>
-                        <td>
-                        {index > 0 && (
-                  groupone.enable === '1' ? (
-                    <button onClick={() => onDelete(groupone)}>탈퇴</button>
-                  ) : (
-                    <>
-                      <button onClick={() => onAccept(groupone)}>수락</button>
-                      <button onClick={() => onRefuse(groupone)}>거절</button>
-                    </>
-                  ))}
-                        </td>
-                    </tr>
-                ))}
+              {groupOneData && groupOneData.map((i, index) => (
+                <GroupOneItem key={i.groupone_id} data={i} refetch={refetchGroupOne}  no={index + 1}/>
+              ))}
             </tbody>
         </table>
         </div>

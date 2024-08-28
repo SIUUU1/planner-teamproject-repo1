@@ -3,6 +3,7 @@ import { faX,faPencil } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import useSendPost from "../../util/useSendPost";
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NoticeItem=({data , refetch, no })=>{
   //삭제
@@ -19,8 +20,9 @@ const NoticeItem=({data , refetch, no })=>{
     refetch();
   };
 
-  //수정
-  
+   //수정
+   const nav = useNavigate();
+
   return(
     <tr className="groupItems">
       <td style={{ width: '70px' }}>{no}</td>
@@ -28,7 +30,7 @@ const NoticeItem=({data , refetch, no })=>{
       <td style={{ width: '250px' }}>{data.subject}</td>
       <td style={{ width: '150px' }}>{data.user_id}</td>
       <td style={{ width: '100px' }}>
-        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={handlDelete}/>
+        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={()=>{nav(`/manager/noticeedit/${data.no}`)}}/>
         <Button text={<FontAwesomeIcon icon={faX} />} onClick={handlDelete}/>
       </td>
     </tr>

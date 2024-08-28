@@ -4,11 +4,24 @@ import React, { useState , useEffect} from 'react';
 import ManagerQnaList from "./ManagerQnaList";
 import ManagerNoticeBoard from "./ManagerNoticeBoard";
 import ManagerFaq from "./ManagerFaq";
+import {useParams } from 'react-router-dom';
 
 const ManagerCustomerService=()=>{
- 
+  const {mode} = useParams();
   // 메뉴 선택
   const [selectedTab, setSelectedTab] = useState(null);
+  
+  useEffect(() => {
+    if(mode==='notice'){
+      setSelectedTab('notice');
+    }
+    if(mode==='faq'){
+      setSelectedTab('faq');
+    }
+    if(mode==='voice'){
+      setSelectedTab('voice');
+    }
+  }, [ mode]);
 
   return(
     <div className="managerCustomerService">
@@ -25,9 +38,9 @@ const ManagerCustomerService=()=>{
           <p>여러분의 헌신과 노력이 고객의 만족을 만듭니다. 함께 만들어가는 최고의 고객 경험!</p>
           <p>매 순간 최선을 다하는 여러분이 있어 고객에게 신뢰를 주고 있습니다. 여러분의 열정에 감사합니다!</p>
           </div>
-          {selectedTab === 'notice' && <ManagerNoticeBoard onChangeTab={setSelectedTab}/>}
+          {selectedTab === 'notice' && <ManagerNoticeBoard onChangeTab={setSelectedTab} />}
           {selectedTab === 'faq' && <ManagerFaq onChangeTab={setSelectedTab}/>}
-          {selectedTab === 'voice' && <ManagerQnaList onChangeTab={setSelectedTab}/>}
+          {selectedTab === 'voice' && <ManagerQnaList onChangeTab={setSelectedTab} />}
         </div>
 
       </div>

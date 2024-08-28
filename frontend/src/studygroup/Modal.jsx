@@ -1,3 +1,4 @@
+import { height } from '@fortawesome/free-brands-svg-icons/fa42Group';
 import useLoading from '../util/useLoading';
 import useMove from '../util/useMove';
 import useSendPost from '../util/useSendPost';
@@ -67,8 +68,9 @@ const Modal = ({ group, onClose }) => {
           <button className="closeButton" onClick={onClose}>X</button>
           <h1>{group.group_name}</h1>
           <hr />
-          <div>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
+          <div style={{ height: '350px', padding:'25px 20px'}}>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
           <div>{group.group_notice ? formatModalContent(group.group_notice) : '기본 모달 내용'}</div>
+          <div className='groupBtnDiv'>
           {filteredGroupOne && filteredGroupOne.enable === '1' ? (
             <>
               <button className="joinButton" onClick={moveToGroupPage}>그룹 메인</button>
@@ -79,6 +81,7 @@ const Modal = ({ group, onClose }) => {
           ) : (
             <button className="joinButton" onClick={onJoinGroup}>그룹 가입</button>
           )}
+          </div>
         </div>
       </div>
     </>

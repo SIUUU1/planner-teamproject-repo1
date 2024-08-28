@@ -91,4 +91,9 @@ public class QnaServiceImpl implements QnaService {
 		return mapper.readByGroupId(group_id);
 	}
 
+	@Override
+	public Qna readByReply(int group_id) throws Exception {
+		return mapper.readByReply(group_id);
+	}
+
 }

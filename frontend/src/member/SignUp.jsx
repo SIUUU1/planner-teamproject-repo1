@@ -130,8 +130,14 @@ function SignUp() {
 
   // ID 중복 체크 함수
   const checkId = () => {
-    if(user.user_id===''){
+    //아이디 체크
+    const idPattern = /^[a-zA-Z0-9]{4,20}$/;
+    const idValue = user.user_id;
+    if (idValue === "") {
       alert(`아이디를 입력하세요.`);
+      return;
+    } else if (!idValue.match(idPattern)) {
+      alert(`아이디 4~20자 이내 알파벳와 숫자만 입력하세요.`);
       return;
     }
 
