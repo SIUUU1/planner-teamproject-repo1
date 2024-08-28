@@ -80,15 +80,13 @@ function StudyGroupMain() {
     return<div>loading...</div>;
   }
   return (
-    <div className="studyGroupMain">
-      <header className="header">
-        <h3>스터디그룹</h3>
+    <div className="studyGroupMain backWhite">
+        <h1>스터디그룹</h1>
         <div className="searchBar">
           <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
           <button className="searchButton" onClick={onSearch}>검색</button>
           <button className="addGroupButton" onClick={()=>{ navigate('/groupedit/0');}}>그룹 추가</button>
         </div>
-      </header>
       {searching ? (
              searchList && searchList.length === 0 ?(
               <div>검색결과 없습니다.</div>

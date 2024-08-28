@@ -48,7 +48,10 @@ import ManagerSignUp from './manager/ManagerSignUp';
 import MessageItem from './message/MessageItem';
 import NotificationList from './notification/NotificationList';
 import StudyGroup from './pages/StudyGroup';
-
+import ManagerFaqEditor from './manager/ManagerFaqEditor';
+import ManagerNoticeEditor from './manager/ManagerNoticeEditor';
+import ManagerQnaEditor from './manager/ManagerQnaEditor';
+import ManagerGroupCateEditor from './manager/ManagerGroupCateEditor';
 
 function App() {
   return (
@@ -97,11 +100,15 @@ function App() {
             <Route path='/msglist' element={<MessageList/>}/>
             <Route path='/managerJoin' element={<ManagerSignUp/>}/>
             <Route path='/manager' element={<ManagerRoute element={<ManagerHome />} />} />
-            <Route path='/manager/customer-service' element={<ManagerRoute element={<ManagerCustomerService />} />} />
+            <Route path='/manager/customer-service/:mode' element={<ManagerRoute element={<ManagerCustomerService />} />} />
             <Route path='/manager/chart' element={<ManagerRoute element={<ManagerChart />} />} />
             <Route path='/manager/User' element={<ManagerRoute element={<ManagerUser />} />} />
             <Route path='/manager/Group' element={<ManagerRoute element={<ManagerGroup />} />} />
             <Route path='/manager/Chat' element={<ManagerRoute element={<ManagerChat />} />} />
+            <Route path='/manager/faqedit/:no' element={<ManagerRoute element={<ManagerFaqEditor />} />} />
+            <Route path='/manager/noticeedit/:no' element={<ManagerRoute element={<ManagerNoticeEditor />} />} />
+            <Route path='/manager/qnaedit/:no' element={<ManagerRoute element={<ManagerQnaEditor />} />} />
+            <Route path='/manager/group/cateedit' element={<ManagerRoute element={<ManagerGroupCateEditor />} />} />
             <Route path='/msgitem/:no' element={<MessageItem/>}/>
             <Route path='/notificationlist' element={<NotificationList/>}/>
           </Routes>
