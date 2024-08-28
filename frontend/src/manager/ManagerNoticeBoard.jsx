@@ -3,6 +3,7 @@ import Pagination from '../components/Pagination';
 import NoticeItem from './items/NoticeItem';
 import useLoading from '../util/useLoading';
 import Button from '../components/Button';
+import useMove from '../util/useMove';
 
 const ManagerNoticeBoard = () => {
   const [notices, setNotices] = useState([]);
@@ -32,13 +33,12 @@ const indexOfFirstNotice = indexOfLastNotice - itemsPerPage;
 const currentNotices = notices.slice(indexOfFirstNotice, indexOfLastNotice);
 
 //글쓰기
+const moveToWrite = useMove('/manager/noticeedit/0');
 
-
-
-  return (
+return (
     <div className="managerNoticeBoard">
-        <div className='writeBtn'>
-        <Button text={'글쓰기'} onClick={()=>{}}/>
+        <div className='writeBtnDiv'>
+        <Button text={'글쓰기'} onClick={moveToWrite} className={'writeBtn'}/>
         </div>
         <table className="UserTable" style={{ tableLayout: 'fixed', width: '100%' }}>
           <thead>

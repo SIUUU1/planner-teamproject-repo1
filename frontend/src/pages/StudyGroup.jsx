@@ -33,16 +33,11 @@ const StudyGroup = () => {
   const { data: weatherData, loading: loadingWeather, error: errorWeather } = useLoading('http://localhost:8080/api/weather', 'json');
 
   // 게시판
-  // const { data: boardListData = [], loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
-  // const filteredBoard = groupData && boardListData && boardListData.length > 0 ? boardListData
-  //   .filter(board => board.user_id === groupData.user_id)
-  //   .filter(board => board.step === 0)
-  //   .slice(0, 5) : [];
-
-  // // 그룹
-  // const { data: GroupListData = [], loading: loadingGroupList, error: errorGroupList, refetch: refetchMyGroupList } = useLoading(`http://localhost:8080/api/group/${user_id}/list`, 'json');
-  // const filteredGroup = GroupListData && GroupListData.length > 0 ? GroupListData.slice(0, 5) : [];
-  // const [selectedGroup, setSelectedGroup] = useState(null); 
+  const { data: boardListData = [], loading: loadingBoardList, error: errorBoardList, refetch: refetchBoardData } = useLoading('http://localhost:8080/api/board/list', 'json');
+  const filteredBoard = groupData && boardListData && boardListData.length > 0 ? boardListData
+    .filter(board => board.group_id === groupData.group_id)
+    .filter(board => board.step === 0)
+    .slice(0, 5) : [];
 
   //todo 데이터를 로드
   const { data: todoData, loading: loadingTodo, error: errorTodo, refetch: refetchTodo } = useLoading(`http://localhost:8080/api/user/todos/searchGroup?todo_date=${currentDate}&group_id=${group_id}`, 'json');
@@ -165,8 +160,8 @@ const StudyGroup = () => {
             {/* 게시판 부분
             <ToFullList URL={`/boardlist/${user_id}`} />
             <div className='board1'>
-              {filteredBoard && filteredBoard.length > 0 ? filteredBoard.map((i) => (
-                <BoardItem key={i.id} data={i} />
+              {filteredBoard && filteredBoard.length > 0 ? 
+               filteredBoard.map((board, index) => (<BoardItem key={index} board={board} user_id={user_id}/>))
               )) : 
               <div className='boardInfo'><p>등록된 게시물이 없습니다!</p></div>}
             </div>

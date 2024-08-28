@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 const ManagerMenuInfo = () => {
   const [activeButton, setActiveButton] = useState('');
 
-  const moveCustomerService = useMove('/manager/customer-service');
+  const moveCustomerService = useMove('/manager/customer-service/notice');
   const moveChart = useMove('/manager/chart');
   const moveUser = useMove('/manager/User');
   const moveGroup = useMove('/manager/Group');

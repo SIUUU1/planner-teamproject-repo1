@@ -3,6 +3,7 @@ import { faX,faPencil } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import useSendPost from "../../util/useSendPost";
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FaqItem=({data , refetch, no })=>{
   //삭제
@@ -20,6 +21,7 @@ const FaqItem=({data , refetch, no })=>{
   };
 
   //수정
+  const nav = useNavigate();
 
   // 글자수 자르기
   const truncateContent = (content) => {
@@ -30,8 +32,6 @@ const FaqItem=({data , refetch, no })=>{
     return content; // 텍스트가 40자 이하라면 그대로 반환
   };
 
-  
-  
   return(
     <tr className="groupItems">
       <td style={{ width: '70px' }}>{no}</td>
@@ -39,7 +39,7 @@ const FaqItem=({data , refetch, no })=>{
       <td style={{ width: '150px' }}>{data.faq_title}</td>
       <td style={{ width: '250px' }}>{truncateContent(data.faq_content)}</td>
       <td style={{ width: '100px' }}>
-        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={handlDelete}/>
+        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={()=>{nav(`/manager/faqedit/${data.faq_id}`)}}/>
         <Button text={<FontAwesomeIcon icon={faX} />} onClick={handlDelete}/>
       </td>
     </tr>

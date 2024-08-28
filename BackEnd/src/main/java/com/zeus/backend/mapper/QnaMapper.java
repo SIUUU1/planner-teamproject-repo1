@@ -26,6 +26,9 @@ public interface QnaMapper {
 	// group_id로 문의내역 조회
 	public Qna readByGroupId(int group_id) throws Exception;
 	
+	// group_id로 답변 조회
+	public Qna readByReply(int group_id) throws Exception;
+	
 	// 문의내역 조회
 	public Qna read(int qna_id) throws Exception;
 

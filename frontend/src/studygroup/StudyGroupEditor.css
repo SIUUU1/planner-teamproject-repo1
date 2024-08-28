@@ -1,15 +1,35 @@
 .studyGroupEditor {
+  width: 70%;
   margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .studyGroupEditor h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
   text-align: center;
 }
-.studyGroupEditor table {
-  margin: 0 auto;
+.studyGroupEditor .EditorForm {
+  width: 60%;
+  margin: 60px auto 50px auto;
 }
-.studyGroupEditor .buttonSection {
-  margin: 0 auto;
+.studyGroupEditor .EditorForm .imgDiv {
   text-align: center;
+}
+.studyGroupEditor .formGroup {
+  margin-bottom: 15px;
+}
+.studyGroupEditor .formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+.studyGroupEditor .formGroup input, .studyGroupEditor .formGroup select, .formGroup textarea{
+  width: 97%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 .studyGroupEditor .groupImage {
   width: 120px; 
@@ -17,4 +37,30 @@
   border-radius: 50%;
   cursor: pointer; /* 클릭 가능한 항목임을 나타냄 */
   margin: 10px 0;
+}
+.studyGroupEditor textarea {
+  resize: vertical;
+  height: 150px;
+}
+.studyGroupEditor .btnSub{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.studyGroupEditor .completeButton{
+  background-color: rgb(168, 176, 189);
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #bcbcbc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 550;
+  width: 100px;
+  margin-left: 10px;
+}
+.studyGroupEditor  .completeButton:hover {
+  background-color:  rgb(114, 120, 129);
 }

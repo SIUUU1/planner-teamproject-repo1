@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Board {
 	private int no; // 공지사항 번호
+	private int group_id; // 그룹 ID
 	private String user_id; // 작성자 ID
 	private String user_nickname; // 회원 닉네임
 	private String filename; // 프로필 이미지 URL

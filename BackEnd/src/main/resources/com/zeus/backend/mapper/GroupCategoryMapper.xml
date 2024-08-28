@@ -3,7 +3,7 @@
 <mapper namespace="com.zeus.backend.mapper.GroupCategoryMapper">
 	<!-- 그룹카테고리 조회 -->
 	<select id="list" resultType="com.zeus.backend.domain.GroupCategory">
-		SELECT * FROM GroupCategory 
+		SELECT * FROM GroupCategory order by code
 	</select>
 	<!-- 그룹카테고리 조회 -->
 	<select id="read" resultType="com.zeus.backend.domain.GroupCategory">

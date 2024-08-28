@@ -5,6 +5,7 @@ import GroupItem from  './items/GroupItem';
 import Button from '../components/Button';
 import React, { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
+import useMove from '../util/useMove';
 
 const ManagerGroup=()=>{
   const [groups, setGroups] = useState([]);
@@ -14,7 +15,6 @@ const ManagerGroup=()=>{
 
   const { data, loading, error, refetch } = useLoading('http://localhost:8080/api/group/list', 'json');
   const { data: categroyData, loading: loadingCategory , error : errorCategory, refetch: refetchCategory } = useLoading('http://localhost:8080/api/category/list', 'json');
-  const onCate=()=>{};
 
   useEffect(() => {
     if (data) {
@@ -32,6 +32,8 @@ const ManagerGroup=()=>{
   const indexOfFirstGroup = indexOfLastGroup - itemsPerPage;
   const currentGroups = groups.slice(indexOfFirstGroup, indexOfLastGroup);
 
+  const moveToEdit = useMove('/manager/group/cateedit');
+
   if(loadingCategory || loading){
     return <div>loading</div>;
   }
@@ -40,8 +42,8 @@ const ManagerGroup=()=>{
       <div className="managerContent backWhite">
         <ManagerMenuInfo/>
         
-        <div className="cateBtn">
-        <Button text={'카테고리 추가'} onClick={onCate}/>
+        <div className="writeBtnDiv">
+        <Button text={'카테고리 수정'} onClick={moveToEdit} className={'writeBtn'}/>
         </div>
         <table className="UserTable" style={{ tableLayout: 'fixed', width: '100%' }}>
           <thead>

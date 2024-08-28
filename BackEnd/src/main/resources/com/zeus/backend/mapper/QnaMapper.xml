@@ -40,6 +40,10 @@
   <select id="readByGroupId" resultType="com.zeus.backend.domain.Qna">
     SELECT * FROM QNA WHERE group_id = #{group_id} and qora = 1
   </select>
+   <!-- group_id로 문의내역 조회 --> 
+  <select id="readByReply" resultType="com.zeus.backend.domain.Qna">
+    SELECT * FROM QNA WHERE group_id = #{group_id} and qora = 2
+  </select>
   <!-- 카테고리별 조회 -->
   <select id="listByCategory" resultType="com.zeus.backend.domain.Qna">
     SELECT * FROM QNA WHERE category = #{category}

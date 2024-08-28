@@ -29,12 +29,11 @@ const StudyGroupEditor = () => {
   
   const img = useRef(null);
   //이미지
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState('/images/cat1.jpg');
   const [selectedImageFile, setSelectedImageFile] = useState(null); 
 
   // 사용자 정보
   const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-
 
   useEffect(() => {
     if (groupData) {
@@ -64,14 +63,6 @@ const StudyGroupEditor = () => {
   }));
   };
 
-  // const validateInput = () => {
-  //   if (!groupData.groupName || !groupData.category || !groupData.groupGoal || !groupData.groupContent || !groupData.image) {
-  //     setError('모든 필드를 채워주세요.');
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
   const formatModalContent = (content) => {
     return content
       .split('\n')
@@ -80,31 +71,6 @@ const StudyGroupEditor = () => {
       .map((line, index) => (line === '---' ? <hr key={index} /> : <p key={index}>{line}</p>));
   };
 
-  // const handleSubmit = () => {
-  //   if (!validateInput()) {
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-  //   const newGroup = {
-  //     name: groupData.groupName,
-  //     image: URL.createObjectURL(groupData.image),
-  //     tags: [groupData.category],
-  //     capacity: '0/20',
-  //     attendance: '0%',
-  //     privacy: '공개', // Default privacy
-  //     customModalContent: groupData.customModalContent // Include custom modal content
-  //   };
-
-  //   //addGroup(newGroup);
-  //   nav('/manager/groupmain', { replace: true });
-
-  //   setTimeout(() => {
-  //     setIsSubmitting(false);
-  //     setError('');
-     
-  //   }, 2000);
-  // };
 
 // 그룹 등록
 const onSubmit = async () => {
@@ -211,9 +177,54 @@ const onDelete =async ()=>{
   return(<div>loading...</div>);
   }
   return (
-    <div className='studyGroupEditor'>
+    <div className='studyGroupEditor backWhite'>
       <h3>그룹 만들기</h3>
-      <table>
+
+      <div className='EditorForm'> 
+      <div className="formGroup imgDiv">
+          <img src={selectedImage} className="groupImage" onClick={() => document.getElementById('fileInput').click()}/>
+          <input type="file" id="fileInput" style={{ display: 'none' }} onChange={handleImageChange} ref={img} accept="image/*"/>
+      </div>
+      <div className="formGroup">
+        <label htmlFor="group_name">그룹명</label>
+        <input type="text" name="group_name" placeholder='그룹명을 적어주세요.' value={group.group_name} onChange={onChange} />
+      </div>
+      <div className="formGroup">
+        <select name="category" value={group.category} onChange={onChange}>
+                <option value="">카테고리를 선택하세요.</option>
+                {category.map((cate, index) => (
+                  <option key={index} value={cate.code}>{cate.category_name}</option>
+                ))}
+        </select>
+      </div>
+      
+      <div className="formGroup">
+        <label htmlFor="content">그룹목표</label>
+        <input type="text" name="group_goal" placeholder='그룹목표를 적어주세요.' value={group.group_goal} onChange={onChange} />
+      </div>
+      <div className="formGroup">
+        <label htmlFor="content">그룹설명</label>
+        <textarea name="group_detail" cols="30" rows="10" placeholder='어떤 그룹인지 설명해주세요.' value={group.group_detail} onChange={onChange}></textarea>
+      </div>
+      <div className="formGroup">
+        <label htmlFor="content">간단 소개글</label>
+        <textarea name="group_notice" cols="30" rows="5" placeholder='#weplan #기상 #함께해요' value={group.group_notice} onChange={onChange}></textarea>
+      </div>
+
+      <div className="formGroup btnSub">
+       <Button text={'취소'} onClick={() => nav(-1)} className={'completeButton'}/>
+        {groupData && groupData.leader_id===userData.user_id?(
+          <>
+        <Button text={'수정'} onClick={onEdit} className={'completeButton'}/>
+        <Button text={'삭제'} onClick={onDelete} className={'completeButton'}/>
+        </>
+        ):(
+          <Button text={'완료'} onClick={onSubmit} className={'completeButton'}/>
+        )}
+      </div>
+      </div>  
+
+      {/* <table>
         <tbody>
           <tr>
             <td>그룹이미지</td>
@@ -250,8 +261,8 @@ const onDelete =async ()=>{
             <td><textarea name="group_notice" cols="30" rows="5" placeholder='#weplan #기상 #함께해요' value={group.group_notice} onChange={onChange}></textarea></td>
           </tr>
         </tbody>
-      </table>
-      <section className='buttonSection'>
+      </table> */}
+      {/* <div className='buttonSection'>
         <Button text={'취소'} onClick={() => nav(-1)} />
         {groupData && groupData.leader_id===userData.user_id?(
           <>
@@ -261,7 +272,7 @@ const onDelete =async ()=>{
         ):(
           <Button text={'완료'} onClick={onSubmit}/>
         )}
-      </section>
+      </div> */}
     </div>
   );
 };

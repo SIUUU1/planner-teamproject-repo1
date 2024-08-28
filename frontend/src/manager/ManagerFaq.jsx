@@ -37,8 +37,8 @@ const ManagerFaq =()=>{
   }
   return(
     <div className="managerFaq">
-      <div>
-        <Button text={'글쓰기'} onClick={moveToWrite}/>
+      <div className='writeBtnDiv'>
+        <Button text={'글쓰기'} onClick={moveToWrite} className={'writeBtn'}/>
       </div>
       <table className="UserTable" style={{ tableLayout: 'fixed', width: '100%' }}>
           <thead>

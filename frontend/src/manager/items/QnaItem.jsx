@@ -3,6 +3,7 @@ import { faX,faPencil } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import useSendPost from "../../util/useSendPost";
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const QnaItem=({data , refetch, no })=>{
   //삭제
@@ -12,17 +13,18 @@ const QnaItem=({data , refetch, no })=>{
     'text', 
     false 
   );
-  const handlDelete = async () => {
-    if(!window.confirm('고객 문의입니다. 정말로 삭제하시겠습니까?')){
+  const handleDelete = async () => {
+    if(!window.confirm('고객문의도 함께 삭제됩니다. 정말로 삭제하시겠습니까?')){
       return;
     }
     // JSON 형식으로 데이터를 전송
     await postRequestDel({ qna_id: data.qna_id });
-    alert('정상적으로 공지사항이 삭제 되었습니다.');
+    alert('정상적으로 qna 삭제 되었습니다.');
     refetch();
   };
 
-  //수정
+  //답변, 수정
+  const nav = useNavigate();
 
   // 글자수 자르기
   const truncateContent = (content) => {
@@ -36,12 +38,13 @@ const QnaItem=({data , refetch, no })=>{
   return(
     <tr className="groupItems">
       <td style={{ width: '70px' }}>{no}</td>
+      <td style={{ width: '70px' }}>{data.category}</td>
       <td style={{ width: '70px' }}>{data.qna_subject}</td>
       <td style={{ width: '150px' }}>{truncateContent(data.qna_content)}</td>
       <td className={data.reply === 1 ? 'answered' : 'pending'} style={{ width: '250px' }}> {data.reply === 1 ? '답변 완료' : '답변 대기중'}</td>
       <td style={{ width: '100px' }}>
-        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={handlDelete}/>
-        <Button text={<FontAwesomeIcon icon={faX} />} onClick={handlDelete}/>
+        <Button text={<FontAwesomeIcon icon={faPencil} />} onClick={()=>{nav(`/manager/qnaedit/${data.qna_id}`)}}/>
+        <Button text={<FontAwesomeIcon icon={faX} />} onClick={handleDelete}/>
       </td>
     </tr>
   );
