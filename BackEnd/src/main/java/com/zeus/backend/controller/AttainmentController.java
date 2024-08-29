@@ -1,7 +1,6 @@
 package com.zeus.backend.controller;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -135,4 +132,20 @@ public class AttainmentController {
 		System.out.println("attainments: "+attainments.toString());
 		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;
 	}
+	
+	 @GetMapping("/monthlyShortTermAttainmentRate")
+	    public ResponseEntity<Map<String, String>> getMonthlyShortTermAttainmentRate() {
+	        System.out.println("getMonthlyShortTermAttainmentRate");
+	        Map<String, String> map = attainmentService.getMonthlyShortTermAttainmentRate();
+	        System.out.println("map: " + map.toString());
+	        return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	    }
+	 
+	 @GetMapping("/monthlyLongTermAttainmentRate")
+	    public ResponseEntity<Map<String, String>> getMonthlyLongTermAttainmentRate() {
+	        System.out.println("getMonthlyLongTermAttainmentRate");
+	        Map<String, String> map = attainmentService.getMonthlyLongTermAttainmentRate();
+	        System.out.println("map: " + map.toString());
+	        return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	    }
 }

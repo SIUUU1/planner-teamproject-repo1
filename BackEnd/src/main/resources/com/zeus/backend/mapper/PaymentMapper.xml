@@ -18,4 +18,44 @@
 		SELECT * FROM payment where user_no = #{user_no}
 	</select>
 	
+	<!-- 최근 7일 누적 판매량 정보 조회 -->
+	<select id="getPayCountByDate" resultType="java.util.Map">
+        SELECT
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 6 THEN 1 END)) AS day1,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 5 THEN 1 END)) AS day2,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 4 THEN 1 END)) AS day3,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 3 THEN 1 END)) AS day4,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 2 THEN 1 END)) AS day5,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 1 THEN 1 END)) AS day6,
+            TO_CHAR(COUNT(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) THEN 1 END)) AS day7
+        FROM payment
+    </select>
+    	<!-- 최근 7일 일일 판매 액 -->
+    <select id="getDailySalesByDate" resultType="java.util.Map">
+	    SELECT
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 6 THEN price END)), '0') AS day1,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 5 THEN price END)), '0') AS day2,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 4 THEN price END)), '0') AS day3,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 3 THEN price END)), '0') AS day4,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 2 THEN price END)), '0') AS day5,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) - 1 THEN price END)), '0') AS day6,
+	        NVL(TO_CHAR(SUM(CASE WHEN TRUNC(reg_date) = TRUNC(SYSDATE) THEN price END)), '0') AS day7
+	    FROM payment
+	</select>
+	
+	<!-- 최근 7일 누적 판매 액 -->
+	<select id="getCumulativeSalesByDate" resultType="java.util.Map">
+    SELECT
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 6 THEN price END)) AS day1,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 5 THEN price END)) AS day2,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 4 THEN price END)) AS day3,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 3 THEN price END)) AS day4,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 2 THEN price END)) AS day5,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) - 1 THEN price END)) AS day6,
+        TO_CHAR(SUM(CASE WHEN reg_date &lt;= TRUNC(SYSDATE) THEN price END)) AS day7
+    FROM payment
+</select>
+	
+    
+	
 </mapper>

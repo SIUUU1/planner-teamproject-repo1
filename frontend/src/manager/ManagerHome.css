@@ -245,3 +245,7 @@ textarea {
 .managerContent .pagination span {
   font-size: 16px;
 }
+
+.managerChartItem h3{
+  text-align: center;
+}

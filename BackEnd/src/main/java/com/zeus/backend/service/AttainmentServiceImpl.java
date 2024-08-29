@@ -3,6 +3,7 @@ package com.zeus.backend.service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,14 @@ public class AttainmentServiceImpl implements AttainmentService {
 		return null;
 	}
 	
-	
+	 @Override
+	    public Map<String, String> getMonthlyLongTermAttainmentRate() {
+	        return attainmentMapper.getMonthlyLongTermAttainmentRate();
+	    }
+	 
+	 @Override
+	    public Map<String, String> getMonthlyShortTermAttainmentRate() {
+	        return attainmentMapper.getMonthlyShortTermAttainmentRate();
+	    }
     
 }
