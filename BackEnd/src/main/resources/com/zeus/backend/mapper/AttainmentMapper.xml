@@ -138,7 +138,7 @@
 		AND TRUNC(end_date) &gt;=TRUNC(#{select_date})
 	</select>
 	
-	 <select id="getMonthlyShortTermAttainmentRate" resultType="java.util.Map">
+	 <select id="getMonthlyShortTermAttainmentRate" resultType="java.util.LinkedHashMap">
         <![CDATA[
         SELECT
             TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -0), 'MM') 
@@ -166,7 +166,7 @@
         ]]>
     </select>
 
-    <select id="getMonthlyLongTermAttainmentRate" resultType="java.util.Map">
+    <select id="getMonthlyLongTermAttainmentRate" resultType="java.util.LinkedHashMap">
         <![CDATA[
         SELECT
             TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -0), 'MM') 

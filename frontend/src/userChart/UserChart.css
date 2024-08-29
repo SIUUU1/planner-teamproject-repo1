@@ -1,0 +1,11 @@
+.userChartContent {
+  width: 80%;
+  border: 0.8px solid rgb(197, 197, 197);
+  border-radius: 10px;
+  margin: 50px auto;
+  min-height: 500px
+}
+
+.userChartContent{
+  padding: 20px 40px;
+}

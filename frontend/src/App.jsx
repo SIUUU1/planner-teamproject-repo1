@@ -52,6 +52,7 @@ import ManagerFaqEditor from './manager/ManagerFaqEditor';
 import ManagerNoticeEditor from './manager/ManagerNoticeEditor';
 import ManagerQnaEditor from './manager/ManagerQnaEditor';
 import ManagerGroupCateEditor from './manager/ManagerGroupCateEditor';
+import UserChart from './userChart/UserChart';
 
 function App() {
   return (
@@ -111,6 +112,7 @@ function App() {
             <Route path='/manager/group/cateedit' element={<ManagerRoute element={<ManagerGroupCateEditor />} />} />
             <Route path='/msgitem/:no' element={<MessageItem/>}/>
             <Route path='/notificationlist' element={<NotificationList/>}/>
+            <Route path='/userChart' element={<UserChart/>}/>
           </Routes>
           </ThemeProvider>
           <Footer/>

@@ -78,7 +78,7 @@ const MenuBar = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="menuItem">
-          <button className="menuItemLink" onClick={() => onMove('/attainmentMain')}>
+          <button className="menuItemLink" onClick={() => onMove('/userChart')}>
             <FontAwesomeIcon icon={faChartSimple} /> <span>학습통계</span>
           </button>
         </div>
