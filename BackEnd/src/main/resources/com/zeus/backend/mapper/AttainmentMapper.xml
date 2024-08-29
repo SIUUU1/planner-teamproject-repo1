@@ -137,5 +137,61 @@
 		TRUNC(#{select_date})
 		AND TRUNC(end_date) &gt;=TRUNC(#{select_date})
 	</select>
+	
+	 <select id="getMonthlyShortTermAttainmentRate" resultType="java.util.Map">
+        <![CDATA[
+        SELECT
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -0), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, 1), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month1,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, 0), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month2,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month3,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -3), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month4,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -4), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, -3), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month5,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN start_date >= TRUNC(ADD_MONTHS(SYSDATE, -5), 'MM') 
+                                       AND start_date < TRUNC(ADD_MONTHS(SYSDATE, -4), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month6
+        FROM 
+            attainment
+        WHERE 
+            attainment_duration = 'short_term'
+        ]]>
+    </select>
+
+    <select id="getMonthlyLongTermAttainmentRate" resultType="java.util.Map">
+        <![CDATA[
+        SELECT
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -0), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, 1), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month1,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, 0), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month2,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month3,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -3), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, -2), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month4,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -4), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, -3), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month5,
+            TO_CHAR(NVL(ROUND(AVG(CASE WHEN end_date >= TRUNC(ADD_MONTHS(SYSDATE, -5), 'MM') 
+                                       AND end_date < TRUNC(ADD_MONTHS(SYSDATE, -4), 'MM') 
+                                       THEN attainment_rate END), 2), 0)) AS month6
+        FROM 
+            attainment
+        WHERE 
+            attainment_duration = 'long_term'
+        ]]>
+    </select>
 
 </mapper>

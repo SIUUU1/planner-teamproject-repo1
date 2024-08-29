@@ -3,6 +3,7 @@ package com.zeus.backend.service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.zeus.backend.domain.Attainment;
 
@@ -24,4 +25,8 @@ public interface AttainmentService {
 
 	List<Attainment> getAttainmentsByOtherGroupIdAndDate(Long group_id, String attainmentDuration,
 			LocalDate selectDate);
+	
+	 Map<String, String> getMonthlyLongTermAttainmentRate();
+	 
+	 Map<String, String> getMonthlyShortTermAttainmentRate();
 }

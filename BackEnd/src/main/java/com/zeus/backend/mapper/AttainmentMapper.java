@@ -3,6 +3,7 @@ package com.zeus.backend.mapper;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,4 +32,8 @@ public interface AttainmentMapper {
 	List<Attainment> getLongTermAttainmentsByGroupId(Long group_id, LocalDate select_date);
 
 	List<Attainment> getShortTermAttainmentsByGroupId(Long group_id, LocalDate select_date);
+
+	 Map<String, String> getMonthlyLongTermAttainmentRate();
+	 
+	 Map<String, String> getMonthlyShortTermAttainmentRate();
 }

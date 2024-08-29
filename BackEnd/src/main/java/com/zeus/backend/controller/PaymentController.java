@@ -1,8 +1,11 @@
 package com.zeus.backend.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +62,28 @@ public class PaymentController {
 		}
 	}
 	
-	// 결제리스트
+	@GetMapping("/payCountByDate")
+	public ResponseEntity<Map<String, String>> getPayCountByDate() {
+	    System.out.println("getPayCountByDate");
+	    Map<String, String> map = paymentService.getPayCountByDate();
+	    System.out.println("map: " + map.toString());
+	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	}
+	
+	@GetMapping("/dailySalesByDate")
+	public ResponseEntity<Map<String, String>> getDailySalesByDate() {
+	    System.out.println("getDailySalesByDate");
+	    Map<String, String> map = paymentService.getDailySalesByDate();
+	    System.out.println("map: " + map.toString());
+	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	}
+	
+	@GetMapping("/cumulativeSalesByDate")
+	public ResponseEntity<Map<String, String>> getCumulativeSalesByDate() {
+	    System.out.println("getCumulativeSalesByDate");
+	    Map<String, String> map = paymentService.getCumulativeSalesByDate();
+	    System.out.println("map: " + map.toString());
+	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	}
 
 }
