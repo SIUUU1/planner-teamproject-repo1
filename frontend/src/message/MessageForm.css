@@ -17,7 +17,7 @@
   margin-bottom: 10px;
 }
 
-.messageFormHeader button {
+.messageFormHeader .closeBtn {
   background: none;
   border: none;
   cursor: pointer;
@@ -49,18 +49,22 @@
   height: 100px;
 }
 
-.messageFormBody button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+.messageFormBody .msgFormBtnDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.messageFormBody .msgFormBtnDiv button {
+  padding: 0 10px;
+  height: 35px;
+  border: 1px solid #bcbcbc;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 5px;
-}
-
-.messageFormBody button:hover {
-  background-color: #45a049;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  width: 80px;
+  margin: 0 0 5px 10px;
 }
 
 .messageFormBody .customSelectContainer {

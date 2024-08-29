@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zeus.backend.mapper.BoardMapper">
-	<!-- 게시물 등록 -->
+	<!-- 게시물 등록(개인) -->
 	<insert id="create">
 		INSERT INTO BOARD
-		(no, user_id, user_nickname, category, subject, content, filename, ref,
-		step, depth)
+		(no, group_id, user_id, user_nickname, category, subject, content, filename, ref, step, depth)
 		VALUES
-		(BOARD_id_SEQ.NEXTVAL, #{user_id}, #{user_nickname}, #{category}, #{subject}, #{content},
+		(BOARD_id_SEQ.NEXTVAL, #{group_id}, #{user_id}, #{user_nickname}, #{category}, #{subject}, #{content},
 		#{filename}, #{ref}, #{step}, #{depth})
 	</insert>
 	<!-- no 최댓값 --> 
@@ -63,5 +62,9 @@
         OR LOWER(content) LIKE LOWER(#{search})) 
         AND LOWER(category) = LOWER(#{category}) 
 		order by reg_date desc
+	</select>
+	<!-- 카테고리 --> 
+	<select id="listCategory" resultType="String">
+	select category from BOARD
 	</select>
 </mapper>

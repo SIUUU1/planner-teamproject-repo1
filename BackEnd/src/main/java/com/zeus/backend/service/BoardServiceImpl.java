@@ -18,6 +18,10 @@ public class BoardServiceImpl implements BoardService {
 	// 게시글 및 댓글 작성
 	@Override
 	public void createNew(Map<String, Object> map) throws Exception {
+		int group_id = 0;
+		if (map.get("group_id") != null) {
+			group_id = Integer.parseInt(String.valueOf(map.get("group_id")));
+		}
 		int no = Integer.parseInt(String.valueOf(map.get("no")));
 		int ref = Integer.parseInt(String.valueOf(map.get("ref")));
 		int step = Integer.parseInt(String.valueOf(map.get("step")));
@@ -47,6 +51,7 @@ public class BoardServiceImpl implements BoardService {
 			depth = 0;
 		}
 
+		map.put("group_id", group_id);
 		map.put("ref", ref);
 		map.put("step", step);
 		map.put("depth", depth);
@@ -99,6 +104,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Board readByRef(int ref) throws Exception {
 		return mapper.readByRef(ref);
+	}
+
+	@Override
+	public String listCategory() throws Exception {
+		return mapper.listCategory();
 	}
 
 }

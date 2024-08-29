@@ -8,8 +8,7 @@ import ProfileLink from '../components/ProfileLink'
 import Toback from '../components/ToBack'
 
 const BoardDetail = () => {
-  const {user_id} = useParams();
-  const { no } = useParams();
+  const {user_id, no, group_id} = useParams();
   const navigate = useNavigate();
 
   const initComment = {
@@ -241,6 +240,18 @@ const BoardDetail = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const backLink = ()=>{
+    if(user_id){
+      return `/boardlist/${user_id}`;
+    }
+    else if(group_id){
+      return `/boardlist/group/${group_id}`;
+    }
+    else {
+      return `/boardlist/`;
+    }
+  };
+
   if(loadingUser || loadingBoardData){
     return <div>loading</div>;
   }
@@ -248,12 +259,12 @@ const BoardDetail = () => {
   return (
     <div className="boardDetail">
       <div className='boardContent backWhite'>
-        <Toback URL={user_id ? `/boardlist/${user_id}` : '/boardlist'} />
+        <Toback URL={backLink()} />
         <h1>{board.subject}</h1>
         <div className='boardInfo'>
           <p>{formatDate(board.reg_date)} &middot; {board.category}</p>
           <div className="buttonGroup">
-            {!user_id &&
+            {board.user_id===userData.user_id && 
             <>
             <Button onClick={onEdit} className={"editButton"} text={'수정'}/>
             <Button onClick={onDelete} className={"deleteButton"} text={'삭제'}/>

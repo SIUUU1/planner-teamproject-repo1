@@ -1,5 +1,6 @@
 import './Weather.css'
 const Weather =({date, skyState, ptyState, error, loading})=>{
+  
   if(loading){
     return <div className='weather'>Loading...</div>;
   }

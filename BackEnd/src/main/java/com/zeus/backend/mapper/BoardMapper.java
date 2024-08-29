@@ -6,7 +6,7 @@ import java.util.Map;
 import com.zeus.backend.domain.Board;
 
 public interface BoardMapper {
-	// 등록 처리
+	// 등록 처리(개인)
 	public void create(Map<String, Object> map) throws Exception;
 
 	// no 최댓값
@@ -35,6 +35,9 @@ public interface BoardMapper {
 
 	// 댓글 작성 시 수정
 	public void modifyReply(Board board) throws Exception;
+
+	// 카테고리 조회
+	public String listCategory() throws Exception;
 
 	// 검색
 	public List<Board> search(String search) throws Exception;

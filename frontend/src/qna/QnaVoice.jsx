@@ -39,7 +39,7 @@ const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null}
           user_name: userData.user_name,
           user_tel: userData.user_tel,
           user_email: userData.user_email,
-          category : "불편/불만",
+          category : "회원",
         }));
       }
     }
@@ -60,7 +60,7 @@ const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null}
   const onMove =useMove(`/qna/create/0`);
   const onInit = ()=>{
      // 입력 초기화
-     setQna(prevQna => ({...prevQna, category: '불편/불만',qna_subject: '',qna_content: '',}));
+     setQna(prevQna => ({...prevQna, category: '회원',qna_subject: '',qna_content: '',}));
      onEvent(); //refetch
      onMove(); //주소 초기화하기
      onChangeTab('myqna'); //탭 바꾸기
@@ -119,13 +119,16 @@ const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null}
             <label className="formLabel">상담유형</label>
             <div className="radioGroup">
               <label>
-                <input type="radio" value="불편/불만" name="category" onChange={onRadioChange}  checked={qna.category === '불편/불만'}/>불편/불만
+                <input type="radio" value="회원" name="category" onChange={onRadioChange}  checked={qna.category === '회원'}/>회원
               </label>
               <label>
-                <input type="radio" value="칭찬/격려" name="category" onChange={onRadioChange}  checked={qna.category === '칭찬/격려'}/>칭찬/격려
+                <input type="radio" value="결제" name="category" onChange={onRadioChange}  checked={qna.category === '결제'}/>결제
               </label>
               <label>
-                <input type="radio" value="기타문의" name="category" onChange={onRadioChange}  checked={qna.category === '기타문의'}/>기타문의
+                <input type="radio" value="그룹" name="category" onChange={onRadioChange}  checked={qna.category === '그룹'}/>그룹
+              </label>
+              <label>
+                <input type="radio" value="기타" name="category" onChange={onRadioChange}  checked={qna.category === '기타'}/>기타
               </label>
             </div>
           </div>
@@ -149,8 +152,10 @@ const QnaVoice =({ mode = 'create', qna_id, onEvent, onChangeTab, userData=null}
             <label className="formLabel">내용</label>
             <textarea className="formTextarea"  name="qna_content" value={qna.qna_content} onChange={onChange}></textarea>
           </div>
-          <button type="button" className="submitButton" onClick={handleRequest}>{mode === 'create' ? '등록' : '수정'}</button>
+          <div className='qnaVocieBtnDiv'>
+          <button type="button" className="submitButton" onClick={handleRequest}>{mode !== 'edit' ? '등록' : '수정'}</button>
           {mode==='edit' && <button type="button" className="submitButton" onClick={() => onInit()}>취소</button>}
+          </div>
         </div>
   );
 };
