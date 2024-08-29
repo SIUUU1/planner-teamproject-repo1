@@ -6,7 +6,7 @@ import useLoading from '../util/useLoading';
 import { useNavigate,useParams } from 'react-router-dom';
 
 const BoardList = () => {
-  const {user_id} = useParams();
+  const {user_id, group_id} = useParams();
   const [boards, setBoards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -29,6 +29,12 @@ const BoardList = () => {
       } else if (boardListData) {
         filteredBoards = boardListData.filter(board=>board.user_id === user_id).filter(board => board.step === 0);
       }
+    }else if(group_id){ //group
+      if (searching) {
+        filteredBoards = searchList.filter(board=>board.group_id === group_id).filter(board => board.step === 0);
+      } else if (boardListData) {
+        filteredBoards = boardListData.filter(board=>board.group_id === group_id).filter(board => board.step === 0);
+      }
     }else{ // 사용자 본인
       if (searching && userData) {
         filteredBoards = searchList.filter(board=>board.user_id === userData.user_id).filter(board => board.step === 0);
@@ -46,7 +52,7 @@ const BoardList = () => {
 
     setBoards(filteredBoards);
     setTotalPages(Math.ceil(filteredBoards.length / itemsPerPage));
-  }, [boardListData, itemsPerPage, sortOrder, searching, searchList,userData]);
+  }, [boardListData, itemsPerPage, sortOrder, searching, searchList, userData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -61,6 +67,8 @@ const BoardList = () => {
     await incrementReadCount(no);
     if(user_id){
       nav(`/boarddetail/${no}/${user_id}`);
+    }else if(group_id){
+      nav(`/boarddetail/group/${no}/${group_id}`);
     }else{
       nav(`/boarddetail/${no}`);
     }

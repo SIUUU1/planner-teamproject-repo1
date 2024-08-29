@@ -58,9 +58,9 @@ const MessageList =()=>{
 
     // 정렬
     if (sortOrder === 'latest') {
-      filteredMsgs = filteredMsgs.sort((a, b) => new Date(b.reg_date) - new Date(a.reg_date));
+      filteredMsgs = filteredMsgs.sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at));
     } else if (sortOrder === 'regOrder') {
-      filteredMsgs = filteredMsgs.sort((a, b) => new Date(a.reg_date) - new Date(b.reg_date));
+      filteredMsgs = filteredMsgs.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
     }
 
     setMsgs(filteredMsgs);

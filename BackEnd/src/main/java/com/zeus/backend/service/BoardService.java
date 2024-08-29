@@ -6,7 +6,7 @@ import java.util.Map;
 import com.zeus.backend.domain.Board;
 
 public interface BoardService {
-	// 새로운 글 등록 처리
+	// 새로운 글 등록 처리()
 	public void createNew(Map<String, Object> map) throws Exception;
 
 	// 목록 페이지
@@ -26,6 +26,9 @@ public interface BoardService {
 
 	// 조회수 증가
 	public void incrementReadCount(int no) throws Exception;
+
+	// 카테고리 조회
+	public String listCategory() throws Exception;
 
 	// 검색
 	public List<Board> search(String search, String category) throws Exception;

@@ -102,8 +102,8 @@
 }
 
 .qnaCustomerSupport .submitButton {
-  background-color: #4CAF50;
-  color: white;
+  background-color: white;
+  color: #333;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
@@ -114,5 +114,14 @@
 }
 
 .qnaCustomerSupport .submitButton:hover {
-  background-color: #45a049;
+  background-color: #a8a8a8;
+}
+
+.supportForm .qnaVocieBtnDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.supportForm .qnaVocieBtnDiv button {
+  margin: 0 10px;
 }

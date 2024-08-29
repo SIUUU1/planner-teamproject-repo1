@@ -94,7 +94,7 @@ const MessageForm = ({ isOpen, onClose, receiver_id }) => {
     <div className={`messageForm ${isOpen ? 'open' : ''}`}>
       <div className="messageFormHeader">
         <span>쪽지 보내기</span>
-        <button onClick={onClose}>닫기</button>
+        <button onClick={onClose} className='closeBtn'>닫기</button>
       </div>
       <div className="messageFormBody">
         <label>받는 사람:</label>
@@ -126,8 +126,10 @@ const MessageForm = ({ isOpen, onClose, receiver_id }) => {
         </div>
         <label>메시지:</label>
         <textarea value={message.content} onChange={(e) => setMessage(prev => ({ ...prev, content: e.target.value }))} />
+        <div className='msgFormBtnDiv'>
         <button type="button" onClick={handleSubmit}>보내기</button>
         <button type="button" onClick={() => { moveToMsgList(); onClose(); }}>쪽지함</button>
+        </div>
       </div>
     </div>
   );

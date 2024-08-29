@@ -9,8 +9,6 @@ import Weather from '../components/Weather';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import useMove from '../util/useMove';
-import GroupList from '../components/GroupList';
-import Modal from '../studygroup/Modal';
 import BoardItem from '../components/BoardItem';
 import {useUser} from '../contexts/UserContext'
 
@@ -19,7 +17,7 @@ const StudyGroup = () => {
   //유저 정보
   const {user:userData}=useUser(); 
   // 그룹 ID 받기
-  const { group_id} = useParams();
+  const { group_id } = useParams();
   // 스터디 그룹의 정보를 가져온다.
   const { data: groupData, loading: loadingGroup, error: errorGroup } = useLoading(`http://localhost:8080/api/group/read/${group_id}`, 'json');
   const [selectedImage, setSelectedImage] = useState('/images/cat1.jpg');
@@ -71,7 +69,7 @@ const StudyGroup = () => {
     if (groupData) {
       let src = '';
       if (groupData.image_url) {
-        src = `http://localhost:8080/static/images/profile/${groupData.image_url}`;
+        src = `http://localhost:8080/static/images/group/${groupData.image_url}`;
         setSelectedImage(src || '/images/cat1.jpg');
       }
     }
@@ -157,16 +155,16 @@ const StudyGroup = () => {
           </div>
           
           <div className='board backWhite'>
-            {/* 게시판 부분
-            <ToFullList URL={`/boardlist/${user_id}`} />
+          <ToFullList URL={`/boardlist/group/${group_id}`}/>
             <div className='board1'>
-              {filteredBoard && filteredBoard.length > 0 ? 
-               filteredBoard.map((board, index) => (<BoardItem key={index} board={board} user_id={user_id}/>))
-              )) : 
-              <div className='boardInfo'><p>등록된 게시물이 없습니다!</p></div>}
-            </div>
-            */}
-          </div>
+          {filteredBoard&&filteredBoard.length!==0?(
+              filteredBoard.map((board, index) => (<BoardItem key={index} board={board} group_id={group_id}/>))
+          ):(
+            <div className='progressInfo'>등록된 게시물이 없습니다!</div>
+          )}
+           </div>
+          </div> 
+
         </div>
       </div>
     </div>
