@@ -84,6 +84,8 @@ function App() {
             <Route path="/boarddetail/:no" element={<BoardDetail />} />
             <Route path="/boardlist/:user_id" element={<BoardList />} />
             <Route path="/boarddetail/:no/:user_id" element={<BoardDetail />} />
+            <Route path="/boardlist/group/:group_id" element={<BoardList />} />
+            <Route path="/boarddetail/group/:no/:group_id" element={<BoardDetail />} />
             <Route path="/qna/:mode/:qna_id" element={<QnaCustomerSupport />} />
             {/* <Route path='/support' element={<Support />} /> */}
             <Route path="/notice" element={<NoticeBoard />} />
