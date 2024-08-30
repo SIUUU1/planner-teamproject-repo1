@@ -326,7 +326,7 @@ public class GroupController {
 			notification.setUser_id(group.getLeader_id());
 			notification.setContent(group.getGroup_name());
 			notification.setType("GroupJoinRequest");
-			notification.setLink("-");
+			notification.setLink("/groupone/"+String.valueOf(map.get("group_id")));
 			notificationService.create(notification);
 
 			return ResponseEntity.ok("Groupone insert successfully");
@@ -355,7 +355,7 @@ public class GroupController {
 			notification.setUser_id(String.valueOf(map.get("user_id")));
 			notification.setContent(group.getGroup_name());
 			notification.setType("GroupJoinConfirmation");
-			notification.setLink("-");
+			notification.setLink("/group/"+String.valueOf(map.get("group_id")));
 			notificationService.create(notification);
 
 			return ResponseEntity.ok("Groupone accept successfully");

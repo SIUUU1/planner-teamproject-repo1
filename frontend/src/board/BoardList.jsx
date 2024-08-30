@@ -8,6 +8,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 const BoardList = () => {
   const {user_id, group_id=0} = useParams();
   const [boards, setBoards] = useState([]);
+  const [categories, setCategories] = useState([]); // 카테고리
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
@@ -29,7 +30,7 @@ const BoardList = () => {
       } else if (boardListData) {
         filteredBoards = boardListData.filter(board=>board.user_id === user_id).filter(board => board.step === 0).filter(board => board.group_id === 0);
       }
-    }else if(group_id !== 0){ //group
+    }else if(group_id != 0){ //group
       if (searching) {
         filteredBoards = searchList.filter(board=>board.group_id == group_id).filter(board => board.step === 0);
       } else if (boardListData) {
@@ -50,6 +51,10 @@ const BoardList = () => {
       filteredBoards = filteredBoards.sort((a, b) => new Date(a.reg_date) - new Date(b.reg_date));
     }
 
+    // 중복 없는 카테고리 배열 생성
+    const uniqueCategories = [...new Set(filteredBoards.map(board => board.category))];
+    setCategories(uniqueCategories);
+
     setBoards(filteredBoards);
     setTotalPages(Math.ceil(filteredBoards.length / itemsPerPage));
   }, [boardListData, itemsPerPage, sortOrder, searching, searchList, userData]);
@@ -67,7 +72,7 @@ const BoardList = () => {
     await incrementReadCount(no);
     if(user_id){
       nav(`/boarddetail/${no}/${user_id}`);
-    }else if(group_id !== 0){
+    }else if(group_id != 0){
       nav(`/boarddetail/group/${no}/${group_id}`);
     }else{
       nav(`/boarddetail/${no}`);
@@ -123,7 +128,7 @@ const BoardList = () => {
       });
   };
 
-  const moveToWrite = useMove(`/boardwrite/0/${group_id !==0 ? group_id: 0}`); 
+  const moveToWrite = useMove(`/boardwrite/0/${group_id !=0 ? group_id: 0}`); 
   const handleWrite = () => {
     moveToWrite();
   };
@@ -132,7 +137,7 @@ if(loadingUser){
 }
   return (
     <div className="boardList backWhite">
-      <h1>게시판</h1>
+      <h1>{group_id!=0 && '그룹'} 게시판</h1>
       {/* <div className="boardListHeader">
         
       </div> */}
@@ -142,9 +147,12 @@ if(loadingUser){
           <option value="regOrder">등록순</option>
         </select>
         <select ref={category}>
-          <option value="all">전체</option>
-          <option value="english">영어</option>
-          <option value="toeic">토익</option>
+        <option value="all">전체</option>
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
         <input type="text" placeholder="검색어를 입력해주세요" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
         <button onClick={onSearch}>검색</button>

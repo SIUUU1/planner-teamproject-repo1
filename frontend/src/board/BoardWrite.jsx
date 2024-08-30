@@ -38,6 +38,12 @@ const BoardWrite = () => {
         user_nickname: userData.user_nickname,
       }));
     }
+    if(group_id!=0){
+      setBoard(prevBoard => ({
+        ...prevBoard,
+        group_id: group_id,
+      }));
+    }
     if (boardData) {
       setBoard(boardData);
     }
@@ -75,15 +81,9 @@ const BoardWrite = () => {
       alert('모든 필드를 채워주세요.');
       return;
     }
-    // 그룹 게시글 추가
-    if(group_id !== 0){
-      setBoard(prevBoard => ({
-        ...prevBoard,
-        group_id: group_id,
-      }));
-    }
     try {
       const formData = new FormData();
+      
       for (const key in board) {
         formData.append(key, board[key]);
       }
@@ -101,7 +101,7 @@ const BoardWrite = () => {
         alert('게시판이 성공적으로 등록되었습니다.');
         refetchBoardData();
          // 목록으로 
-      if(group_id !==0 ){
+      if(group_id !=0 ){
         navigate(`/boardlist/group/${group_id}`);
       }else {
       navigate('/boardlist');
@@ -140,7 +140,7 @@ const BoardWrite = () => {
         alert('게시판이 성공적으로 수정되었습니다.');
         refetchBoardData();
         //목록으로
-        if(group_id !==0 || group_id){
+        if(group_id !=0 || group_id){
           navigate(`/boardlist/group/${group_id}`);
         }else {
         navigate('/boardlist');

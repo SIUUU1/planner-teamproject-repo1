@@ -1,7 +1,7 @@
 import './BoardItem.css'
 import { useNavigate } from 'react-router-dom';
 
-const BoardItem =({ board, user_id, group_id })=>{
+const BoardItem =({ board, user_id, group_id=0 })=>{
   const nav = useNavigate();
   const onClick = async (no) => {
     await incrementReadCount(no);
@@ -9,7 +9,7 @@ const BoardItem =({ board, user_id, group_id })=>{
     if(user_id){
       apiUrl=`/boarddetail/${no}/${user_id}`;
     }
-    else if(group_id){
+    else if(group_id!=0){
       apiUrl=`/boarddetail/group/${no}/${group_id}`;
     }
     else {
