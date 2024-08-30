@@ -84,11 +84,11 @@ const NotificationList =()=>{
 
   // 글자수 대로 자르기
   const truncateContent = (content) => {
-    if (content.length > 20) {
-      const truncatedText = `${content.substring(0, 20)}...`;
+    if (content.length > 40) {
+      const truncatedText = `${content.substring(0, 40)}...`;
       return truncatedText;
     }
-    return content; // 텍스트가 20자 이하라면 그대로 반환
+    return content; // 텍스트가 40자 이하라면 그대로 반환
   };
 
   if(loadingNotifyList){

@@ -71,16 +71,20 @@ const Modal = ({ group, onClose }) => {
           <div style={{ height: '350px', padding:'25px 20px'}}>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
           <div>{group.group_notice ? formatModalContent(group.group_notice) : '기본 모달 내용'}</div>
           <div className='groupBtnDiv'>
-          {filteredGroupOne && filteredGroupOne.enable === '1' ? (
+           {filteredGroupOne && filteredGroupOne.enable === '1' &&
             <>
-              <button className="joinButton" onClick={moveToGroupPage}>그룹 메인</button>
-              {group.leader_id === userData.user_id && (
-                <button className="joinButton" onClick={moveToGroupOne}>그룹 관리</button>
-              )}
+            <button className="joinButton" onClick={moveToGroupPage}>그룹 메인</button>
+            {group.leader_id === userData.user_id && (
+              <button className="joinButton" onClick={moveToGroupOne}>그룹 관리</button>
+            )}
             </>
-          ) : (
-            <button className="joinButton" onClick={onJoinGroup}>그룹 가입</button>
-          )}
+           } 
+          {filteredGroupOne && filteredGroupOne.enable === '0' && 
+           <button className="joinButton" onClick={alreadyJoin}>그룹 가입</button>
+          }
+          {!filteredGroupOne &&
+           <button className="joinButton" onClick={onJoinGroup}>그룹 가입</button>
+          }
           </div>
         </div>
       </div>

@@ -87,7 +87,7 @@ const BoardDetail = () => {
   };
 
   const onEdit = () => {
-    navigate(`/boardwrite/${board.no}/${group_id !==0 ? group_id : 0}`);
+    navigate(`/boardwrite/${board.no}/${group_id !=0 ? group_id : 0}`);
   }
   // 게시판 삭제
   const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/board/delete', {}, 'json');
@@ -97,7 +97,7 @@ const BoardDetail = () => {
       await deleteRequest({no});
       alert('게시판이 삭제되었습니다.');
       // 목록으로 
-      if(group_id !==0){
+      if(group_id !=0){
         navigate(`/boardlist/group/${group_id}`);
       }else {
       navigate('/boardlist');
@@ -253,7 +253,7 @@ const BoardDetail = () => {
     if(user_id){
       return `/boardlist/${user_id}`;
     }
-    else if(group_id !==0){
+    else if(group_id !=0){
       return `/boardlist/group/${group_id}`;
     }
     else {
