@@ -40,6 +40,7 @@ const Home = ()=>{
   const filteredBoard = otherUserData && boardListData && boardListData.length > 0 ? boardListData
     .filter(board => board.user_id === otherUserData.user_id)
     .filter(board => board.step === 0)
+    .filter(board => board.group_id === 0)
     .slice(0, 5) : [];
 
   // 그룹
