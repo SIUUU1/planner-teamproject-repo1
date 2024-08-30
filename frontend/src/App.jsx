@@ -37,7 +37,7 @@ import GroupOne from './studygroup/GroupOne';
 import PasswordReset from './member/PasswordReset';
 import MessageList from './message/MessageList';
 import ManagerRoute from './router/ManagerRoute';
-// import UserRoute from './router/UserRoute';
+import UserRoute from './router/UserRoute';
 import ManagerHome from './manager/ManagerHome';
 import ManagerCustomerService from './manager/ManagerCustomerService';
 import ManagerUser from './manager/ManagerUser';
@@ -63,7 +63,8 @@ function App() {
           <BackGround/>
           <Header />
           <Routes>
-            <Route path='/' element={<Home/>}/>
+            <Route path='/' element={<UserRoute element={<Home/>}/>}/>
+            {/* <Route path='/' element={<Home/>}/> */}
             <Route path="/joinForm" element={<Signup />} /> 
             <Route path='/loginForm' element={<Login/>}/>
             <Route path='/welcome' element={<Welcome/>} />

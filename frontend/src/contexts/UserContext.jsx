@@ -10,6 +10,7 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [retrying, setRetrying] = useState(false); // 재요청 여부를 체크하는 상태
+  const [loading, setLoading] = useState(true); 
 
   const fetchData = async (retry = true) => {
     try {
@@ -28,6 +29,7 @@ export function UserProvider({ children }) {
         console.error('Failed to fetch user info', response.status);
         setIsLoggedIn(false);
         setUser(null);
+        setLoading(false);
         return;
       }
 
@@ -36,11 +38,13 @@ export function UserProvider({ children }) {
       setIsLoggedIn(true);
       console.log('정상적으로 로그인 정보를 가져왔습니다.'); // 정상적으로 로그인 정보를 가져온 경우 로그 출력
       setRetrying(false);
+      setLoading(false);
     } catch (error) {
       // 에러 처리
       console.error('Error fetching user info', error);
       setIsLoggedIn(false);
       setUser(null);
+      setLoading(false);
     }
   };
 
@@ -72,7 +76,7 @@ export function UserProvider({ children }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, isLoggedIn, fetchData, logout }}>
+    <UserContext.Provider value={{ user, isLoggedIn, fetchData,loading, logout }}>
       {children}
     </UserContext.Provider>
   );
