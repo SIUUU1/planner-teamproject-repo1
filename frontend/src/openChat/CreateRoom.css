@@ -1,0 +1,16 @@
+h1{
+  text-align: center;
+}
+.createRoom>div>input{
+  width: 93%;
+  margin-bottom: 7px;
+}
+.createRoom button{
+  cursor: pointer;
+  float: right; 
+  background: rgb(208, 229, 248);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 3px;
+  margin-right: 2px;
+}

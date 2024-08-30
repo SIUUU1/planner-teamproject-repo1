@@ -2,10 +2,11 @@
   display: flex;
 }
 .settingChatRoomItemHeader h1{
-  margin-left: 20px;
+  margin-left: 60px;
 }
 .settingChatRoomItemInput input{
   width: 93%;
+  margin-bottom: 6px;
 }
 .settingChatRoomItemBtn{
   display: flex;
@@ -14,4 +15,11 @@
 }
 .settingChatRoomItemBtn button{
   margin-left: 10px;
+  cursor: pointer;
+  float: right; 
+  background: rgb(208, 229, 248);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 3px;
+  margin-right: 2px;
 }

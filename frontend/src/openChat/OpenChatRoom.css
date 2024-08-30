@@ -3,6 +3,9 @@
   overflow-y: scroll;
   scrollbar-width: none;
 }
+.openChatRoom h1{
+ text-align: center;
+}
 .roomItem{
   border: 1px solid black;
   border-radius: 5px;
