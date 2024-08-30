@@ -80,7 +80,7 @@ function App() {
             <Route path='/attainmentMain/group/:group_id' element={<AttainmentMain/>}/>
             <Route path='/attainmentDetail/:no' element={<AttainmentDetail/>}/>
             <Route path="/boardlist" element={<BoardList />} />
-            <Route path="/boardwrite/:no" element={<BoardWrite />} />
+            <Route path="/boardwrite/:no/:group_id" element={<BoardWrite />} />
             <Route path="/boarddetail/:no" element={<BoardDetail />} />
             <Route path="/boardlist/:user_id" element={<BoardList />} />
             <Route path="/boarddetail/:no/:user_id" element={<BoardDetail />} />

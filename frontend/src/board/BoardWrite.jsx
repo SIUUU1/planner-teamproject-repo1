@@ -1,5 +1,5 @@
 import React, { useRef,useEffect,useState } from 'react';
-import {useParams } from 'react-router-dom';
+import {useParams,useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './BoardWrite.css';
@@ -9,6 +9,7 @@ import useMove from '../util/useMove';
 const BoardWrite = () => {
   const initBoard = {
     no: 0,
+    group_id: 0,
     user_id: '',
     user_nickname: '',
     category:'',
@@ -22,12 +23,12 @@ const BoardWrite = () => {
     reg_date:'',
   };
   const img = useRef(null);
-  const {no} = useParams();
+  const {no, group_id=0} = useParams();
   const [board, setBoard] = useState(initBoard);
   const {data: boardData, loading: loadingBoardData, error: errorBoardData, refetch: refetchBoardData } = useLoading(`http://localhost:8080/api/board/read/${no}`, 'json');
   // 사용자 정보
   const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userData) {
@@ -67,12 +68,19 @@ const BoardWrite = () => {
     }
   };
 
-  const move = useMove('/boardlist');
+  const move = useMove(`/boardlist`);
   //등록
   const onSubmit = async () => {
     if (!board.subject || !board.content) {
       alert('모든 필드를 채워주세요.');
       return;
+    }
+    // 그룹 게시글 추가
+    if(group_id !== 0){
+      setBoard(prevBoard => ({
+        ...prevBoard,
+        group_id: group_id,
+      }));
     }
     try {
       const formData = new FormData();
@@ -92,7 +100,12 @@ const BoardWrite = () => {
       if (response.ok) {
         alert('게시판이 성공적으로 등록되었습니다.');
         refetchBoardData();
-        move();//목록으로
+         // 목록으로 
+      if(group_id !==0 ){
+        navigate(`/boardlist/group/${group_id}`);
+      }else {
+      navigate('/boardlist');
+    }
       } else {
         throw new Error('게시판 등록 실패');
       }
@@ -126,7 +139,12 @@ const BoardWrite = () => {
       if (response.ok) {
         alert('게시판이 성공적으로 수정되었습니다.');
         refetchBoardData();
-        move();//목록으로
+        //목록으로
+        if(group_id !==0 || group_id){
+          navigate(`/boardlist/group/${group_id}`);
+        }else {
+        navigate('/boardlist');
+      }
       } else {
         throw new Error('게시판 수정 실패');
       }

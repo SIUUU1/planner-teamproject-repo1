@@ -8,11 +8,12 @@ import ProfileLink from '../components/ProfileLink'
 import Toback from '../components/ToBack'
 
 const BoardDetail = () => {
-  const {user_id, no, group_id} = useParams();
+  const {user_id, no, group_id=0} = useParams();
   const navigate = useNavigate();
 
   const initComment = {
     no: 0,
+    group_id: 0,
     user_id: '',
     user_nickname: '',
     category:'',
@@ -28,6 +29,7 @@ const BoardDetail = () => {
   
   const [board, setBoard] = useState({
     no: 0,
+    group_id: 0,
     user_id: '',
     user_nickname: '',
     category:'',
@@ -59,13 +61,14 @@ const BoardDetail = () => {
       setBoard(boardData);
     }
     if (boardListData) {
-      const filteredComments = boardListData.filter(e => e.step !== 0 && e.ref === boardData?.ref);
+      const filteredComments = boardListData.filter(e => e.step !== 0 && e.ref === boardData?.ref );
       setComments(filteredComments);
     }
     if (userData && boardData) {
       setComment(prevComment => ({
         ...prevComment,
         no: boardData.no,
+        group_id: boardData.group_id,
         user_id: userData.user_id,
         user_nickname: userData.user_nickname,
         category: boardData.category,
@@ -84,7 +87,7 @@ const BoardDetail = () => {
   };
 
   const onEdit = () => {
-    navigate(`/boardwrite/${board.no}`);
+    navigate(`/boardwrite/${board.no}/${group_id !==0 ? group_id : 0}`);
   }
   // 게시판 삭제
   const { postRequest: deleteRequest } = useSendPost('http://localhost:8080/api/board/delete', {}, 'json');
@@ -93,7 +96,12 @@ const BoardDetail = () => {
     try {
       await deleteRequest({no});
       alert('게시판이 삭제되었습니다.');
+      // 목록으로 
+      if(group_id !==0){
+        navigate(`/boardlist/group/${group_id}`);
+      }else {
       navigate('/boardlist');
+      }
       refetchBoardListData();
     } catch (error) {
       console.error('게시판 삭제 실패:', error);
@@ -142,6 +150,7 @@ const BoardDetail = () => {
       const replyComment = {
         ...comment,
         no: parentComment.no,
+        group_id: parentComment.group_id,
         subject: parentComment.subject,
         content: replyContent.current.value,
         ref: parentComment.ref,
@@ -244,11 +253,11 @@ const BoardDetail = () => {
     if(user_id){
       return `/boardlist/${user_id}`;
     }
-    else if(group_id){
+    else if(group_id !==0){
       return `/boardlist/group/${group_id}`;
     }
     else {
-      return `/boardlist/`;
+      return `/boardlist`;
     }
   };
 
