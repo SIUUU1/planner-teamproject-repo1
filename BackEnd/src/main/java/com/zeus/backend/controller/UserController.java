@@ -1,12 +1,16 @@
 package com.zeus.backend.controller;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.Authentication;
 
 import com.zeus.backend.domain.Friend;
 import com.zeus.backend.domain.User;
@@ -65,9 +68,20 @@ public class UserController {
 	@GetMapping("/countByDate")
 	public ResponseEntity<Map<String, String>> getUserCountByDate() {
 	    System.out.println("getUserCountByDate");
-	    Map<String, String> map = userService.getUserCountByDate();
-	    System.out.println("map: " + map.toString());
-	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
+	    Map<String, String> originalMap = userService.getUserCountByDate();
+
+	    // Stream을 사용해 키를 정렬한 후, LinkedHashMap으로 수집
+	    Map<String, String> sortedMap = originalMap.entrySet().stream()
+	        .sorted(Map.Entry.comparingByKey(Comparator.comparingInt(key -> Integer.parseInt(key.replace("DAY", "")))))
+	        .collect(Collectors.toMap(
+	            Map.Entry::getKey, 
+	            Map.Entry::getValue, 
+	            (e1, e2) -> e1, 
+	            LinkedHashMap::new
+	        ));
+
+	    System.out.println("sortedMap: " + sortedMap.toString());
+	    return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
 	}
 
 	
