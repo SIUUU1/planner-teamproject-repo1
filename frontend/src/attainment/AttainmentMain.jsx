@@ -59,11 +59,23 @@ const AttainmentMain = () => {
 
   const { data:shortData=[],refetch:refetchShort } = useLoading(shortTermUrl, 'json');
   const { data:longData=[],refetch:refetchLong } = useLoading(longTermUrl, 'json');
-  const [longHeight,setLongHeight] = useState(longData?longData.length * 70:50);
   const [isRegister,setIsRegister]=useState(false);
   const onClickLeft = () => setDate(dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'));
   const onClickRight = () => setDate(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
-  const [shortHeight,setShortHeight] = useState(shortData?shortData.length * 70:50);
+  const [longHeight, setLongHeight] = useState(longData ? longData.length * 70 : 50);
+  const [shortHeight, setShortHeight] = useState(shortData ? shortData.length * 70 : 50);
+
+  useEffect(() => {
+    if (longData) {
+      setLongHeight(longData.length * 70);
+    }
+  }, [longData]);
+
+  useEffect(() => {
+    if (shortData) {
+      setShortHeight(shortData.length * 70);
+    }
+  }, [shortData]);
 
   const [data, setData] = useState({
     attainment_name: '',
@@ -109,11 +121,11 @@ const AttainmentMain = () => {
           />
         </div>
         {!user_id&&<Button onClick={()=>setIsRegister(!isRegister)} className={'addAttainment'} text={<FontAwesomeIcon icon={faPlus} />}></Button>}
-        <div className="attainmentList" style={{ height: `${shortHeight}px` }}>
+        <div className="attainmentList" style={{ height: `${shortHeight}px`, minHeight:'50px'}}>
           {(shortData&&shortData.length!==0)?shortData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
           <p>등록된 오늘의 목표가 없습니다!</p>}
         </div>
-        <div className="attainmentList" style={{ height: `${longHeight}px` }}>
+        <div className="attainmentList" style={{ height: `${longHeight}px`, minHeight:'50px' }}>
         {longData&&longData.length!==0 ? longData.map((i) => (<Attainment key={i.id} data={i} padding={0.2}/>)) : 
           <p>등록된 장기적인 목표가 없습니다!</p>}
         </div>

@@ -4,7 +4,9 @@
   width: 60%;
   margin: 0 auto;
 }
-
+.scheduleContent{
+  padding: 0 20px;
+}
 .schedule .dateDisplay {
   width: 90%;
   margin: 0 auto;
@@ -17,7 +19,6 @@
 }
 
 .schedule .addButton {
-  background-color: #f0f0f0;
   border: 1px solid #ddd;
   padding: 10px 20px;
   cursor: pointer;
@@ -41,10 +42,13 @@
 
 .scheduleTitle {
   font-weight: bold;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .scheduleTime {
   font-size: 1rem;
+  margin-right: 20px;
 }
 
 .schedule.buttonGroup {
@@ -52,9 +56,8 @@
   align-items: center;
 }
 
-.schedule .editButton, .schedule .deleteButton {
-  background-color: #7c4dff;
-  color: white;
+.schedule .editButton, .schedule .deleteButton, .addButton {
+  background-color: #ebf1ff;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
@@ -62,8 +65,8 @@
   margin-left: 5px;
 }
 
-.schedule .editButton:hover, .schedule.deleteButton:hover {
-  background-color: #5e35b1;
+.schedule .editButton:hover, .schedule .deleteButton:hover,.schedule .modalContent button:hover ,.addButton:hover{
+  background-color: #bfcddb;
 }
 
 /* Modal 스타일링 */
@@ -107,13 +110,9 @@
   margin: 5px;
   cursor: pointer;
   border: none;
-  background-color: #7c4dff;
+  background-color: #b6c1cd;
   color: white;
   border-radius: 5px;
-}
-
-.schedule .modalContent button:hover {
-  background-color: #5e35b1;
 }
 
 /* Calendar 스타일링 */

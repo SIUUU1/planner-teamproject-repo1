@@ -4,6 +4,7 @@ const useDataTransformer = (inputData, id) => {
   // 날짜를 N개월 전으로 계산하는 함수
   const getFormattedMonth = (monthsAgo) => {
     const date = new Date();
+    date.setDate(1);
     date.setMonth(date.getMonth() - monthsAgo);
     
     const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
