@@ -28,4 +28,7 @@ public interface MessageService {
 
 	// 쪽지 검색
 	public List<Message> search(String search, String user_id) throws Exception;
+
+	// 안읽은 쪽지 갯수
+	public int msgCountNotRead(String user_id) throws Exception;
 }

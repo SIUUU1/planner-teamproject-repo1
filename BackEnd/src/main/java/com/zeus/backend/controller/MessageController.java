@@ -163,4 +163,31 @@ public class MessageController {
 		service.deleteByReceiverId(user.getUser_id());
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
+	// 안읽은 쪽지 갯수
+	@GetMapping("/msg/count")
+	public ResponseEntity<Integer> getCountNotRead() {
+		System.out.println("getCountNotRead msg:");
+		Integer count = null;
+
+		// 토큰에서 사용자 정보를 얻는다.
+		User user = null;
+		try {
+			user = userService.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+		if (user == null) {
+			return ResponseEntity.status(499).build(); // 499 Custom Unauthorized
+		}
+
+		try {
+			count = service.msgCountNotRead(user.getUser_id());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(count);
+		}
+		return new ResponseEntity<>(count, HttpStatus.OK);
+	}
 }

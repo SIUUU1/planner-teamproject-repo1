@@ -24,18 +24,41 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .rightHeader {
   display: flex;
   justify-content: flex-end;
 }
+
 .leftHeader{
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .leftMiddleHeader {
   margin-left: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.rightHeader .showRed {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -15px;
+  right: -12px;
+  background-color: red;
+  color: white;
+  padding: 5px 5px;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  font-size: 12px;
+  z-index: 1;
+  font-weight: 800;
+  text-align: center;
+  vertical-align: bottom;
 }

@@ -29,4 +29,7 @@ public interface NotificationMapper {
 	// 특정 사용자가 받은 모든 알림 삭제
 	public void deleteByUserId(String user_id) throws Exception;
 
+	// 안읽은 알림 갯수
+	public int notifyCountNotRead(String user_id) throws Exception;
+
 }

@@ -170,3 +170,8 @@
   text-align: left;
   margin-left: 10px;
 }
+
+.searchResult {
+  max-height: 500px; /* 최대 높이*/
+  overflow-y: auto;  /* 세로 스크롤 */
+}

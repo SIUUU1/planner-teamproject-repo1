@@ -49,7 +49,7 @@ const Modal = ({ group, onClose }) => {
 
   const formatModalContent = (content) => {
     return content
-      .split('\n')
+      .split('\\n')
       .map(line => line.trim())
       .filter(line => line.length > 0)
       .map((line, index) => line === '---' ? <hr key={index} /> : <p key={index}>{line}</p>);

@@ -11,14 +11,13 @@ import MessageForm from '../message/MessageForm';
 const Header = () => {
   
   const {data: UserData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
+  const {data: notiCount, loading: loadingNotiCount, error: errorNotiCount } = useLoading('http://localhost:8080/api/notify/count', 'json');
+  const {data: msgCount, loading: loadingMsgCount, error: errorMsgCount } = useLoading('http://localhost:8080/api/msg/count', 'json');
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
-  // const [notifications] = useState([
-  //   { id: 1, date: '7월 12일', category: '보안기능', message: '새로운 환경에서 로그인 되었습니다.' }
-  // ]);
-
+  
   const onMoveLoginform = useMove('/loginForm');
   const onLogout = ()=>{
     fetch('http://localhost:8080/logout', {
@@ -54,12 +53,17 @@ const Header = () => {
     }
   };
 
+   // 쪽지와 알림 읽지 않은 갯수
+   const renderBadge = (count) => (
+    count > 0 && <span className="badge">{count}</span>
+  );
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMenuOpen, showNotifications, showMessageForm]);
+  }, [isMenuOpen, showNotifications, showMessageForm, notiCount, msgCount]);
   
   return (
     <header className="header">
@@ -76,8 +80,12 @@ const Header = () => {
             </div>
           </div>
           <div className='rightHeader'>
-            <div className='headerFifthChild'><Button text={<FontAwesomeIcon icon={faPaperPlane} onClick={toggleMessageForm} />} /></div>
-            <div className='headerSixthChild'><Button text={<FontAwesomeIcon icon={faBell} onClick={()=>{location.href='/notificationlist'}} />} /></div>
+            <div className='headerFifthChild showRed'><Button text={<FontAwesomeIcon icon={faPaperPlane} onClick={toggleMessageForm} />} />
+            {renderBadge(msgCount)}
+            </div>
+            <div className='headerSixthChild showRed'><Button text={<FontAwesomeIcon icon={faBell} onClick={()=>{location.href='/notificationlist'}} />} />
+            {renderBadge(notiCount)}
+            </div>
           </div>
         </div>
       </div>
