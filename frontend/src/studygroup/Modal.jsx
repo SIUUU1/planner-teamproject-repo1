@@ -68,7 +68,7 @@ const Modal = ({ group, onClose }) => {
           <button className="closeButton" onClick={onClose}>X</button>
           <h1>{group.group_name}</h1>
           <hr />
-          <div style={{ height: '350px', padding:'25px 20px'}}>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
+          <div style={{ height: '350px', padding:'25px 20px', textAlign: 'left'}}>{group.group_detail ? formatModalContent(group.group_detail) : '기본 모달 내용'}</div>
           <div>{group.group_notice ? formatModalContent(group.group_notice) : '기본 모달 내용'}</div>
           <div className='groupBtnDiv'>
            {filteredGroupOne && filteredGroupOne.enable === '1' &&
