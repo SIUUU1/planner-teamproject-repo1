@@ -146,7 +146,7 @@ const formatDate = (dateString) => {
           ))}
           <br/>
           <div className='noticeAddComment'>
-            <p>{userData.user_nickname}:</p>
+            <p className='writer'>{userData.user_nickname}:</p>
             <textarea className='noticeCommentTextarea' value={comment.content} onChange={changeComment} rows="4" ></textarea>
             <button onClick={submitComment}>등록</button>
           </div>

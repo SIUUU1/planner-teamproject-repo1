@@ -1,3 +1,4 @@
+/* src/pages/NoticeBoard.css */
 .noticeBoard {
   font-family: Arial, sans-serif;
   width: 100%; /* 내용이 중앙에 정렬되도록 너비 설정 */
@@ -126,6 +127,9 @@
   align-items: center;
   height: 80px;
   /* padding-right: 20px; */
+}
+.noticeAddComment .writer {
+  width: 60px;
 }
 .noticeAddComment button{
   width: 90px;

@@ -120,6 +120,11 @@ const BoardDetail = () => {
       }
       await submitCommentRequest(formData);
       alert('댓글이 추가되었습니다.');
+      //댓글 초기화
+      setComment(prevComment => ({
+        ...prevComment,
+        content: '',
+      }));
       refetchBoardListData();
     } catch (error) {
       console.error('댓글 추가 실패:', error);
