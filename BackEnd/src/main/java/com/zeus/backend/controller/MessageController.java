@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zeus.backend.domain.Message;
 import com.zeus.backend.domain.User;
 import com.zeus.backend.service.MessageService;
-import com.zeus.backend.service.NotificationService;
 import com.zeus.backend.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;

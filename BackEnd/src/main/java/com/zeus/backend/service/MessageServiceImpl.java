@@ -38,6 +38,7 @@ public class MessageServiceImpl implements MessageService {
 			number = maxNo;
 
 			message.setUser_id(message.getReceiver_id());
+			message.setIs_read(1);
 			mapper.create(message);
 		}
 		
