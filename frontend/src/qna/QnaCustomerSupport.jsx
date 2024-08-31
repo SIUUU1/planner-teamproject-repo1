@@ -18,9 +18,9 @@ const QnaCustomerSupport = () => {
   // FaqList
   const { data: faqListData, loading: loadingFaqList, error: errorFaqList } = useLoading('http://localhost:8080/api/faq/list', 'json');
   
-  // 사용자 QnaList
+  //  QnaList
   const [qnaList, setQnaList] = useState([]);
-  const { data: qnaListData, loading: loadingQnaList, error: errorQnaList, refetch: refetchQnaList} = useLoading('http://localhost:8080/api/user/qna/list', 'json');
+  const { data: qnaListData, loading: loadingQnaList, error: errorQnaList, refetch: refetchQnaList} = useLoading('http://localhost:8080/api/qna/list', 'json');
   
    // 사용자 정보
    const { data: userData, loading: loadingUser, error: errorUser } = useLoading('http://localhost:8080/api/user/userInfo', 'json');
@@ -67,7 +67,7 @@ const QnaCustomerSupport = () => {
       {selectedTab === 'notice' && <NoticeBoard userData={userData}/>}
       {selectedTab === 'faq' && <Faq faqs={faqListData || []} />}
       {selectedTab === 'voice' && <QnaVocie mode={mode} qna_id={qna_id} onEvent={onEventHandler} onChangeTab={setSelectedTab} userData={userData}/>}
-      {selectedTab === 'myqna' && <MyQnaList qnas={qnaListData || []} onChangeTab={setSelectedTab}/>}
+      {selectedTab === 'myqna' && <MyQnaList user_id={userData.user_id} qnas={qnaListData || []} onChangeTab={setSelectedTab}/>}
     </div>
   );
 };
