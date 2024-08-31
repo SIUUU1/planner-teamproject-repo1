@@ -233,7 +233,7 @@ function PasswordReset() {
                             <p className='rightP'>WePlan 계정 패스워드를 재설정 합니다.</p>
                         </div>
                         <div className="passRight">
-                            <input type="password" placeholder="패스워드" name="password" value={userInput.password} onChange={handleInputChange} />
+                            <input type="password" placeholder="패스워드" name="password" value={userInput.password} onChange={handleInputChange} /><br/>
                             <input type="password" placeholder="패스워드 확인" ref={confirmPw} />
                             <button type="submit" className="resetButton" onClick={resetPass}>재설정</button>
                             {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}

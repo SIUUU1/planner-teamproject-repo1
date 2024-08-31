@@ -62,6 +62,9 @@ const NoticeItem =({selectedNotice,backToList,comments,userData,onEvent})=>{
 
   //notice modify
   const modifyRequest = useSendPost('http://localhost:8080/api/notice/update', {}, 'json');
+
+   //notice delete
+   const deleteRequest = useSendPost('http://localhost:8080/api/notice/delete', {}, 'json');
   
   //댓글 추가
   const submitComment = async () => {
@@ -93,6 +96,18 @@ const handleConfirmEdit = async (comment) => {
   }
 };
 
+// 댓글 삭제
+const handleDelClick = async (comment) => {
+  try {
+    await deleteRequest.postRequest({no: comment.no}); // 댓글 삭제 API 호출
+    alert('댓글이 삭제되었습니다.');
+    onEvent(); // 댓글 목록을 갱신하기 위한 리패치 호출
+  } catch (error) {
+    console.error('댓글 삭제 실패:', error);
+    alert('댓글 삭제에 실패했습니다.');
+  }
+};
+
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -120,7 +135,10 @@ const formatDate = (dateString) => {
                   <ProfileLink user_id={comment.user_id} user_nickname={comment.user_nickname}></ProfileLink>
                   <p className='noticeCommentContent'>: {comment.content}</p> <p>({formatDate(comment.reg_date)})</p>
                   {comment.user_id === userData.user_id && (
+                    <>
                     <Button text={'수정'} onClick={() => handleEditClick(comment)} />
+                    <Button text={'삭제'} onClick={() => handleDelClick(comment)} />
+                    </>
                   )}
                 </div>
               )}
