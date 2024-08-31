@@ -1,6 +1,9 @@
 package com.zeus.backend.controller;
 
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,27 +66,42 @@ public class PaymentController {
 	}
 	
 	@GetMapping("/payCountByDate")
-	public ResponseEntity<Map<String, String>> getPayCountByDate() {
-	    System.out.println("getPayCountByDate");
-	    Map<String, String> map = paymentService.getPayCountByDate();
-	    System.out.println("map: " + map.toString());
-	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
-	}
-	
-	@GetMapping("/dailySalesByDate")
-	public ResponseEntity<Map<String, String>> getDailySalesByDate() {
-	    System.out.println("getDailySalesByDate");
-	    Map<String, String> map = paymentService.getDailySalesByDate();
-	    System.out.println("map: " + map.toString());
-	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
-	}
-	
-	@GetMapping("/cumulativeSalesByDate")
-	public ResponseEntity<Map<String, String>> getCumulativeSalesByDate() {
-	    System.out.println("getCumulativeSalesByDate");
-	    Map<String, String> map = paymentService.getCumulativeSalesByDate();
-	    System.out.println("map: " + map.toString());
-	    return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
-	}
+    public ResponseEntity<Map<String, String>> getPayCountByDate() {
+        System.out.println("getPayCountByDate");
+        Map<String, String> originalMap = paymentService.getPayCountByDate();
+        Map<String, String> sortedMap = sortMapByDate(originalMap);
+        System.out.println("sortedMap: " + sortedMap.toString());
+        return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
+    }
+
+    @GetMapping("/dailySalesByDate")
+    public ResponseEntity<Map<String, String>> getDailySalesByDate() {
+        System.out.println("getDailySalesByDate");
+        Map<String, String> originalMap = paymentService.getDailySalesByDate();
+        Map<String, String> sortedMap = sortMapByDate(originalMap);
+        System.out.println("sortedMap: " + sortedMap.toString());
+        return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
+    }
+
+    @GetMapping("/cumulativeSalesByDate")
+    public ResponseEntity<Map<String, String>> getCumulativeSalesByDate() {
+        System.out.println("getCumulativeSalesByDate");
+        Map<String, String> originalMap = paymentService.getCumulativeSalesByDate();
+        Map<String, String> sortedMap = sortMapByDate(originalMap);
+        System.out.println("sortedMap: " + sortedMap.toString());
+        return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
+    }
+
+    // 공통된 정렬 메서드
+    private Map<String, String> sortMapByDate(Map<String, String> originalMap) {
+        return originalMap.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey(Comparator.comparingInt(key -> Integer.parseInt(key.replace("DAY", "")))))
+            .collect(Collectors.toMap(
+                Map.Entry::getKey, 
+                Map.Entry::getValue, 
+                (e1, e2) -> e1, 
+                LinkedHashMap::new
+            ));
+    }
 
 }

@@ -1,8 +1,11 @@
 package com.zeus.backend.controller;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -133,19 +136,33 @@ public class AttainmentController {
 		return new ResponseEntity<>(attainments, HttpStatus.OK); // 200 OK;
 	}
 	
-	 @GetMapping("/monthlyShortTermAttainmentRate")
-	    public ResponseEntity<Map<String, String>> getMonthlyShortTermAttainmentRate() {
-	        System.out.println("getMonthlyShortTermAttainmentRate");
-	        Map<String, String> map = attainmentService.getMonthlyShortTermAttainmentRate();
-	        System.out.println("map: " + map.toString());
-	        return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
-	    }
-	 
-	 @GetMapping("/monthlyLongTermAttainmentRate")
-	    public ResponseEntity<Map<String, String>> getMonthlyLongTermAttainmentRate() {
-	        System.out.println("getMonthlyLongTermAttainmentRate");
-	        Map<String, String> map = attainmentService.getMonthlyLongTermAttainmentRate();
-	        System.out.println("map: " + map.toString());
-	        return ResponseEntity.ok(map); // HTTP 상태 200 OK와 함께 반환
-	    }
+	@GetMapping("/monthlyShortTermAttainmentRate")
+    public ResponseEntity<Map<String, String>> getMonthlyShortTermAttainmentRate() {
+        System.out.println("getMonthlyShortTermAttainmentRate");
+        Map<String, String> originalMap = attainmentService.getMonthlyShortTermAttainmentRate();
+        Map<String, String> sortedMap = sortMapByMonth(originalMap);
+        System.out.println("sortedMap: " + sortedMap.toString());
+        return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
+    }
+
+    @GetMapping("/monthlyLongTermAttainmentRate")
+    public ResponseEntity<Map<String, String>> getMonthlyLongTermAttainmentRate() {
+        System.out.println("getMonthlyLongTermAttainmentRate");
+        Map<String, String> originalMap = attainmentService.getMonthlyLongTermAttainmentRate();
+        Map<String, String> sortedMap = sortMapByMonth(originalMap);
+        System.out.println("sortedMap: " + sortedMap.toString());
+        return ResponseEntity.ok(sortedMap); // HTTP 상태 200 OK와 함께 반환
+    }
+
+    // 공통된 정렬 메서드
+    private Map<String, String> sortMapByMonth(Map<String, String> originalMap) {
+        return originalMap.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey(Comparator.comparingInt(key -> Integer.parseInt(key.replace("MONTH", "")))))
+            .collect(Collectors.toMap(
+                Map.Entry::getKey, 
+                Map.Entry::getValue, 
+                (e1, e2) -> e1, 
+                LinkedHashMap::new
+            ));
+    }
 }
