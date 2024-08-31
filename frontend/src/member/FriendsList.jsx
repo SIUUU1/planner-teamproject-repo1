@@ -48,7 +48,8 @@ const FriendsList = () => {
   );
   useEffect(() => {
     if (data) {
-      setSearchList(data);
+      let filteredFriendData = data.filter(friend => friend.role !== 'ROLE_MANAGER');
+      setSearchList(filteredFriendData);
     }
   }, [data]);
 
@@ -63,18 +64,6 @@ const FriendsList = () => {
 
     postRequest(form);
   };
-  // const onSearch = () => {
-  //   let url = 'http://localhost:8080/api/user/friend/search';
-  //   const form = new FormData();
-  //   form.append('searchkey', searchkey.current.value);
-  //   form.append('search', search.current.value);
-  //   console.log(url);
-  //   console.log(searchkey.current.value);
-  //   console.log(search.current.value);
-  //   fetch(url, { method: 'post', body: form ,credentials: 'include',})
-  //   .then(response => { return response.json(); })
-  //   .then(data => { setSearchList(data); });
-  // };
 
   // 친구등록
   const insertRequest = useSendPost('http://localhost:8080/api/user/friend/insert', {}, 'json');

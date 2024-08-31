@@ -29,6 +29,9 @@ public interface MessageMapper {
 	// message_id의 최댓값
 	public Integer maxMessageId() throws Exception;
 
+	// 안읽은 쪽지 갯수
+	public int msgCountNotRead(String user_id) throws Exception;
+
 	// 쪽지 검색
 	public List<Message> search(String search, String user_id) throws Exception;
 }

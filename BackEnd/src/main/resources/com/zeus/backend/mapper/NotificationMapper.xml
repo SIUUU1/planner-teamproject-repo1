@@ -37,4 +37,8 @@
     <delete id="deleteByUserId" >
         DELETE FROM notifications WHERE user_id = #{user_id}
     </delete>
+    <!-- 안읽은 알림 갯수 -->
+	<select id="notifyCountNotRead" resultType="int">
+	    SELECT count(*) FROM notifications where is_read = 0 and user_id = #{user_id}
+	</select>
 </mapper>

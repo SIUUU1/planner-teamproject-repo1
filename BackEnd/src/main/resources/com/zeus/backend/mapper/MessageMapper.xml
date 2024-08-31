@@ -48,4 +48,8 @@
         AND user_id = #{user_id} 
    		ORDER BY sent_at DESC 
 	</select>  
+	<!-- 안읽은 쪽지 갯수 -->
+	<select id="msgCountNotRead" resultType="int">
+	    SELECT count(*) FROM messages where is_read = 0 and user_id = #{user_id}
+	</select>
 </mapper>

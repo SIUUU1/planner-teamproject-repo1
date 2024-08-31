@@ -82,4 +82,9 @@ public class NotificationServiceImpl implements NotificationService {
 		notificationMapper.deleteByUserId(user_id);
 	}
 
+	@Override
+	public int notifyCountNotRead(String user_id) throws Exception {
+		return notificationMapper.notifyCountNotRead(user_id);
+	}
+
 }

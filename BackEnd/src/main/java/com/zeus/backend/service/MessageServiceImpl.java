@@ -79,4 +79,9 @@ public class MessageServiceImpl implements MessageService {
 		return mapper.read(message_id);
 	}
 
+	@Override
+	public int msgCountNotRead(String user_id) throws Exception {
+		return mapper.msgCountNotRead(user_id);
+	}
+
 }
