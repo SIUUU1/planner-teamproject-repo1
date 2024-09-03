@@ -320,9 +320,10 @@ const BoardDetail = () => {
                     </>
                   )}
                    
-                </div>
+                </div >
                 {replyingCommentId === com.no && (
-                  <div className="replyInput">
+                  <div className="commentRegister">
+                     <p>{userData.user_nickname} </p>
                     <textarea ref={replyContent} rows="4"></textarea>
                     <Button onClick={() => submitReply(com)} text={'추가'} className={'replyButton'} />
                   </div>
