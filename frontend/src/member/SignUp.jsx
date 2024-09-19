@@ -63,7 +63,7 @@ function SignUp() {
       alert(`패스워드를 입력하세요.`);
       return;
     } else if (!passwdValue.match(userPwPettern)) {
-      alert(`패스워드 6~16자 영문자와 숫자,특수기호를 조합해 입력하세요.`);
+      alert(`패스워드 6~20자 영문자와 숫자,특수기호를 조합해 입력하세요.`);
       return;
     }
     if(user.user_gender === ''){

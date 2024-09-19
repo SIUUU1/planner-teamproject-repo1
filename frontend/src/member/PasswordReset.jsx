@@ -173,7 +173,7 @@ function PasswordReset() {
                         <div className="passRight">
                             <input type="text" name="user_email" placeholder="복구이메일" value={userInput.user_email} onChange={handleInputChange} /><br />
                             <button type="submit" className="resetButton" onClick={handleNextStep}>다음</button>
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}
@@ -187,7 +187,7 @@ function PasswordReset() {
                         <div className="passRight">
                             <input type="text" name="user_name" placeholder="이름" value={userInput.user_name} onChange={handleInputChange} /><br />
                             <button type="submit" className="resetButton" onClick={checkEmail}>다음</button>
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}
@@ -207,7 +207,7 @@ function PasswordReset() {
                                     <button type="submit" className="resetButton" onClick={sendCode}>보내기</button>
                                 </>
                             )}
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}
@@ -221,7 +221,7 @@ function PasswordReset() {
                         <div className="passRight">
                             <input type="text" placeholder="인증번호" ref={code} /><br />
                             <button type="submit" className="resetButton" onClick={verifyCode}>인증하기</button>
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}
@@ -236,7 +236,7 @@ function PasswordReset() {
                             <input type="password" placeholder="패스워드" name="password" value={userInput.password} onChange={handleInputChange} /><br/>
                             <input type="password" placeholder="패스워드 확인" ref={confirmPw} />
                             <button type="submit" className="resetButton" onClick={resetPass}>재설정</button>
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}
@@ -258,7 +258,7 @@ function PasswordReset() {
                                 <p className='rightP'>당신은 {shouldHideEmailChangeButton()} 소셜 로그인 회원입니다.</p>
                                 </>
                             )}
-                            <Link to="/login">로그인으로 돌아가기</Link>
+                            <Link to="/loginForm">로그인으로 돌아가기</Link>
                         </div>
                     </div>
                 )}
@@ -273,7 +273,7 @@ function PasswordReset() {
                             <input type="password" placeholder="패스워드" name="password" value={userInput.password} onChange={handleInputChange} /><br/>
                             <input type="password" placeholder="패스워드 확인" ref={confirmPw} /><br/>
                             <button type="submit" className="resetButton" onClick={resetPass}>재설정</button>
-                            {type === 'id' && (<Link to="/login">로그인으로 돌아가기</Link>)}
+                            {type === 'id' && (<Link to="/loginForm">로그인으로 돌아가기</Link>)}
                         </div>
                     </div>
                 )}

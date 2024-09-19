@@ -23,7 +23,7 @@ const PaymentComponent = ({type, item_id, price}) => {
     }
   }, [userData]);
   
-  const onMove = useMove('/');
+  const onMove = useMove('/themechange');
   const url = `http://localhost:8080/api/pay/${type}`; //emojiPay 또는 proPay
   const payInfo={
     user_no: profiles.user_no,

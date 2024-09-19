@@ -152,6 +152,7 @@ public class AuthController {
 	@PostMapping("/verifyCode")
 	public ResponseEntity<?> verifyCode(@RequestBody Map<String, Object> map, HttpSession session) {
 		String inputCode = String.valueOf(map.get("code"));
+		String user_email = String.valueOf(map.get("user_email"));
 
 		// 세션에서 인증 코드와 이메일 속성 가져오기
 		SessionAttributeWithExpiry sessionCodeWrapper = (SessionAttributeWithExpiry) session
@@ -172,6 +173,9 @@ public class AuthController {
 
 		if (!inputCode.equals(sessionCode)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드가 일치하지 않습니다.");
+		}
+		if (!user_email.equals(sessionEmail)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증 코드를 발송한 이메일이 아닙니다.");
 		}
 
 		// 인증이 성공적으로 완료된 경우 세션 속성 제거
